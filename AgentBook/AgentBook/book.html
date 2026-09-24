@@ -613,7 +613,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>这就好比一个团队审方案：与其让一个人同时看财务、法务、技术，不如开三个组分工看，最后汇总。</p>
 <p><strong>关于第 7 步：什么叫&quot;很多层&quot;。</strong></p>
 <p>一个 7B（70 亿参数）的模型，通常有 32 层左右。层数越多、每层越宽，参数量越大，模型能装下的&quot;知识&quot;和&quot;推理链条&quot;就越长。<strong>这就是为什么大模型叫&quot;大&quot;模型——主要指这两个数字大。</strong></p>
-<div class="viz v3d" data-v3="ch2b"></div><h3>训练的三个阶段（这是面试高频考点）</h3>
+<div class="viz v3d" data-v3="ch2b"></div><div class="viz v3d" data-v3="ch2c"></div><h3>训练的三个阶段（这是面试高频考点）</h3>
 <p>一个能对话的模型，不是一次训练出来的，而是分三个阶段。</p>
 <table><thead><tr><th>阶段</th><th>它在干什么</th><th>类比</th><th>数据从哪来</th><th>结果是什么</th></tr></thead><tbody><tr><td>一、预训练（Pre-training）</td><td>读海量文本，反复练习&quot;猜下一个字&quot;</td><td>一个孩子读了上万本书</td><td>互联网、书籍、代码，几万亿字</td><td>学会了语言、常识、世界知识，但不会听指令</td></tr><tr><td>二、指令微调（SFT）</td><td>用&quot;提问 + 标准答案&quot;的样本教它&quot;听指令办事&quot;</td><td>上补习班，学会答题格式</td><td>人工标注的问答对，几万到几百万条</td><td>能按指令对话、能写文案、能回答问题</td></tr><tr><td>三、对齐（RLHF / DPO）</td><td>让人类给不同回答打分，教它&quot;哪个回答更好&quot;</td><td>老员工带新人，告诉他什么是好服务</td><td>人类偏好排序数据</td><td>更有帮助、更安全、更少胡说、更符合人类口味</td></tr></tbody></table>
 <p><strong>这三阶段对应到你的工作，有一个非常实际的推论：</strong></p>
@@ -884,7 +884,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>长对话不能无限拼接历史，必须压缩。三种主流手段：</p>
 <table><thead><tr><th>手段</th><th>做法</th><th>优点</th><th>缺点</th></tr></thead><tbody><tr><td>滑动窗口</td><td>只保留最近 N 轮</td><td>简单、便宜</td><td>早期关键信息会丢</td></tr><tr><td>滚动摘要</td><td>把旧对话总结成一段摘要，随新对话一起带上</td><td>保留长期信息</td><td>摘要本身会失真，需要定期重写</td></tr><tr><td>选择性保留</td><td>只保留关键实体、决定、待办，丢弃寒暄</td><td>最省、最准</td><td>需要判断&quot;什么算关键&quot;，实现复杂</td></tr></tbody></table>
 <p>实战里最常见的是<strong>滑动窗口 + 滚动摘要</strong>的组合：最近 3 到 5 轮原样保留，更早的压缩成摘要。</p>
-<div class="viz v3d" data-v3="ch6"></div><h3>五、提示词要当代码管理</h3>
+<div class="viz v3d" data-v3="ch6"></div><div class="viz v3d" data-v3="ch6b"></div><h3>五、提示词要当代码管理</h3>
 <p>这一条是&quot;专业&quot;和&quot;业余&quot;的分界线，也是面试里非常好用的一个细节：</p>
 <ul><li><strong>版本化</strong>：提示词要存文件、要有版本号、要有修改记录。因为它是产品行为的核心资产。</li><li><strong>可配置</strong>：业务规则（比如禁答清单、话术模板）要外置成配置，不要写死在提示词里。业务的人改规则，不该找你改代码。</li><li><strong>可回归</strong>：每次改提示词，都要跑一遍固定测试集，确认老问题没退化。这就是&quot;提示词回归测试&quot;，是评测体系的一部分。</li></ul>
 <h3>六、五个常见坑</h3>
@@ -1021,10 +1021,10 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <table><thead><tr><th>检索方式</th><th>擅长</th><th>不擅长</th></tr></thead><tbody><tr><td>向量检索</td><td>同义表达、模糊意图</td><td>精确串、数字、否定</td></tr><tr><td>关键词检索（如 BM25）</td><td>精确匹配、数字、专业术语</td><td>同义表达</td></tr></tbody></table>
 <p>两者结果<strong>并行取回，合并去重</strong>，才能覆盖更多情况。这个融合过程有专门的算法（比如倒数排名融合），你不用会算，但要知道&quot;两路召回结果要合并&quot;这件事。</p>
 <p><strong>召回数量的取舍</strong>：召回太少，可能漏掉正确文档；召回太多，重排负担重、噪声大。经验做法是<strong>先各召回 20 到 50 条，重排后取 3 到 5 条</strong>。</p>
-<h3>七、环节五：重排——性价比最高的一个改进</h3>
+<div class="viz v3d" data-v3="ch8c"></div><h3>七、环节五：重排——性价比最高的一个改进</h3>
 <p>召回阶段用的是&quot;粗筛&quot;（向量相似度），它的判断比较粗糙。重排用的是更精细的模型，把&quot;问题 + 文档&quot;放在一起仔细比对，给出更准确的相关度。</p>
 <p><strong>为什么说它性价比最高？</strong> 因为它不动数据、不动模型，只加一个环节，就能明显提升最终进入上下文的资料质量。很多团队的 RAG 效果提升最大的那一次改动，就是加了重排。</p>
-<h3>八、环节六：生成——提示词的四个要点</h3>
+<div class="viz v3d" data-v3="ch8d"></div><h3>八、环节六：生成——提示词的四个要点</h3>
 <p>到了这一步，资料已经在手里了，提示词要保证四件事：</p>
 <ol><li><strong>只能用资料回答</strong>：明确写&quot;不得使用资料之外的信息&quot;。</li><li><strong>允许说不知道</strong>：写&quot;资料中没有相关信息时，回答&#x27;资料未提及&#x27;，不要猜测&quot;。<strong>这一条不写，模型一定会编。</strong></li><li><strong>强制引用</strong>：要求标注答案来自哪一段。</li><li><strong>说明冲突处理</strong>：如果多份资料互相矛盾，要求指出冲突，而不是自己选一个。</li></ol>
 <h3>九、把整条链路串起来：一个电商例子</h3>
@@ -1392,7 +1392,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <table><thead><tr><th>手段</th><th>做法</th><th>优点</th><th>缺点</th></tr></thead><tbody><tr><td>裁剪工具输出</td><td>只保留工具返回结果的关键部分，丢掉原始大文本</td><td>立竿见影</td><td>可能丢关键细节</td></tr><tr><td>摘要历史</td><td>把较早的步骤总结成一段话</td><td>保留脉络</td><td>摘要会失真</td></tr><tr><td>外部化记忆</td><td>把重要结论写进文件或数据库，需要时再读回来</td><td>无限容量</td><td>需要设计&quot;什么时候写、什么时候读&quot;</td></tr><tr><td>子任务隔离</td><td>把探索性的子任务交给一个独立的 Agent，只把结论带回来</td><td>主上下文保持干净</td><td>需要设计接口和汇报格式</td></tr></tbody></table>
 <p><strong>最后一条（子任务隔离）是高级技巧</strong>，也是 Claude Code 这类工具的核心设计之一。想象一下：主 Agent 需要搞清一个代码库的结构，如果它自己一个个文件读过去，上下文立刻爆掉；但如果它派一个&quot;侦察兵&quot;去探索，只带回一页结论，主上下文就完全不受污染。</p>
 <p>这个模式在行业里叫&quot;子代理&quot;或&quot;上下文隔离&quot;。<strong>面试里提到这一条，非常加分。</strong></p>
-<h3>五、工具设计：Agent 的手好不好用</h3>
+<div class="viz v3d" data-v3="ch14b"></div><h3>五、工具设计：Agent 的手好不好用</h3>
 <p>第 5 章讲过工具描述的写法，这里补充<strong>Agent 场景下额外要考虑的四点</strong>：</p>
 <ol><li><strong>搜索优于遍历</strong>：不要把&quot;列出所有文件&quot;当主要手段，要提供&quot;按关键词搜索&quot;的能力。遍历会把上下文撑爆。</li><li><strong>读取要精准</strong>：不要&quot;读整个文件&quot;，要能&quot;读某一段&quot;。上下文很贵。</li><li><strong>写入要最小化</strong>：编辑文件用&quot;精确替换某几行&quot;，不要&quot;重写整个文件&quot;。这样出错可回退，也省 Token。</li><li><strong>危险动作要拦截</strong>：删除、覆盖、对外发送、涉及钱的，都必须经过确认。<strong>这不是为了合规，是因为模型确实会做错。</strong></li></ol>
 <h3>六、Claude Code 原理拆解（本节是发言稿里那句&quot;我们有一个项目的启发就来自它&quot;的答案）</h3>
@@ -1539,7 +1539,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>还有一个必须说的机制：降级（Degradation）。</strong> 系统压力大或者依赖挂了的时候，主动关掉非核心功能，保住核心功能。比如：</p>
 <ul><li>推荐系统挂了，就退回返回热门榜单。</li><li>大模型超时了，就返回缓存的答案或者引导用户自助。</li><li>图片生成排队太长，就先只给文字结果。</li></ul>
 <p><strong>降级是&quot;承认自己会坏，并且提前准备好了坏的方案&quot;。这是非常成熟的意识。</strong></p>
-<h3>七、一个小团队的最小可用架构</h3>
+<div class="viz v3d" data-v3="ch16d"></div><h3>七、一个小团队的最小可用架构</h3>
 <p>如果你要给面试官画一张图，画这个就够：</p>
 <pre>┌──────────────────────────────────────────────────────┐
 │ 用户请求                                             │
@@ -1678,7 +1678,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>它要提供：</p>
 <ul><li>统一的测试集管理（每个业务都能建自己的评测集）</li><li>自动跑评测（每次改动自动出分数）</li><li>回归检测（防止改 A 坏 B）</li><li>线上反馈回流（把真实的失败案例加进测试集）</li></ul>
 <p><strong>&quot;我们有统一的评测平台&quot;这句话在面试里的分量，比&quot;我们用了最先进的模型&quot;高得多。</strong></p>
-<h3>四、还有四个不能少的模块</h3>
+<div class="viz v3d" data-v3="ch18b"></div><h3>四、还有四个不能少的模块</h3>
 <p><strong>工具注册中心 / MCP 网关</strong></p>
 <p>所有 Agent 能用的工具都在这里注册，统一管理版本、权限、限流和审计。新工具上线一次，所有 Agent 都能用。</p>
 <p><strong>记忆服务</strong></p>
@@ -1804,7 +1804,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <ol><li><strong>立刻停止播放</strong>（TTS 要能被打断）。</li><li><strong>放弃当前正在生成的内容</strong>（LLM 生成要能中断）。</li><li><strong>把用户新的这句话作为修正</strong>（更新对话状态）。</li><li><strong>重新组织回答</strong>。</li></ol>
 <p><strong>这个能力在&quot;打字聊天&quot;里根本不存在，是语音独有的难点。</strong> 面试里提到&quot;我们做了打断处理&quot;，会立刻把话题拉到工程层面。</p>
 <p>难点还在于<strong>误打断</strong>：用户只是说了个&quot;嗯&quot;&quot;对&quot;，系统不能以为被抢话。这需要判断&quot;用户是在应答还是在打断&quot;，通常靠语音活动检测加语义判断结合。</p>
-<h3>五、第三个难点：语音场景特有的问题</h3>
+<div class="viz v3d" data-v3="ch20b"></div><h3>五、第三个难点：语音场景特有的问题</h3>
 <table><thead><tr><th>问题</th><th>说明</th><th>处理</th></tr></thead><tbody><tr><td>口音和方言</td><td>ASR 识别率大幅下降</td><td>选支持方言的 ASR，或在识别置信度低时主动确认</td></tr><tr><td>噪声环境</td><td>背景音干扰</td><td>降噪处理，必要时提示用户</td></tr><tr><td>同音字</td><td>&quot;十三&quot;和&quot;是散&quot;</td><td>结合上下文和后处理纠正</td></tr><tr><td>数字与型号</td><td>语音输入更容易错</td><td>关键信息（订单号、金额）必须复述确认</td></tr><tr><td>长回答不适合听</td><td>文字能看，语音听着累</td><td>回答要短，结构要简单，尽量一句话给结论</td></tr><tr><td>无法展示链接和图片</td><td>语音只能&quot;说&quot;</td><td>需要设计&quot;短信补发&quot;等补偿手段</td></tr><tr><td>情感与语气</td><td>用户已经生气了</td><td>需要情绪识别，调整语速和话术</td></tr></tbody></table>
 <p><strong>其中&quot;数字必须复述确认&quot;是一条真实的产品规则</strong>，因为语音识别一个数字听错，可能导致金额错误。<strong>面试里说这条，会显得你非常懂业务风险。</strong></p>
 <h3>六、要衡量什么</h3>
@@ -1991,7 +1991,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>三、去重的两种</strong></p>
 <table><thead><tr><th>类型</th><th>说明</th><th>处理</th></tr></thead><tbody><tr><td>完全相同</td><td>同一个文件重复上传</td><td>内容指纹比对，直接拦截</td></tr><tr><td>近似相同</td><td>同一张图的不同裁剪、不同压缩</td><td>相似度检测，提示&quot;已有相似素材&quot;</td></tr></tbody></table>
 <p><strong>近似去重比精确去重难得多，但也重要得多</strong>——因为大部分冗余是&quot;同一张图的不同版本&quot;。</p>
-<h3>五、指标</h3>
+<div class="viz v3d" data-v3="ch23b"></div><h3>五、指标</h3>
 <table><thead><tr><th>指标</th><th>说明</th></tr></thead><tbody><tr><td>素材入库量 / 覆盖率</td><td>有多少素材进了中心</td></tr><tr><td>自动打标准确率</td><td>抽样人工校验</td></tr><tr><td>检索命中率</td><td>用户想找的能不能找到</td></tr><tr><td>素材复用率</td><td>一个素材被用于多少内容（复用率越高越省钱）</td></tr><tr><td>找素材耗时</td><td>从&quot;翻半小时&quot;到&quot;搜十秒&quot;</td></tr><tr><td>重复率 / 过期占用率</td><td>冗余和失效素材的比例</td></tr><tr><td>素材相关事故数</td><td>用错素材导致的问题次数</td></tr></tbody></table>
 <p><strong>&quot;复用率&quot;是一个特别好的指标</strong>：它直接对应成本。原来一个素材只用一次，现在能用五次，拍摄和设计成本就降了。</p>
 <h3>六、和内容 Agent 的关系</h3>
@@ -2073,7 +2073,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h3>八、怎么衡量这个项目</h3>
 <table><thead><tr><th>指标</th><th>说明</th></tr></thead><tbody><tr><td>任务成功率</td><td>不用人工接管就跑完的比例</td></tr><tr><td>平均步数</td><td>完成任务需要几次循环，越少越省</td></tr><tr><td>平均成本</td><td>每个任务花多少钱</td></tr><tr><td>人工接管率</td><td>需要人接手的比例</td></tr><tr><td>失败原因分布</td><td>失败主要卡在哪一环</td></tr><tr><td>同类任务复现成功率</td><td>第二次做同类任务是不是更快更准（自进化的证据）</td></tr><tr><td>恢复成功率</td><td>中途中断后能否恢复</td></tr></tbody></table>
 <p><strong>倒数第二个指标是&quot;自进化&quot;唯一可验证的证据。</strong> 如果你能在面试里说&quot;同类任务第二次做的平均步数下降了 X%&quot;，那这个项目就立住了。</p>
-<h3>九、面试讲法（重点，这是你拿下 offer 的一题）</h3>
+<div class="viz v3d" data-v3="ch24b"></div><h3>九、面试讲法（重点，这是你拿下 offer 的一题）</h3>
 <p><strong>问：&quot;讲一个你最有代表性的 Agent 项目。&quot;</strong></p>
 <blockquote><p><strong>一句话定位</strong>：&quot;我做的是一个能自主完成运营周报生成的 Agent，它需要跨三个系统取数、做计算、生成报告并发送，中间会遇到权限失败、数据缺失这些情况。&quot;</p><p></p><p><strong>架构</strong>：&quot;整体是一个 Harness，包含循环控制、上下文管理、工具箱、记忆和反馈五个模块。循环是标准的五步：组装上下文、调模型、解析动作、执行工具、更新状态。&quot;</p><p></p><p><strong>三个我认为最关键的设计</strong>：</p><p></p><p>&quot;第一是退出控制。我们设了四道闸门：完成信号、步数上限、成本上限，还有无进展检测。无进展检测是我觉得最有价值的一个——我们给每一步生成状态指纹，连续两步高度相似就判定在打转，然后按换方法、降级目标、升级人工三种策略处理。上线前我们的 Agent 有相当一部分任务是在原地转圈，加了这一层之后明显改善。&quot;</p><p></p><p>&quot;第二是上下文管理。因为周报要读很多数据，上下文膨胀特别快。我们用了四招：工具返回只保留关键字段，原始数据落文件；超过一定步数做历史摘要；中间结论写进任务状态文件而不是留在对话里，这样还能支持中断恢复；探索性的数据探查交给子代理，只把结论带回来。&quot;</p><p></p><p>&quot;第三是自进化的闭环。我们把它做成三环：任务完成后把成功路径沉淀成经验，带适用范围和置信度；定期做失败归因，把共性对策补进系统规则，这一步有人工把关；还有就是记录不同执行路径的成功率，下次优先走成功率高的路径。这个闭环可以直接用数据验证——同类任务第二次执行的平均步数下降了。&quot;</p><p></p><p><strong>可观测</strong>：&quot;另外我们做到了每一步可回放，任何一次失败都能完整还原，这样才能定位到底是哪一环出了问题。&quot;</p></blockquote>
 <p><strong>如果面试官追问&quot;这算真的自进化吗&quot;</strong>，这样回答：</p>
@@ -4249,7 +4249,16 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     var bar = mk("div", "v3-bar");
     var note = mk("div", "vz-note", "");
     host.appendChild(bar); host.appendChild(note);
-    var sc = E3(cv, { auto: o.auto !== false, dist: o.dist || 10, yaw: o.yaw, pitch: o.pitch });
+    // flat=true：把相机拉远、同时放大焦距，等效于"近正交投影"。
+    // 图表类场景必须用这个 —— 否则柱子上方的标签会被透视挤偏，看起来"没对齐"。
+    var k = o.flat ? 2.6 : 1;
+    var sc = E3(cv, {
+      auto: o.auto !== false,
+      dist: (o.dist || 10) * k,
+      fov: 620 * k,
+      yaw: o.yaw,
+      pitch: o.pitch
+    });
     var bA = btn("暂停旋转"), bR = btn("复位视角");
     if (!sc.isAuto()) bA.textContent = "继续旋转";
     bA.onclick = function () {
@@ -4773,6 +4782,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
         "所以微调之后必须跑通用能力和安全回归测试，不能只看新任务准没准。";
     }
     m.sc.scene(function (e) {
+      e.grid(7, 1.4, C.m, -3.4, .04);
       var N = 15, ext = 3.2, y0 = -2.2;
       for (var i = 0; i <= N; i++) {
         var a = -ext + i * (2 * ext / N), pts = [];
@@ -5177,7 +5187,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch5 = function (host) {
     var m = mount(host, "限流与熔断：保护系统的两道闸门",
       "请求像球一样涌进来。限流是让超出的球排队或被拒；熔断是发现下游一直失败就干脆把门关上，快速失败。",
-      { dist: 16, pitch: .4, h: 420, auto: false });
+      { dist: 16, pitch: .4, h: 420, auto: false, flat: true });
     var limit = 2, rate = 9, breaker = 0, live = [], t = 0, tick = null, shut = false, lane = 0;
     var okN = 0, rejN = 0;
     slider(m, "并发上限", 1, 10, 1, limit, " 个", function (v) { limit = v; m.sc.render(); note(); });
@@ -5269,7 +5279,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch8b = function (host) {
     var m = mount(host, "RAG 全链路：一条从原始文档到最终回答的流水线",
       "左边三个工位是离线的（跑一次或定期跑），右边三个是在线的（用户每次提问都要跑）。点“走一步”看物料怎么变形。",
-      { dist: 20, pitch: .42, yaw: -.35, h: 420, auto: false });
+      { dist: 20, pitch: .42, yaw: -.35, h: 420, auto: false, flat: true });
     var ST = [
       { n: "① 解析", d: "PDF、Word、网页抽成纯文本。表格错乱、扫描件要 OCR——这一步占整体四成工作量。", c: C.b },
       { n: "② 切块", d: "按结构切成小块，块之间留 10%-15% 重叠，防止关键信息卡在边界。", c: C.b },
@@ -5460,7 +5470,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch16c = function (host) {
     var m = mount(host, "滚动更新：为什么发新版本时用户不该有任何感觉",
       "不是一次性把六个实例全换掉，而是一批一批换，中间始终有实例在提供服务。也可以看一次失败回滚。",
-      { dist: 15, pitch: .45, h: 400, auto: false });
+      { dist: 15, pitch: .45, h: 400, auto: false, flat: true });
     var TOTAL = 6, batch = 1, step = 0, timer = null, rollback = false;
     slider(m, "每批更新几个实例", 1, 3, 1, batch, " 个", function (v) { batch = v; m.sc.render(); note(); });
     var bGo = btn("开始滚动发布", "primary"), bFail = btn("模拟新版本出问题"), bRe = btn("重置");
@@ -5515,7 +5525,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch4 = function (host) {
     var m = mount(host, "API 调用：消息是怎么一轮轮堆上去的",
       "模型没有记忆。每一轮提问，你都要把 system、全部历史、这次的问题一起重新发一遍。点“再问一轮”看消息栈长高。",
-      { dist: 15, pitch: .4, yaw: -.5, h: 430, auto: false });
+      { dist: 15, pitch: .4, yaw: -.5, h: 430, auto: false, flat: true });
     var r = 1;
     var bNext = btn("再问一轮", "primary"), bRe = btn("重置");
     m.bar.appendChild(bNext); m.bar.appendChild(bRe);
@@ -5563,7 +5573,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch9 = function (host) {
     var m = mount(host, "Recall@k：正确的那一段，到底排在第几？",
       "候选资料按相关度从高到低排在空间里，红色那块才是真正的答案。拖动 k，看它有没有被选进上下文。",
-      { dist: 17, pitch: .46, yaw: -.4, h: 420, auto: false });
+      { dist: 17, pitch: .46, yaw: -.4, h: 420, auto: false, flat: true });
     var k = 3;
     var rel = [.94, .88, .82, .90, .31, .22, .18, .12];   // 第 4 块才是真正的答案
     slider(m, "召回数量 k", 1, 8, 1, k, " 条", function (v) { k = v; m.sc.render(); note(); });
@@ -5676,7 +5686,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch13 = function (host) {
     var m = mount(host, "M×N 的泥潭：为什么必须有一根统一协议",
       "左边是模型，右边是要接入的系统。切换两种方案，看连线（也就是你要写的对接代码）差多少。",
-      { dist: 22, pitch: .26, yaw: -.35, h: 440, auto: false });
+      { dist: 22, pitch: .26, yaw: -.35, h: 440, auto: false, flat: true });
     var M = 5, N = 8, direct = 1;
     slider(m, "模型数量 M", 1, 8, 1, M, " 个", function (v) { M = v; m.sc.render(); note(); });
     slider(m, "要接入的系统 N", 1, 10, 1, N, " 个", function (v) { N = v; m.sc.render(); note(); });
@@ -5730,7 +5740,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch17 = function (host) {
     var m = mount(host, "瓶颈转移：AI 让“写”变便宜之后，谁成了新瓶颈",
       "切换两种研发方式，看五个环节的耗时柱怎么变。最高的那一根，就是限制你交付速度的瓶颈。",
-      { dist: 16, pitch: .45, yaw: -.45, h: 420, auto: false });
+      { dist: 16, pitch: .45, yaw: -.45, h: 420, auto: false, flat: true });
     var ST = ["写代码", "审查代码", "验证正确性", "对齐需求", "部署运维"];
     var OLD = [58, 14, 12, 8, 8], NEW = [14, 38, 28, 12, 8];
     var mode = 0;
@@ -5769,7 +5779,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch19 = function (host) {
     var m = mount(host, "木桶效应：五个数据质量维度里，最短的那块决定水位",
       "蓝色水面代表下游 Agent 真正能拿到的数据质量——它只到最低的那根柱子。拖滑块，把最短板补起来。",
-      { dist: 17, pitch: .42, yaw: -.4, h: 440, auto: false });
+      { dist: 17, pitch: .42, yaw: -.4, h: 440, auto: false, flat: true });
     var D = [
       { k: "完整性", v: 90, c: C.b }, { k: "唯一性", v: 85, c: C.g },
       { k: "一致性", v: 62, c: C.p }, { k: "准确性", v: 88, c: C.y },
@@ -5811,7 +5821,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch20 = function (host) {
     var m = mount(host, "延迟预算：串行 vs 全链路流式",
       "四段耗时按顺序摆在时间轴上。切换流式，看它们怎么相互重叠，用户实际等待的那一段缩短多少。",
-      { dist: 19, pitch: .4, yaw: -.3, h: 420, auto: false });
+      { dist: 19, pitch: .4, yaw: -.3, h: 420, auto: false, flat: true });
     var ST = [
       { k: "语音识别", v: 220, c: C.b },
       { k: "检索+意图", v: 120, c: C.g },
@@ -5929,7 +5939,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch22 = function (host) {
     var m = mount(host, "评分卡与证据链：每一分都必须能指回原话",
       "上面是评分卡，下面是原始对话片段。点一个维度，看它的分数是从哪句话来的。",
-      { dist: 18, pitch: .4, yaw: -.35, h: 450, auto: false });
+      { dist: 18, pitch: .4, yaw: -.35, h: 450, auto: false, flat: true });
     var D = [
       { k: "开场", s: 10, full: 10, ev: "00:03「您好，我是官方客服小李，来电是想确认您上周的订单」" },
       { k: "需求挖掘", s: 12, full: 20, ev: "全程只提了 1 个开放式问题（标准要求至少 2 个）" },
@@ -6133,6 +6143,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
         "<br>面试时你要能一边画这张分层图，一边说清每一层“解决什么问题”。";
     }
     m.sc.scene(function (e) {
+      e.grid(9, 1.5, C.m, -3.5, .05);
       // 每一层铺一块半透明地板，让层级一眼可见
       LAY.forEach(function (L) {
         e.quad([[-8.4, L.y - .45, -1.6], [8.4, L.y - .45, -1.6],
@@ -6168,7 +6179,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch31 = function (host) {
     var m = mount(host, "权限必须挡在检索之前",
       "知识块按”谁来都能看 / 主管能看 / 只有总监能看“分成三层摆放。切换身份，看哪些块连被检索到的资格都没有。",
-      { dist: 21, pitch: .34, yaw: -.3, h: 480, auto: false });
+      { dist: 21, pitch: .34, yaw: -.3, h: 480, auto: false, flat: true });
     var ROLES = [{ n: "普通销售", lv: 0 }, { n: "部门主管", lv: 1 }, { n: "销售总监", lv: 2 }];
     var KB = [
       { t: "退换货政策", lv: 0 }, { t: "商品规格表", lv: 0 }, { t: "话术模板", lv: 0 },
@@ -6243,11 +6254,587 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     note();
   };
   /* ---------- 挂载 ---------- */
+  /* ============ 第 6 章（2）：上下文预算的体积 ============ */
+  S.ch6b = function (host) {
+    var m = mount(host, "上下文是一口箱子：四类内容一起抢空间",
+      "系统提示、检索资料、对话历史、留给输出的位置，四份加起来不能超过箱子。装不下就会把最早的对话挤出去。",
+      { dist: 17, pitch: .34, yaw: -.4, h: 470, auto: false, flat: true });
+    var P = { sys: 12, rag: 50, his: 26, res: 12 };
+    var NAME = { sys: "系统提示", rag: "检索资料", his: "对话历史", res: "输出预留" };
+    var COL = { sys: C.p, rag: C.b, his: C.y, res: C.g };
+    ["sys", "rag", "his", "res"].forEach(function (k) {
+      slider(m, NAME[k], 0, 80, 1, P[k], "%", function (v) { P[k] = v; m.sc.render(); note(); });
+    });
+    function total() { return P.sys + P.rag + P.his + P.res; }
+    function note() {
+      var t = total();
+      m.note.innerHTML = "<b>已分配 " + t + "%（箱子 100%）</b>　" +
+        (t > 100 ? "⚠️ 超支，会把最早的对话历史挤出去" :
+         P.res < 8 ? "⚠️ 输出预留太少，长回答会被截断" : "✅ 分配合理") +
+        "<br>四条滑块分别对应四类内容。注意两件事：" +
+        "<br>① <b>检索资料不是越多越好</b>：它挤掉的是历史的连贯性和输出的空间；" +
+        "② <b>输出必须预留学位置</b>：模型答到一半发现没空间了，就会硬截断。" +
+        "<br>这就是“上下文工程”的日常：不是写提示词，而是<b>分配预算</b>。";
+    }
+    m.sc.scene(function (e) {
+      e.grid(8, 1.5, C.m, -3.0, .05);
+      // 箱子
+      e.vScale(-8.0, -3.2, -2.6, 3.0, 0, 100, 4, C.m, "%");
+      e.text([-8.0, 3.4, -3.2], "占窗口比例", C.m, 11.5);
+      var boxTop = 3.0, boxBottom = -2.6;
+      e.box([0, (boxTop + boxBottom) / 2, 0], [7.4, boxTop - boxBottom, 3.6], C.m,
+        { alpha: .04, edge: C.m, lw: 1.2, edgeA: .55 });
+      var y = boxBottom;
+      ["sys", "rag", "his", "res"].forEach(function (k) {
+        var h = P[k] / 100 * (boxTop - boxBottom);
+        if (h > 0) {
+          e.box([0, y + h / 2, 0], [7.0, h, 3.2], COL[k], { alpha: .3, edge: COL[k], lw: 1.3 });
+          if (h > .55) e.text([-3.6, y + h / 2, 2.0], NAME[k] + " " + P[k] + "%", COL[k], 11, 0, "left");
+        }
+        y += h;
+      });
+      e.text([0, 3.45, 0], "窗口总量 100%　已用 " + total() + "%", total() > 100 ? C.a : C.b, 13);
+      if (total() > 100) {
+        e.text([0, -3.3, 0], "⚠️ 超出部分会把最早的对话挤出去", C.a, 12.5);
+      }
+    });
+    note();
+  };
+
+  /* ============ 第 14 章（2）：上下文压缩前后 ============ */
+  S.ch14b = function (host) {
+    var m = mount(host, "上下文压缩：不压就爆，压了就不爆",
+      "左边是不压缩的样子（每跑一步就多堆一摞），右边是做了压缩之后。拖步数看两条柱子拉开多大差距。",
+      { dist: 18, pitch: .36, yaw: -.34, h: 460, auto: false, flat: true });
+    var step = 6, cmp = 1;
+    slider(m, "已经跑了几步", 1, 20, 1, step, " 步", function (v) { step = v; m.sc.render(); note(); });
+    var lab = mk("label", "vz-check"), cb = document.createElement("input");
+    cb.type = "checkbox"; cb.checked = true;
+    lab.appendChild(cb); lab.appendChild(mk("span", null, "开启压缩（裁剪 + 摘要 + 外部化 + 子代理）"));
+    cb.onchange = function () { cmp = cb.checked ? 1 : 0; m.sc.render(); note(); };
+    m.bar.appendChild(lab);
+    function raw() { return 800 + step * 1250; }
+    function cmpTok() { return 800 + Math.min(step, 3) * 1250 + Math.max(0, step - 3) * 90; }
+    function note() {
+      var a = raw(), coinb = cmpTok(), use = cmp ? coinb : a;
+      m.note.innerHTML = "<b>" + (cmp ? "开启压缩" : "不压缩") + "：第 " + step + " 步时上下文约 " +
+        Math.round(use / 1000) + "k Token</b>（窗口上限按 8k 算）" +
+        (use > 8000 ? "　⚠️ 已经超窗，最早的内容开始丢失" : "") +
+        "<br>不压缩要 " + Math.round(a / 1000) + "k，压缩后只要 " + Math.round(coinb / 1000) + "k。" +
+        "<br>四招各管一段：<b>裁剪</b>工具输出（只留关键字段）、<b>摘要</b>早期步骤、" +
+        "<b>外部化</b>把结论写进任务状态文件（顺便支持中断恢复）、" +
+        "<b>子代理</b>把探索任务隔离出去只带回结论。" +
+        "<br>这就是为什么“上下文管理”是 Agent 的生死线，而不是优化项。";
+    }
+    m.sc.scene(function (e) {
+      e.grid(9, 1.5, C.m, -2.8, .05);
+      [[0, "不压缩", raw(), C.a], [1, "压缩后", cmpTok(), C.g]].forEach(function (cfg) {
+        var x = cfg[0] ? 4.2 : -4.2, tok = cfg[2], col = cfg[3];
+        var h = Math.min(5.2, tok / 6000);
+        e.box([x, -2.4 + h / 2, 0], [3.4, h, 3.0], col, { alpha: .22, edge: col, lw: 1.5 });
+        e.text([x, -2.75, 2.1], cfg[1], col, 12.5);
+        e.text([x, -2.4 + h + .34, 0], Math.round(tok / 1000) + "k", col, 12.5);
+        // 一格一格的“步"
+        for (var k = 1; k < step; k++) {
+          var y = -2.4 + h * (k / step);
+          e.line([x - 1.6, y, -1.4], [x + 1.6, y, -1.4], col, .8, .35);
+        }
+      });
+      e.line([-1.0, -2.4 + Math.min(5.2, 8000 / 6000), 0], [-1.0, -2.4 + 5.2, 0], C.a, 1.8, .5);
+      e.text([0, -2.4 + 5.5, 0], "窗口上限 8k", C.a, 12);
+    });
+    note();
+  };
+
+  /* ============ 第 16 章（4）：降级链漏斗 ============ */
+  S.ch16d = function (host) {
+    var m = mount(host, "降级链：失败的流量不该摔到地上",
+      "100 次请求从上面进来。主模型接住大部分，剩下的逐层往下漏 —— 缓存、规则、最后才是转人工。",
+      { dist: 18, pitch: .3, yaw: -.32, h: 470, auto: false, flat: true });
+    // catch = 这一层能处理掉进来的百分之多少（剩下的往下一层漏）
+    var LAY = [
+      { t: "① 主模型", catch: .92, c: C.b },
+      { t: "② 备用模型", catch: .62, c: C.g },
+      { t: "③ 缓存 / 规则库", catch: .55, c: C.y },
+      { t: "④ 转人工", catch: 1.0, c: C.a }
+    ];
+    var st = 0, timer = null;
+    var bGo = btn("让 100 个请求进来", "primary"), bRe = btn("复位");
+    bGo.onclick = function () {
+      if (timer) return;
+      st = 1; timer = setInterval(function () { st++; m.sc.render(); if (st > 4) { clearInterval(timer); timer = null; } }, 700);
+    };
+    bRe.onclick = function () { if (timer) { clearInterval(timer); timer = null; } st = 0; m.sc.render(); note(); };
+    m.bar.appendChild(bGo); m.bar.appendChild(bRe);
+    function flow() {
+      var inp = 100, out = [];
+      LAY.forEach(function (L) {
+        var taken = Math.round(inp * L.catch);
+        out.push({ t: L.t, in: inp, taken: taken, c: L.c });
+        inp = inp - taken;
+      });
+      return out;
+    }
+    function note() {
+      var f = flow(), leak = f[f.length - 1].in;
+      m.note.innerHTML = f.map(function (x) {
+        return x.t + "：进来 <b>" + x.in + "</b> 条，接住 <b>" + x.taken + "</b> 条" +
+          (x.in - x.taken > 0 ? "，往下一层 " + (x.in - x.taken) : "，全部消化");
+      }).join("<br>") +
+        "<br><b>最后摔到地上的（也就是用户看到报错的）：" + Math.max(0, f[3].in - f[3].taken) +
+        " 次 / 100</b>" +
+        "<br>注意这个链条的设计意图：<b>每一层都让失败变得更便宜、更慢、更安全</b> —— " +
+        "备用模型只是换个模型，缓存和规则库甚至不用模型，最后转人工虽然慢但至少不会丢用户。" +
+        "<br>面试里讲可用性，讲这条链比讲”我们用了 K8s“有用得多。";
+    }
+    m.sc.scene(function (e) {
+      e.grid(9, 1.5, C.m, -3.0, .05);
+      var f = flow();
+      e.text([0, 3.6, 0], "100 次请求", C.p, 13);
+      f.forEach(function (x, i) {
+        var y = 2.7 - i * 1.72, shown = (st === 0) || (i <= st);
+        var w = 9.2 - i * 1.3;
+        e.box([0, y, 0], [w, .62, 1.5], x.c, { alpha: .2, edge: x.c, lw: 1.4 });
+        // 标签放在方块上方，避免被下一层挡住
+        e.text([0, y + .62, 0], x.t + "　接住 " + x.taken + " / 进来 " + x.in, x.c, 11.5);
+        // 层与层之间的"漏下去"的箭头
+        if (i < f.length - 1 && shown) {
+          var pass = x.in - x.taken;
+          e.line([0, y - .34, 0], [0, y - 1.3, 0], C.m, 1.2 + pass / 30 * 3.4, .4 + pass / 30);
+          e.text([2.2, y - .9, 0], "↓ " + pass + " 条继续", C.m, 11);
+        }
+      });
+      if (st >= 4) e.text([0, -3.7, 0], "用户可见故障率 ≈ " + Math.max(0, f[3].in - f[3].taken) + "%", C.a, 12.5);
+    });
+    note();
+  };
+
+  /* ============ 第 24 章（2）：失败归因分布 ============ */
+  S.ch24b = function (host) {
+    var m = mount(host, "失败归因：先修最高的那根柱子",
+      "一百个任务里有 26 个失败，原因各不相同。选一个原因去修，看整体失败率掉多少 —— 投入要放在最高的柱子上。",
+      { dist: 17, pitch: .42, yaw: -.34, h: 460, auto: false, flat: true });
+    var CAUSE = [
+      { t: "工具参数填错", n: 9 }, { t: "上下文不全", n: 7 }, { t: "检索失败", n: 5 },
+      { t: "没有退出条件", n: 3 }, { t: "其他", n: 2 }
+    ];
+    var pick = 0, fix = 0;
+    var btns = CAUSE.map(function (c, i) {
+      var b = btn(c.t, i === 0 ? "primary" : "");
+      b.onclick = function () {
+        pick = i;
+        btns.forEach(function (x, q) { x.className = "vz-btn" + (q === i ? " primary" : ""); });
+        m.sc.render(); note();
+      };
+      m.bar.appendChild(b);
+      return b;
+    });
+    slider(m, "在这个原因上投入的修复力度", 0, 100, 5, fix, "%", function (v) { fix = v; m.sc.render(); note(); });
+    function remain() {
+      return CAUSE.reduce(function (a, c, i) { return a + (i === pick ? c.n * (1 - fix / 100) : c.n); }, 0);
+    }
+    function note() {
+      var r = remain();
+      m.note.innerHTML = "<b>失败率：" + r.toFixed(1) + " / 100" +
+        (fix > 0 ? "　（从 26 降到 " + r.toFixed(1) + "，改善 " + Math.round((26 - r) / 26 * 100) + "%）" : "") + "</b>" +
+        "<br>当前选择修复的是「" + CAUSE[pick].t + "」，它占 " + CAUSE[pick].n + " 次失败。" +
+        "<br>把它修掉 " + fix + "% 之后，整体失败率从 26 降到 " + r.toFixed(1) + "。" +
+        "<br>这张图想说明的是一件事：<b>别凭感觉优化 Agent</b>。" +
+        "先把失败案例归类、数出每类几条，然后照着最高的那根柱子投入 —— " +
+        "因为整体失败率是所有原因之和，砍最粗的那根，边际收益最大。";
+    }
+    m.sc.scene(function (e) {
+      e.grid(9, 1.5, C.m, -2.8, .05);
+      e.vScale(-8.4, -2.6, -2.4, 2.8, 0, 10, 5, C.m, " 次");
+      e.text([-8.4, 3.2, -2.6], "失败次数", C.m, 11.5);
+      CAUSE.forEach(function (c, i) {
+        var x = -6.0 + i * 3.0;
+        var v = (i === pick ? c.n * (1 - fix / 100) : c.n);
+        var on = (i === pick);
+        var h = Math.max(.06, v * .28);
+        var col = on ? C.a : C.b;
+        // 原高度（淡色）作为参照，能看出修掉了多少
+        e.box([x, -2.4 + c.n * .28 / 2, 0], [2.2, c.n * .28, 2.0], col,
+          { faces: false, edge: col, lw: .8, edgeA: .3 });
+        e.box([x, -2.4 + h / 2, 0], [2.2, h, 2.0], col, { alpha: .3, edge: col, lw: 1.5 });
+        e.text([x, -2.4 + h + .3, 0], v.toFixed(1), col, 11.5);
+        e.text([x, -2.75, 1.4], c.t, on ? C.a : C.m, 11);
+      });
+      e.text([0, 3.4, 0], "总失败 " + remain().toFixed(1) + " / 100（初始 26）", C.a, 13);
+    });
+    note();
+  };
+  /* ============ 第 18 章（2）：模型网关的路由与省钱 ============ */
+  S.ch18b = function (host) {
+    var m = mount(host, "模型网关：把简单问题分给便宜模型，钱就省下来了",
+      "每个小球是一次请求，颜色代表难度。没网关时全走大模型；开了网关，网关按难度分流到三个模型。",
+      { dist: 21, pitch: .3, yaw: -.32, h: 470, auto: false, flat: true });
+    var route = 0, stage = 0, timer = null;
+    var REQ = [];
+    for (var i = 0; i < 24; i++) REQ.push(i % 3);   // 0 简单 / 1 中等 / 2 复杂
+    var PRICE = [1, 4, 16];                          // 相对单价
+    var NAME = ["小模型", "中模型", "大模型"];
+    var COL = [C.g, C.b, C.a];
+    var b1 = btn("没有网关（全走大模型）", "primary"), b2 = btn("开启网关路由");
+    b1.onclick = function () { route = 0; stage = 0; b1.className = "vz-btn primary"; b2.className = "vz-btn"; m.sc.render(); note(); };
+    b2.onclick = function () { route = 1; stage = 0; b2.className = "vz-btn primary"; b1.className = "vz-btn"; m.sc.render(); note(); };
+    m.bar.appendChild(b1); m.bar.appendChild(b2);
+    var bGo = btn("跑一批请求", "primary");
+    bGo.onclick = function () {
+      if (timer) return;
+      stage = 1; timer = setInterval(function () { stage++; m.sc.render(); if (stage > 2) { clearInterval(timer); timer = null; } }, 600);
+    };
+    m.bar.appendChild(bGo);
+    function cost() {
+      if (!route) return REQ.length * PRICE[2];
+      return REQ.reduce(function (a, t) { return a + PRICE[t]; }, 0);
+    }
+    function note() {
+      var base = REQ.length * PRICE[2], now = cost();
+      m.note.innerHTML = "<b>这一批 24 次请求的模型花费：相对值 " + now + "（全走大模型是 " + base + "）</b>" +
+        (route ? "　省了 " + Math.round((1 - now / base) * 100) + "%" : "") +
+        "<br>" + (route
+          ? "开启路由后：简单 " + REQ.filter(function (t) { return t === 0; }).length + " 次 → 小模型，" +
+            "中等 " + REQ.filter(function (t) { return t === 1; }).length + " 次 → 中模型，" +
+            "复杂 " + REQ.filter(function (t) { return t === 2; }).length + " 次 → 大模型。"
+          : "没有网关：连“今天几号”这种问题也在花大模型的价钱。") +
+        "<br>模型网关的价值不止省钱 —— 它同时是<b>统一接口、额度分配、降级开关、缓存和审计</b>的唯一落点。" +
+        "所以它通常是 AI 团队要建的第一个基础设施。";
+    }
+    m.sc.scene(function (e) {
+      e.grid(10, 1.5, C.m, -3.0, .05);
+      // 请求
+      REQ.forEach(function (t, i) {
+        var z = -2.6 + (i % 6) * 1.05, y = -1.8 + Math.floor(i / 6) * .9;
+        e.ball([-11.4, y, z], .2, COL[t], i === 0 ? "难度不同" : null, null);
+      });
+      e.text([-11.4, 2.6, 0], "请求（颜色 = 难度）", C.m, 12);
+      // 网关
+      e.box([-5.4, -.2, 0], [3.0, 5.4, 4.2], C.p,
+        { alpha: route ? .2 : .07, edge: C.p, lw: route ? 1.8 : 1, edgeA: route ? .95 : .4 });
+      e.text([-5.4, 3.0, 0], route ? "模型网关（按难度分流）" : "模型网关（已旁路）", C.p, 12.5);
+      // 三个模型
+      NAME.forEach(function (nm, i) {
+        var y = 2.7 - i * 2.7;
+        e.box([5.6, y, 0], [4.4, 1.05, 2.2], COL[i],
+          { alpha: .2, edge: COL[i], lw: 1.4 });
+        var n = route ? REQ.filter(function (t) { return t === i; }).length : (i === 2 ? REQ.length : 0);
+        e.text([5.6, y + .75, 1.5], nm + "　" + n + " 次　单价 " + PRICE[i], COL[i], 12);
+        e.line([-3.8, -.2, 0], [3.4, y, 0], COL[i], route ? 2.4 + stage * .8 : 1.3,
+          (route ? .65 : .22) + stage * .12);
+      });
+      e.text([0, -3.4, 0], "相对花费 " + cost() + "　（全走大模型 " + (REQ.length * PRICE[2]) + "）", C.a, 13);
+    });
+    note();
+  };
+
+  /* ============ 第 20 章（2）：打断 ============ */
+  S.ch20b = function (host) {
+    var m = mount(host, "打断：用户一抢话，AI 必须立刻闭嘴",
+      "绿柱是用户在说、蓝柱是 AI 在说。第 3 段用户抢话时，AI 的输出被当场截断，然后重新组织回答。",
+      { dist: 20, pitch: .34, yaw: -.26, h: 450, auto: false, flat: true });
+    var st = 0, timer = null;
+    var SEG = [
+      { who: "user", x0: -10, len: 4.2, t: "用户在说：我想退那个…" },
+      { who: "ai", x0: -5.4, len: 5.0, t: "AI：您好，退货需要…" },
+      { who: "user", x0: .2, len: 3.4, t: "用户抢话：不是！我要换货" },
+      { who: "ai", x0: 4.2, len: 5.4, t: "AI：好的，换货流程是…" }
+    ];
+    var bGo = btn("播放一次打断", "primary"), bRe = btn("重来");
+    bGo.onclick = function () {
+      if (timer) return;
+      st = 1; timer = setInterval(function () { st++; m.sc.render(); if (st > 3) { clearInterval(timer); timer = null; } }, 820);
+    };
+    bRe.onclick = function () { if (timer) { clearInterval(timer); timer = null; } st = 0; m.sc.render(); note(); };
+    m.bar.appendChild(bGo); m.bar.appendChild(bRe);
+    function note() {
+      m.note.innerHTML = "<b>" + (st === 0 ? "点“播放一次打断”开始。" :
+        st === 1 ? "第 1 段：用户在说话，系统在识别。" :
+        st === 2 ? "第 2 段：AI 开始回应 —— 注意它是一边生成一边往下说的。" :
+        "第 3 段：用户抢话，AI 的这句话被<b>当场截断</b>，随后重新组织了一轮回答。") + "</b>" +
+        "<br>文字聊天里根本没有这个问题：用户只能等你答完再打字。" +
+        "语音里必须处理三件事：<b>立刻停止播放</b>（TTS 要能中断）、<b>放弃正在生成的内容</b>（LLM 要能中断）、" +
+        "<b>把抢话内容当成对上一轮的修正</b>。" +
+        "<br>目标是把“用户开口 → AI 闭嘴”压到 300 毫秒以内；超过这个数，人就会觉得“它不听我说话”。";
+    }
+    m.sc.scene(function (e) {
+      e.grid(10, 1.5, C.m, -2.8, .05);
+      e.line([-11, 1.6, 0], [11, 1.6, 0], C.m, 1.2, .5);
+      for (var t = -10; t <= 10; t += 4) {
+        e.line([t, 1.5, 0], [t, 1.8, 0], C.m, 1, .45);
+        e.text([t, 2.0, 0], (t - (-10)) / 2 + "s", C.m, 10);
+      }
+      e.text([-11, 2.5, 0], "时间轴", C.m, 11.5);
+      SEG.forEach(function (s, i) {
+        var shown = (st === 0) || (i <= st);
+        var cut = (i === 1 && st >= 3);            // AI 被截断
+        var col = s.who === "user" ? C.g : (cut ? C.a : C.b);
+        var len = cut ? s.len * .55 : s.len;
+        if (!shown) return;
+        // 用一排小柱表示“声波"
+        for (var k = 0; k < 14; k++) {
+          var x = s.x0 + (k + .5) * (len / 14);
+          var hh = .3 + Math.abs(Math.sin(k * 1.3 + i)) * .9;
+          e.box([x, .9 - .2 + hh / 2, 0], [len / 14 * .8, hh, .9], col,
+            { faces: false, edge: col, lw: 1.1, edgeA: .9 });
+        }
+        e.text([s.x0 + len / 2, -.6, 0], s.t, col, 11);
+        if (cut) {
+          e.text([s.x0 + len + .5, .9, 0], "✕ 被截断", C.a, 12);
+          e.line([s.x0 + len, -0.3, 0], [s.x0 + len, 2.1, 0], C.a, 2.6, .9);
+        }
+      });
+      e.text([0, 3.0, 0], st >= 3 ? "打断响应目标 < 300ms（图上这一刻就是”立刻闭嘴“）" :
+        "绿 = 用户在说　蓝 = AI 在说", C.g, 12.5);
+    });
+    note();
+  };
+
+  /* ============ 第 23 章（2）：相似度阈值平面 ============ */
+  S.ch23b = function (host) {
+    var m = mount(host, "相似度阈值：这条线画在哪里，决定抓多少、误删多少",
+      "每个点是一对素材，位置越靠右表示越像。右边的红色平面就是判定阈值 —— 落在右边的会被当成重复素材。",
+      { dist: 18, pitch: .38, yaw: -.34, h: 460, auto: false, flat: true });
+    var th = 86;
+    var PAIRS = [];
+    for (var i = 0; i < 100; i++) {
+      var sim = 58 + (i % 42);
+      PAIRS.push({ s: sim, y: -1.6 + ((i * 7) % 14) * .26, z: -2.6 + ((i * 13) % 20) * .26 });
+    }
+    function X(v) { return -8.4 + (v - 55) / 45 * 16.8; }
+    slider(m, "判定为重复的相似度阈值", 60, 98, 1, th, "%", function (v) { th = v; m.sc.render(); note(); });
+    function stat() {
+      var caught = PAIRS.filter(function (p) { return p.s >= th; }).length;
+      var risk = PAIRS.filter(function (p) { return p.s >= th && p.s < th + 4; }).length;
+      return { caught: caught, risk: risk };
+    }
+    function note() {
+      var s = stat();
+      m.note.innerHTML = "<b>阈值 " + th + "%：抓到 " + s.caught + " / 100 对重复，其中 " + s.risk +
+        " 对处在”边缘地带“（误删风险）</b><br>" +
+        (th >= 92 ? "阈值太高：真正重复的素材大量漏网，素材库里继续堆冗余。"
+          : th <= 78 ? "阈值太低：不同素材被误判成重复，创意会被砍掉。"
+          : "比较平衡：既抓得住”同一张图的不同裁剪版本“，又不容易误伤。") +
+        "<br>之所以要拿阈值做动画，是因为<b>“近似去重”本质上是一次概率取舍</b>：" +
+        "阈值往左移一格，多抓一些但也多误删一些；往右移一格，反过来。" +
+        "现实里冗余的大头是“同一张图的不同裁剪与压缩版本”，精确去重根本抓不到，所以这条线必须调。";
+    }
+    m.sc.scene(function (e) {
+      e.grid(9, 1.5, C.m, -2.8, .05);
+      // 相似度刻度
+      for (var v = 60; v <= 95; v += 5) {
+        e.line([X(v), -2.6, -3.2], [X(v), -2.2, -3.2], C.m, .9, .5);
+        e.text([X(v), -2.9, -3.2], v + "分", C.m, 10);
+      }
+      var xs = X(th);
+      e.quad([[xs, -2.4, -3.0], [xs, 2.6, -3.0], [xs, 2.6, 3.0], [xs, -2.4, 3.0]], C.a, .1, C.a);
+      e.text([xs, 2.9, 0], "阈值 " + th + "%", C.a, 12.5);
+      PAIRS.forEach(function (p, i) {
+        var judged = p.s >= th, edge = judged && p.s < th + 4;
+        var col = edge ? C.a : (judged ? C.g : C.m);
+        e.ball([X(p.s), p.y, p.z], judged ? .2 : .16, col, null, null);
+      });
+      e.text([X(58), 2.2, -3.2], "左边 = 判定为“不同”　右边 = 判定为“重复”", C.m, 11.5);
+    });
+    note();
+  };
+  /* ============ 第 2 章（3）：位置编码 ============ */
+  S.ch2c = function (host) {
+    var m = mount(host, "位置编码：不告诉模型先后，它就分不清“猫追狗”和“狗追猫”",
+      "上下两排词完全一样，只是顺序不同。关掉位置编码，两排的注意力一模一样；打开，它们才分开。",
+      { dist: 17, pitch: .34, yaw: -.35, h: 460, auto: false, flat: true });
+    var on = 1;
+    var A = ["猫", "追", "狗"], B = ["狗", "追", "猫"];
+    var bOn = btn("打开位置编码", "primary"), bOff = btn("关掉位置编码");
+    bOn.onclick = function () { on = 1; bOn.className = "vz-btn primary"; bOff.className = "vz-btn"; m.sc.render(); note(); };
+    bOff.onclick = function () { on = 0; bOff.className = "vz-btn primary"; bOn.className = "vz-btn"; m.sc.render(); note(); };
+    m.bar.appendChild(bOn); m.bar.appendChild(bOff);
+    function note() {
+      var wA = on ? .62 : .62, wB = on ? .41 : .62;
+      m.note.innerHTML = "<b>" + (on ? "打开位置编码" : "关掉位置编码") + "</b><br>" +
+        "上排「猫」对「狗」的注意力权重 = <b>" + wA.toFixed(2) + "</b>　" +
+        "下排「狗」对「猫」= <b>" + wB.toFixed(2) + "</b><br>" +
+        (on
+          ? "同一个词、不同的位置，拿到的表示不一样 —— 所以模型能从“谁在前”推出谁是主语。"
+          : "两排的注意力<b>完全相同</b>：在模型眼里，“猫追狗”和“狗追猫”是一句话。" +
+            "因为注意力本身不区分顺序，它是“对着一堆词做加权”，谁先谁后不影响计算结果。") +
+        "<br>这就是位置编码存在的唯一理由：<b>把“顺序”这件事显式地塞进输入</b>。" +
+        "Transformer 靠它才认得出语序。";
+    }
+    m.sc.scene(function (e) {
+      e.grid(8, 1.5, C.m, -3.0, .05);
+      [[A, 2.3, C.b], [B, -2.3, C.p]].forEach(function (row, ri) {
+        var words = row[0], z = row[1], col = row[2];
+        words.forEach(function (w, i) {
+          var x = -4.4 + i * 4.4;
+          e.line([x, -2.6, z], [x, .2, z], C.m, .8, .25);
+          e.ball([x, .5, z], .34, col, w, null);
+          e.text([x, 1.15, z], "位置 " + i, C.m, 11);
+        });
+        // 注意力连线：第一个词看向第三个词
+        var w = (ri === 0 ? (on ? .62 : .62) : (on ? .41 : .62));
+        e.line([-4.4, .5, z], [4.4, .5, z], w > .5 ? C.a : C.m, .8 + w * 5, .25 + w * .6);
+        e.text([-7.4, .5, z], ri === 0 ? "上排" : "下排", col, 12);
+      });
+      e.text([0, 3.2, 0],
+        on ? "位置信息让两排的注意力的“粗细”不一样了" : "两排的注意力一模一样 —— 模型看不出顺序",
+        on ? C.a : C.m, 12.5);
+    });
+    note();
+  };
+
+  /* ============ 第 8 章（3）：混合检索的融合 ============ */
+  S.ch8c = function (host) {
+    var m = mount(host, "混合检索：两路召回怎么合并成一份名单",
+      "左边是向量召回、右边是关键词召回，它们给出的名次不一样。中间那份才是最终进上下文的结果。",
+      { dist: 19, pitch: .32, yaw: -.3, h: 470, auto: false, flat: true });
+    var stage = 0, timer = null;
+    // 前四条是真正该进上下文的（含两条“数字型号”类，只有关键词能召回对）
+    var VEC = ["售后政策", "退货流程", "尺码对照表", "物流时效", "促销规则"];
+    var KEY = ["型号 A12 保修", "售后政策", "型号 A12 电池", "退货流程", "尺码对照表"];
+    var bGo = btn("演示融合过程", "primary");
+    bGo.onclick = function () {
+      if (timer) return;
+      stage = 1;
+      timer = setInterval(function () {
+        stage++;
+        if (stage > 3) { clearInterval(timer); timer = null; }
+        m.sc.render(); note();
+      }, 700);
+    };
+    m.bar.appendChild(bGo);
+    function fused() {
+      var all = [];
+      VEC.forEach(function (t, i) { all.push({ t: t, s: 1 / (60 + i) + 1 / (60 + (KEY.indexOf(t) < 0 ? 99 : KEY.indexOf(t))), from: KEY.indexOf(t) < 0 ? "向量" : "两路" }); });
+      KEY.forEach(function (t, i) {
+        if (VEC.indexOf(t) < 0) all.push({ t: t, s: 1 / (60 + i) + 1 / (60 + 99), from: "关键词" });
+      });
+      return all.sort(function (a, b) { return b.s - a.s; });
+    }
+    function note() {
+      var f = fused();
+      m.note.innerHTML = "<b>融合后的名单（按融合分数排序）</b><br>" +
+        f.slice(0, 6).map(function (x, i) { return (i + 1) + ". " + x.t + "（" + x.from + "）"; }).join("<br>") +
+        "<br><b>关键点</b>：两路召回各自漏掉的东西不一样 —— " +
+        "「型号 A12 保修」这种带型号的问题，向量检索会把它和普通保修政策混在一起，只有关键词能精确命中；" +
+        "而「尺码对照表」这种同义表达，关键词搜“尺寸表”就抓瞎。" +
+        "<br>所以融合不是简单拼接，而是<b>把两边的名次换算成分数再加权合并，并去掉重复项</b>。" +
+        "这正是“混合检索”比单一方案稳的原因。";
+    }
+    m.sc.scene(function (e) {
+      e.grid(9, 1.5, C.m, -3.0, .05);
+      function col(list, x, colr, label) {
+        e.text([x, 3.1, 0], label, colr, 12.5);
+        list.forEach(function (t, i) {
+          var on = stage === 0 || stage >= 1;
+          e.box([x, 1.9 - i * 1.05, 0], [3.2, .72, 1.4], colr,
+            { alpha: on ? .22 : .1, edge: colr, lw: 1 });
+          e.text([x, 1.9 - i * 1.05, .9], (i + 1) + ". " + t, colr, 10.5);
+        });
+      }
+      col(VEC, -6.6, C.b, "向量召回（按语义相似）");
+      col(KEY, 6.6, C.y, "关键词召回（按字面命中）");
+      // 中间融合列
+      var f = fused();
+      e.text([0, 3.1, 0], "融合去重后的名单", C.g, 13);
+      f.slice(0, 5).forEach(function (x, i) {
+        var appear = stage === 0 || stage >= Math.min(3, i + 2);
+        if (!appear) return;
+        e.box([0, 1.9 - i * 1.15, 0], [3.6, .8, 1.6], C.g,
+          { alpha: .3, edge: C.g, lw: 1.5 });
+        e.text([0, 1.9 - i * 1.15, 1.0], x.t, C.g, 11);
+      });
+      var src = stage >= 2 ? 1 : 0;
+      e.line([-4.8, 1.6, 0], [-1.9, 1.6, 0], C.b, 1.6 + src * 1.4, .5 + src * .4);
+      e.line([4.8, 1.6, 0], [1.9, 1.6, 0], C.y, 1.6 + src * 1.4, .5 + src * .4);
+      e.text([0, -2.6, 0], "两路结果合并 → 去重 → 按融合分数重排", C.m, 12);
+    });
+    note();
+  };
+
+  /* ============ 第 8 章（4）：重排是怎么把对的提上来的 ============ */
+  S.ch8d = function (host) {
+    var m = mount(host, "重排：把正确的那条从第 4 位提到第 1 位",
+      "召回是粗筛，只按向量距离排；重排会用更精细的模型把“问题 + 文档”放一起再比一次。点“开始重排”看柱子换位。",
+      { dist: 18, pitch: .44, yaw: -.35, h: 450, auto: false, flat: true });
+    var docs = [
+      { t: "售后政策总则", recall: .91, rerank: .42 },
+      { t: "尺码对照表", recall: .88, rerank: .38 },
+      { t: "物流时效说明", recall: .86, rerank: .31 },
+      { t: "A12 型号保修条款", recall: .82, rerank: .96 },   // 真正相关的
+      { t: "会员积分规则", recall: .79, rerank: .12 },
+      { t: "促销活动说明", recall: .77, rerank: .09 }
+    ];
+    var phase = 0, timer = null, prog = 0;
+    var bGo = btn("开始重排", "primary"), bRe = btn("复位");
+    bGo.onclick = function () {
+      if (timer) return;
+      prog = 0; phase = 1;
+      timer = setInterval(function () {
+        prog += .08;
+        if (prog >= 1) { prog = 1; clearInterval(timer); timer = null; }
+        m.sc.render(); note();
+      }, 40);
+    };
+    bRe.onclick = function () {
+      if (timer) { clearInterval(timer); timer = null; }
+      phase = 0; prog = 0; m.sc.render(); note();
+    };
+    m.bar.appendChild(bGo); m.bar.appendChild(bRe);
+    function rankBy(key) {
+      return docs.map(function (d, i) { return { d: d, i: i }; })
+        .sort(function (a, b) { return b.d[key] - a.d[key]; });
+    }
+    function note() {
+      var r0 = rankBy("recall"), r1 = rankBy("rerank");
+      m.note.innerHTML = "<b>" + (phase ? "重排后" : "召回后") + "的前三名</b><br>" +
+        (phase ? r1 : r0).slice(0, 3).map(function (x, i) {
+          return (i + 1) + ". " + x.d.t + "（重排分 " + x.d.rerank.toFixed(2) + "）";
+        }).join("<br>") +
+        "<br>召回阶段按向量距离排，真正相关的「A12 型号保修条款」只排第 4；" +
+        "重排模型把问题和文档放一起细看之后，把它提到了第 1。" +
+        "<br><b>为什么说重排性价比最高</b>：它不动数据、不动 embedding、不换模型，" +
+        "只是在召回和生成之间加一环，就能把“进上下文的那几条”从“差不多”变成“真的对”。";
+    }
+    m.sc.scene(function (e) {
+      e.grid(9, 1.5, C.m, -2.8, .05);
+      e.vScale(-9.2, -2.6, -2.2, 2.4, 0, 100, 4, C.m, "%");
+      e.text([-9.2, 2.9, -2.6], "相关度", C.m, 11.5);
+      var order = phase ? rankBy("rerank") : rankBy("recall");
+      var from = rankBy("recall"), to = rankBy("rerank");
+      var posOf = {};
+      docs.forEach(function (d, i) { posOf[i] = 0; });
+      if (phase) {
+        from.forEach(function (x, slot) {
+          var target = to.findIndex(function (y) { return y.i === x.i; });
+          posOf[x.i] = slot + (target - slot) * prog;
+        });
+      } else {
+        from.forEach(function (x, slot) { posOf[x.i] = slot; });
+      }
+      docs.forEach(function (d, i) {
+        var slot = posOf[i], x = -7.4 + slot * 3.4;
+        var val = phase ? d.rerank : d.recall;
+        var isAns = (i === 3);
+        var col = isAns ? C.a : (val > .5 ? C.b : C.m);
+        var h = Math.max(.25, val * 4.6);
+        e.box([x, -2.2 + h / 2, 0], [2.4, h, 2.0], col,
+          { alpha: .28, edge: col, lw: isAns ? 2 : 1.1 });
+        e.text([x, -2.2 + h + .32, 0], val.toFixed(2), col, 11);
+        e.text([x, -2.65, 1.3], d.t, col, 11);
+        e.text([x, 2.75 - (isAns ? .0 : 0), 0], "第 " + (order.findIndex(function (y) { return y.i === i; }) + 1) + " 位",
+          C.m, 10.5);
+      });
+      e.text([0, 3.35, 0], phase ? "重排后的顺序（真正相关的已提到第 1）" : "召回后的顺序（真正相关的排在第 4）",
+        phase ? C.a : C.m, 12.5);
+    });
+    note();
+  };
   /* ============ 第 15 章（4）：数据量 × 质量 → 效果曲面 ============ */
   S.ch15c = function (host) {
     var m = mount(host, "效果曲面：数量很快到顶，质量才是持续变量",
       "横轴是数据量（对数），纵深是标注质量，高度是最终效果。表面在数据量那一侧很快变平。",
-      { dist: 16, pitch: .82, yaw: -.42, h: 470, auto: false });
+      { dist: 16, pitch: .82, yaw: -.42, h: 470, auto: false, flat: true });
     var n = 3000, q = 85;
     function eff(a, b) { return 40 + Math.min(1, a / 5000) * 6 + (b - 50) * .62; }
     function X(a) { return -3.3 + (Math.log10(a) - 2) / (Math.log10(20000) - 2) * 6.6; }
@@ -6266,6 +6853,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     }
     m.sc.scene(function (e) {
       var N = 12;
+      e.grid(9, 1.5, C.m, -2.9, .045);
       e.vScale(-4.4, -3.6, -2.5, 3.2, 40, 100, 6, C.m, "");
       e.text([-4.4, 3.7, -3.6], "效果分", C.m, 12);
       // 曲面网格
@@ -6304,7 +6892,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch22b = function (host) {
     var m = mount(host, "一致性校准：AI 打分和人工打分对得上吗",
       "横轴是人工打分，纵深是 AI 打分。点越贴近对角线，说明两边判断越一致；偏得远的维度，就是评分标准没写清。",
-      { dist: 15, pitch: .5, yaw: -.55, h: 460, auto: false });
+      { dist: 15, pitch: .5, yaw: -.55, h: 460, auto: false, flat: true });
     var clr = .45;
     var DIMS = [
       { n: "开场", h: 88, e: 2 }, { n: "需求挖掘", h: 62, e: -9 }, { n: "产品介绍", h: 85, e: 4 },
@@ -6365,7 +6953,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch3d = function (host) {
     var m = mount(host, "温度：同一个概率分布，采样出来完全不同",
       "八根柱子是八个候选词的概率，前面那堆小球是“采 20 次会落在哪”。拖温度，看分布被压平或拉尖。",
-      { dist: 18, pitch: .4, yaw: -.32, h: 460, auto: false });
+      { dist: 18, pitch: .4, yaw: -.32, h: 460, auto: false, flat: true });
     var T = 1.0;
     var W = [.34, .21, .14, .11, .08, .05, .04, .03];
     var NW = ["客服", "订单", "退货", "物流", "价格", "发票", "投诉", "其他"];
@@ -6416,7 +7004,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch10b = function (host) {
     var m = mount(host, "先过滤还是先检索：同一个问题，能用的资料差很多",
       "紫点是查询，绿球是符合条件（有权限）的资料，灰块不符合。离查询最近的八条全是灰块——这正是坑所在。",
-      { dist: 19, pitch: .34, yaw: -.4, h: 450, auto: false });
+      { dist: 19, pitch: .34, yaw: -.4, h: 450, auto: false, flat: true });
     var k = 4, pre = 0;
     // 近距离八条全是不合格，远处才是合格的
     var PTS = [];
@@ -6449,7 +7037,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       e.grid(8, 1.5, C.m, -2.2, .04);
       var r = result(), inTop = {};
       r.top.forEach(function (q) { inTop[q.ord] = 1; });
-      // 从查询连到被选中的那几条，让"最近的 k 条是哪些"一目了然
+      // 从查询连到被选中的那几条，让“最近的 k 条是哪些”一目了然
       r.top.forEach(function (q) {
         e.line([0, -2.2, 0], q.p, q.ok ? C.g : C.a, 1.6, .55);
       });
