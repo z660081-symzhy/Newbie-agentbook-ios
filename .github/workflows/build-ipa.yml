@@ -1,0 +1,74 @@
+name: 云端编译 IPA
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+    name: 编译 AgentBook
+    runs-on: macos-latest
+
+    steps:
+      - name: 取出代码
+        uses: actions/checkout@v4
+
+      - name: 选择最新可用的 Xcode
+        run: |
+          echo "== 云端预装的 Xcode =="
+          ls -d /Applications/Xcode*.app 2>/dev/null || echo "（没找到 Xcode.app）"
+          LATEST=$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -1)
+          if [ -n "$LATEST" ]; then
+            sudo xcode-select -s "$LATEST/Contents/Developer"
+          fi
+          echo "== 当前使用 =="
+          xcodebuild -version
+          swift --version
+
+      - name: 确认工程与 scheme
+        working-directory: AgentBook
+        run: |
+          xcodebuild -list -project AgentBook.xcodeproj
+
+      - name: 编译（关闭签名，交给侧载工具重签）
+        working-directory: AgentBook
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project AgentBook.xcodeproj \
+            -scheme AgentBook \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: 打包成 .ipa
+        working-directory: AgentBook
+        run: |
+          APP="build/Build/Products/Release-iphoneos/AgentBook.app"
+          if [ ! -d "$APP" ]; then
+            echo "===== 没有找到 app 产物，列出产物目录方便排查 ====="
+            find build/Build/Products -maxdepth 3 -name "*.app" -print 2>/dev/null || true
+            exit 1
+          fi
+          rm -rf Payload AgentBook.ipa
+          mkdir -p Payload
+          cp -R "$APP" Payload/
+          zip -qr AgentBook.ipa Payload
+          rm -rf Payload
+          ls -lh AgentBook.ipa
+          echo "IPA 就绪"
+
+      - name: 上传产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: AgentBook-ipa
+          path: AgentBook/AgentBook.ipa
+          if-no-files-found: error

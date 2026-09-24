@@ -1,0 +1,17 @@
+# 编译产物（云端自己会生成，不用提交）
+build/
+DerivedData/
+*.ipa
+Payload/
+*.xcarchive
+
+# macOS / Xcode 杂项
+.DS_Store
+**/.DS_Store
+xcuserdata/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+
+# 临时文件
+*.log
+*.tmp
