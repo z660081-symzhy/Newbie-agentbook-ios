@@ -626,7 +626,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>这就好比一个团队审方案：与其让一个人同时看财务、法务、技术，不如开三个组分工看，最后汇总。</p>
 <p><strong>关于第 7 步：什么叫&quot;很多层&quot;。</strong></p>
 <p>一个 7B（70 亿参数）的模型，通常有 32 层左右。层数越多、每层越宽，参数量越大，模型能装下的&quot;知识&quot;和&quot;推理链条&quot;就越长。<strong>这就是为什么大模型叫&quot;大&quot;模型——主要指这两个数字大。</strong></p>
-<div class="viz v3d" data-v3="ch2b"></div><div class="viz v3d" data-v3="ch2c"></div><h3>训练的三个阶段（这是面试高频考点）</h3>
+<div class="viz v3d" data-v3="ch2b"></div><div class="viz v3d" data-v3="ch2c"></div><div class="viz v3d" data-v3="ch2d"></div><h3>训练的三个阶段（这是面试高频考点）</h3>
 <p>一个能对话的模型，不是一次训练出来的，而是分三个阶段。</p>
 <table><thead><tr><th>阶段</th><th>它在干什么</th><th>类比</th><th>数据从哪来</th><th>结果是什么</th></tr></thead><tbody><tr><td>一、预训练（Pre-training）</td><td>读海量文本，反复练习&quot;猜下一个字&quot;</td><td>一个孩子读了上万本书</td><td>互联网、书籍、代码，几万亿字</td><td>学会了语言、常识、世界知识，但不会听指令</td></tr><tr><td>二、指令微调（SFT）</td><td>用&quot;提问 + 标准答案&quot;的样本教它&quot;听指令办事&quot;</td><td>上补习班，学会答题格式</td><td>人工标注的问答对，几万到几百万条</td><td>能按指令对话、能写文案、能回答问题</td></tr><tr><td>三、对齐（RLHF / DPO）</td><td>让人类给不同回答打分，教它&quot;哪个回答更好&quot;</td><td>老员工带新人，告诉他什么是好服务</td><td>人类偏好排序数据</td><td>更有帮助、更安全、更少胡说、更符合人类口味</td></tr></tbody></table>
 <p><strong>这三阶段对应到你的工作，有一个非常实际的推论：</strong></p>
@@ -939,7 +939,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>长对话不能无限拼接历史，必须压缩。三种主流手段：</p>
 <table><thead><tr><th>手段</th><th>做法</th><th>优点</th><th>缺点</th></tr></thead><tbody><tr><td>滑动窗口</td><td>只保留最近 N 轮</td><td>简单、便宜</td><td>早期关键信息会丢</td></tr><tr><td>滚动摘要</td><td>把旧对话总结成一段摘要，随新对话一起带上</td><td>保留长期信息</td><td>摘要本身会失真，需要定期重写</td></tr><tr><td>选择性保留</td><td>只保留关键实体、决定、待办，丢弃寒暄</td><td>最省、最准</td><td>需要判断&quot;什么算关键&quot;，实现复杂</td></tr></tbody></table>
 <p>实战里最常见的是<strong>滑动窗口 + 滚动摘要</strong>的组合：最近 3 到 5 轮原样保留，更早的压缩成摘要。</p>
-<div class="viz v3d" data-v3="ch6"></div><div class="viz v3d" data-v3="ch6b"></div><h3>五、提示词要当代码管理</h3>
+<div class="viz v3d" data-v3="ch6b"></div><h3>五、提示词要当代码管理</h3>
 <p>这一条是&quot;专业&quot;和&quot;业余&quot;的分界线，也是面试里非常好用的一个细节：</p>
 <ul><li><strong>版本化</strong>：提示词要存文件、要有版本号、要有修改记录。因为它是产品行为的核心资产。</li><li><strong>可配置</strong>：业务规则（比如禁答清单、话术模板）要外置成配置，不要写死在提示词里。业务的人改规则，不该找你改代码。</li><li><strong>可回归</strong>：每次改提示词，都要跑一遍固定测试集，确认老问题没退化。这就是&quot;提示词回归测试&quot;，是评测体系的一部分。</li></ul>
 <h3>六、五个常见坑</h3>
@@ -1077,7 +1077,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>在线部分（用户每次提问都跑）</strong></p>
 <ol><li><strong>召回（Retrieval）</strong>：用户问题转成向量，去库里找最像的若干块。</li><li><strong>重排（Rerank）</strong>：把召回的候选按&quot;真的有多相关&quot;重新排一遍，取最相关的几条。</li><li><strong>生成（Generation）</strong>：把这几条资料和用户问题一起交给模型，让它带着资料回答。</li></ol>
 <p>下面逐个讲坑。</p>
-<div class="viz v3d" data-v3="ch8b"></div><h3>四、环节一、二：数据准备与切块（最容易做砸的地方）</h3>
+<div class="viz v3d" data-v3="ch8b"></div><h3>四、数据准备与切块：最容易做砸的地方（环节一、二）</h3>
 <p><strong>解析阶段的坑</strong>：PDF 是 AI 数据处理的噩梦。表格会错乱、跨页文字会断开、扫描件需要 OCR（OCR 就是把扫描图片上的字识别成可编辑的文字）、页眉页脚会混入正文。<strong>真实项目里，解析质量差导致的检索失败，占比非常高。</strong></p>
 <p>对策：解析后要有抽查机制；关键文档要人工校对；保留页码等位置信息以便溯源。</p>
 <p><strong>切块阶段的核心矛盾</strong>：块切太小，信息不完整，模型拿到一半话不知道在说什么；块切太大，语义被平均，检索和上下文都变差。</p>
@@ -1089,19 +1089,19 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>元数据有三个巨大作用：</p>
 <ol><li><strong>过滤</strong>：先在&quot;售后政策&quot;这个范围内检索，而不是在整个资料库里瞎找。</li><li><strong>溯源</strong>：回答时告诉用户&quot;依据《退换货政策》第 3 条&quot;。</li><li><strong>权限</strong>：不同角色只能看到自己有权限的资料。</li></ol>
 <p><strong>没有元数据的 RAG，一定会在业务变复杂时崩溃。</strong></p>
-<div class="viz v3d" data-v3="ch8"></div><h3>五、环节三：索引</h3>
+<div class="viz v3d" data-v3="ch8"></div><h3>五、索引：为什么需要它（环节三）</h3>
 <p>把向量存起来，并且建一个能&quot;快速找到最近邻&quot;的结构。这就是向量数据库干的事。细节在第 10 章，这里你只需要记住一句话：</p>
 <blockquote><p><strong>为了快，几乎所有向量数据库都用&quot;近似&quot;算法——用一点点准确率换取几十倍的检索速度。</strong></p></blockquote>
-<h3>六、环节四：召回——为什么要&quot;混合&quot;</h3>
+<h3>六、召回：为什么要&quot;混合&quot;（环节四）</h3>
 <p>第 7 章讲过，纯向量检索不擅长数字、型号、专有名词和否定。所以生产系统普遍采用<strong>混合检索</strong>：</p>
 <table><thead><tr><th>检索方式</th><th>擅长</th><th>不擅长</th></tr></thead><tbody><tr><td>向量检索</td><td>同义表达、模糊意图</td><td>精确串、数字、否定</td></tr><tr><td>关键词检索（如 BM25）</td><td>精确匹配、数字、专业术语</td><td>同义表达</td></tr></tbody></table>
 <p>（BM25 是一种经典的关键词打分算法，可以理解成&quot;把词出现的次数和这个词有多稀有都算进去&quot;的加强版统计。你不用会算，只要知道它和向量检索是两条腿。）</p>
 <p>两者结果<strong>并行取回，合并去重</strong>，才能覆盖更多情况。这个融合过程有专门的算法（比如倒数排名融合），你不用会算，但要知道&quot;两路召回结果要合并&quot;这件事。</p>
 <p><strong>召回数量的取舍</strong>：召回太少，可能漏掉正确文档；召回太多，重排负担重、噪声大。经验做法是<strong>先各召回 20 到 50 条，重排后取 3 到 5 条</strong>。</p>
-<div class="viz v3d" data-v3="ch8c"></div><h3>七、环节五：重排——性价比最高的一个改进</h3>
+<div class="viz v3d" data-v3="ch8c"></div><h3>七、重排：性价比最高的一个改进（环节五）</h3>
 <p>召回阶段用的是&quot;粗筛&quot;（向量相似度），它的判断比较粗糙。重排用的是更精细的模型，把&quot;问题 + 文档&quot;放在一起仔细比对，给出更准确的相关度。</p>
 <p><strong>为什么说它性价比最高？</strong> 因为它不动数据、不动模型，只加一个环节，就能明显提升最终进入上下文的资料质量。很多团队的 RAG 效果提升最大的那一次改动，就是加了重排。（本节末尾的演示就是这件事：看正确的那一条怎么从第 4 位被提到第 1 位。）</p>
-<div class="viz v3d" data-v3="ch8d"></div><h3>八、环节六：生成——提示词的四个要点</h3>
+<div class="viz v3d" data-v3="ch8d"></div><h3>八、生成：提示词的四个要点（环节六）</h3>
 <p>到了这一步，资料已经在手里了，提示词要保证四件事：</p>
 <ol><li><strong>只能用资料回答</strong>：明确写&quot;不得使用资料之外的信息&quot;。</li><li><strong>允许说不知道</strong>：写&quot;资料中没有相关信息时，回答&#x27;资料未提及&#x27;，不要猜测&quot;。<strong>这一条不写，模型一定会编。</strong></li><li><strong>强制引用</strong>：要求标注答案来自哪一段。</li><li><strong>说明冲突处理</strong>：如果多份资料互相矛盾，要求指出冲突，而不是自己选一个。</li></ol>
 <h3>九、把整条链路串起来：一个电商例子</h3>
@@ -1595,6 +1595,13 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <table><thead><tr><th>指标</th><th>怎么算</th><th>看它做什么</th></tr></thead><tbody><tr><td>任务成功率</td><td>完成任务数 ÷ 总任务数</td><td>最顶层的结果指标，要配合&quot;降级成功&quot;一起看，否则会把降级当成失败</td></tr><tr><td>步数分布</td><td>不只看平均值，要看<strong>最长的 5%</strong></td><td>绕圈的行为不会体现在均值上，只会体现在尾部</td></tr><tr><td>单任务成本</td><td>每完成一个任务花掉的 token 与时间</td><td>判断上下文管理和提示词的改动到底有没有真省钱</td></tr><tr><td>人工介入率</td><td>需要人接手的比例</td><td>降级与转人工设计得好不好，直接体现在这个数上</td></tr></tbody></table>
 <p><strong>还有一条最便宜、最容易被忽略的改进：把工具的错误信息写成给人看的话。</strong></p>
 <ul><li>不要回填 <code>Error 400</code>，要回填&quot;订单号必须是数字，你传的是 ORD-12345，请去掉前缀&quot;。</li><li>同一类错误连续出现两次，就不要再把原始错误丢给模型了，直接附上&quot;正确用法示例&quot;。</li><li>原则一句话：<strong>工具的错误信息，是给模型看的提示词，不是给运维看的日志。</strong></li></ul>
+<h4>Harness 回归：用一套&quot;金标任务&quot;跑改动前后</h4>
+<p>上面四个指标如果只是在线上看，那叫<strong>监控</strong>。监控告诉你&quot;今天变差了&quot;， 但<strong>回答不了&quot;是不是我昨天那次改动弄差的&quot;</strong>。要做到后者，你需要一套金标任务集：</p>
+<ol><li><strong>准备 20~50 个真实任务</strong>，覆盖四类：常规能成功的、卡在边界的、会失败要重试的、该转人工的。</li></ol>
+<p><strong>不要自己编题</strong> —— 编出来的题测不出真问题，直接用线上攒下来的。</p>
+<ol><li><strong>给每个任务记四个数</strong>：是否成功（含降级成功）、用了几步、花了多少、要不要人接手。</li><li><strong>每次改 Harness，改动前后各跑一遍</strong>。四个数一起比，<strong>任何一个变差都要能解释清楚</strong>；</li></ol>
+<p>解释不了，就别上线。</p>
+<blockquote><p>一句话记住：<strong>没有金标任务集，你就没有资格说&quot;这次改动让 Agent 变好了&quot;。</strong></p><p>面试里说出这一条，会明显区别于&quot;我调了调提示词，感觉好多了&quot;的人 ——</p><p>因为前者是工程，后者是玄学。</p></blockquote>
 <h3>动手体验</h3>
 <ol><li><strong>手动画一遍 Agent Loop</strong>。拿你的业务场景（比如&quot;帮用户处理退换货&quot;），画出五步循环，并标出四个退出条件。</li><li><strong>找一次&quot;卡住&quot;的体验</strong>。用一个能调工具的 AI 产品，给它一个会失败的任务，观察它转几圈、什么时候放弃。<strong>这是理解退出条件的最好方式。</strong></li><li><strong>写一份项目说明文件</strong>。把&quot;我们项目的规矩&quot;写成一份文档（命名约定、必须遵循的流程、常见坑），然后让 AI 按它工作。<strong>这是 Skills 和项目记忆的最小实践。</strong></li><li><strong>做一个上下文实验</strong>：让 AI 处理一个需要翻很多资料的任务，观察它在什么时候开始&quot;忘记&quot;前面的内容。</li><li><strong>给失败分类</strong>：挑一个你熟悉的业务，写出它的&quot;可重试 / 该降级 / 该转人工&quot;各是什么。<strong>这三行写出来，就是一套完整的收尾策略。</strong></li></ol>
 <h3>现实校准</h3>
@@ -2406,6 +2413,12 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <table><thead><tr><th>字段</th><th>作用</th><th>例子</th></tr></thead><tbody><tr><td>触发条件</td><td>什么时候这条经验适用</td><td>用户问&quot;订单到哪了&quot;且订单号有效</td></tr><tr><td>动作</td><td>该做什么</td><td>先查订单状态，若为已发货再查物流，<strong>不要重复查订单</strong></td></tr><tr><td>结果</td><td>这么做的好处</td><td>平均步数从 9 降到 5</td></tr><tr><td>适用范围</td><td>别用在哪</td><td>不适用于已取消订单、跨境订单</td></tr><tr><td>置信度</td><td>有多可信（0~1）</td><td>0.8，来自 200 次成功执行</td></tr><tr><td>谁写的</td><td>机器生成还是人确认</td><td>机器生成 + 人工确认</td></tr><tr><td>什么时候复核</td><td>过期了要重看</td><td>30 天后复核</td></tr></tbody></table>
 <p><strong>最后三行才是关键。</strong> 少了&quot;适用范围&quot;，这条经验会被用到不该用的场景，<strong>反而制造新错误</strong>； 少了&quot;置信度&quot;，系统分不清&quot;跑过一次&quot;和&quot;跑过两百次&quot;的经验哪个该优先； 少了&quot;复核时间&quot;，半年前的经验会一直生效，而业务早就变了。</p>
 <blockquote><p>面试话术：**&quot;我们的经验条目带适用范围、置信度和复核时间。</p><p>因为经验如果用错场景，危害比没有经验更大 —— 它会让你很自信地做错事。&quot;**</p></blockquote>
+<h3>十一、补充：经验写下来了，怎么在需要的时候找出来</h3>
+<p>经验库最怕的不是&quot;写得少&quot;，而是<strong>&quot;写了没人用&quot;</strong>。写进去 200 条、一条也没被用上， 那它就是个摆设，对&quot;越跑越快&quot;没有任何贡献。所以真正的难点在<strong>取用</strong>：</p>
+<p>三种做法，从稳到贵：</p>
+<table><thead><tr><th>做法</th><th>怎么工作</th><th>什么时候选它</th></tr></thead><tbody><tr><td><strong>按触发条件规则匹配</strong></td><td>把经验里的&quot;如果…就…&quot;写成规则，命中就直接用</td><td>最稳、最容易落地。<strong>一开始就该用这个</strong></td></tr><tr><td><strong>当资料去向量检索</strong></td><td>把经验当成一片片文档，任务来了先检索相关经验</td><td>经验条目多、场景五花八门时补上</td></tr><tr><td><strong>按任务类型建索引 + 人工确认</strong></td><td>同类任务归一堆，由人确认哪些经验适用</td><td>最准但最贵，只在关键业务上用</td></tr></tbody></table>
+<p>判断标准只有一条：<strong>这条经验，得在&quot;它适用的那一刻&quot;被拿出来。</strong> 所以&quot;触发条件&quot;要写得像一句能被程序判断的话（&quot;订单号有效且状态为已发货&quot;）， 而不是&quot;遇到物流类问题&quot;。<strong>前者能自动命中，后者只能靠人记。</strong></p>
+<blockquote><p>面试话术：**&quot;我们的经验库不是写完就存着 —— 每条经验都带触发条件，</p><p>任务走到对应场景时会自动被捞出来。经验如果用不上，写得再多也不产生价值。&quot;**</p></blockquote>
 <h3>动手体验</h3>
 <ol><li><strong>选一个你自己的多步任务</strong>（比如&quot;整理本周的所有会议纪要并生成待办&quot;），画出它的 Agent Loop，标出四道退出闸门。</li><li><strong>找一次它卡住的情况</strong>，记录下&quot;它为什么会卡&quot;。这就是你的无进展检测的触发条件。</li><li><strong>建一份经验文件</strong>：把&quot;这类任务要注意什么&quot;写成规则，下次让 AI 先读它再干活。</li><li><strong>做一次回放实验</strong>：让 AI 做一个多步任务，然后让它自己复盘&quot;第几步做错了、应该怎么做&quot;。<strong>这个动作就是自进化的最小形态。</strong></li></ol>
 <h3>现实校准</h3>
@@ -4965,7 +4978,10 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   };
 
   /* ============ 第 6 章：Q·Kᵀ 矩阵乘法 ============ */
-  S.ch6 = function (host) {
+  // 这个演示讲的是 Q × Kᵀ（注意力矩阵本身），原本挂在第 6 章"上下文工程"下面，
+  // 主题对不上 —— 那是讲提示词和上下文预算的地方。现在挪到第 2 章
+  // "概念逐个拆解"，也就是正文真正讲 Q/K/V 的地方，并顺手把 key 改成 ch2d。
+  S.ch2d = function (host) {
     var m = mount(host, "注意力就是一次矩阵乘法：Q × Kᵀ",
       "每一格 = 一个词对另一个词的关注度。点“播放”看格子是怎么被算出来的。", { dist: 16, pitch: .5, h: 420, grow: true });
     var T = 6, D = 4, i = 0, j = 0, timer = null;
@@ -5216,7 +5232,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   /* ============ 第 11 章：知识图谱三维 ============ */
   S.ch11 = function (host) {
     var m = mount(host, "知识图谱：把文档变成一张能“顺着走”的网",
-      "点是实体，线是关系。点一个节点看它的关系；也可以看一次两跳推理是怎么走出来的。",
+      "点是实体，线是关系。这个演示的重点是两组对照：同一个问题，「沿关系走两跳」能答出来，「只找最像的」却找不到答案。",
       { dist: 15, pitch: .36, h: 440, grow: true });
     var nodes = [
       { t: "甲公司", p: [0, .6, 0], c: C.a },
@@ -5231,8 +5247,29 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       [0, 1, "CEO"], [1, 2, "曾任高管"], [2, 3, "位于"],
       [0, 4, "生产"], [4, 5, "由…负责"], [5, 6, "处理"]
     ];
-    var sel = 0, showPath = false, t1 = 0;
+    var sel = 0, showPath = false, t1 = 0, mode = "kg", TOP = 3;
+    // 查询 = 甲公司；正确答案 = 乙公司（要靠"甲公司→张三→乙公司"两跳才到得了）
+    var QR = 0, ANS = 2;
+    function dist(a, b) {
+      return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2) + Math.pow(a[2] - b[2], 2));
+    }
+    // 纯按"离查询近不近"排队列 —— 这就是向量检索在做的事
+    function ranked() {
+      var q = nodes[QR].p, arr = [];
+      nodes.forEach(function (n, k) { if (k !== QR) arr.push({ k: k, d: dist(q, n.p) }); });
+      arr.sort(function (a, b) { return a.d - b.d; });
+      return arr;
+    }
+    function ansRank() {
+      var r = -1;
+      ranked().forEach(function (o, i) { if (o.k === ANS) r = i + 1; });
+      return r;
+    }
     m.sc.onPick = function (h) { sel = h.tag; showPath = false; m.sc.render(); drawNote(); };
+    var bKg = btn("图谱：沿关系走", "primary"), bVec = btn("向量：只找最像的");
+    bKg.onclick = function () { mode = "kg"; bKg.className = "vz-btn primary"; bVec.className = "vz-btn"; showPath = false; m.sc.render(); drawNote(); };
+    bVec.onclick = function () { mode = "vec"; bVec.className = "vz-btn primary"; bKg.className = "vz-btn"; showPath = false; m.sc.render(); drawNote(); };
+    m.bar.appendChild(bKg); m.bar.appendChild(bVec);
     var bPath = btn("演示两跳推理", "primary");
     bPath.onclick = function () {
       showPath = true; t1 = 0;
@@ -5241,6 +5278,18 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     };
     m.bar.appendChild(bPath);
     function drawNote() {
+      if (mode === "vec") {
+        var rk = ranked(), r = ansRank();
+        m.note.innerHTML = "<b>问题：甲公司的 CEO 之前在哪家公司任职？</b><br>" +
+          "向量检索只会做一件事：找「和这句话最像的段落」。它按距离排出前 " + TOP + " 名：" +
+          rk.slice(0, TOP).map(function (o) { return nodes[o.k].t; }).join("、") + "。<br>" +
+          "而正确答案 <b>" + nodes[ANS].t + "</b> 的相似度只排到第 <b>" + r + "</b> 名，" +
+          "<b>根本没进前 " + TOP + "</b> —— 但它其实就在这份资料里，只是被拆成了两条关系。" +
+          "<br>这就是知识图谱存在的理由：<b>要答「串起来才知道」的问题，你得能沿关系走，而不只是比谁更像。</b>" +
+          "<br>反过来也要诚实：图谱不是万能的 —— 建图很贵、抽取会错、" +
+          "而且大量「问什么答什么」的问题向量检索又便宜又够用。<b>所以成熟方案是两个都上，谁擅长什么就交给谁。</b>";
+        return;
+      }
       if (showPath) {
         m.note.innerHTML = "<b>问题：甲公司的 CEO 之前在哪家公司任职？</b><br>" +
           "沿着网走两步：甲公司 →（CEO）→ 张三 →（曾任高管）→ 乙公司。答案直接给出来了。" +
@@ -5265,12 +5314,30 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       edges.forEach(function (ed, k) {
         var a = nodes[ed[0]].p, b = nodes[ed[1]].p;
         var hot = showPath && k <= t1;
-        var near = !showPath && (ed[0] === sel || ed[1] === sel);
+        var near = !showPath && mode === "kg" && (ed[0] === sel || ed[1] === sel);
+        // 向量模式下把关系线压到近乎看不见 —— 这就是"向量库里没有关系"这句话的画面
+        var alpha = (mode === "vec") ? .05 : (hot ? .95 : (near ? .7 : .28));
         e.line(a, b, hot ? C.a : (near ? C.y : C.m), hot ? 3.4 : (near ? 2 : .9),
-          hot ? .95 : (near ? .7 : .28));
-        e.text([(a[0] + b[0]) / 2, (a[1] + b[1]) / 2 + .32, (a[2] + b[2]) / 2], ed[2],
-          hot ? C.a : C.m, 11);
+          alpha);
+        if (mode === "kg") {
+          e.text([(a[0] + b[0]) / 2, (a[1] + b[1]) / 2 + .32, (a[2] + b[2]) / 2], ed[2],
+            hot ? C.a : C.m, 11);
+        }
       });
+      // 向量模式：从查询拉出前 3 名，并把"答案没进来"直接标在图上
+      if (mode === "vec") {
+        var rk = ranked(), q = nodes[QR].p;
+        rk.slice(0, TOP).forEach(function (o) {
+          var s = Math.max(.1, 1 - o.d / 6), np = nodes[o.k].p;
+          e.line(q, np, C.p, 1 + s * 4, .3 + s * .5);
+          e.text([(q[0] + np[0]) / 2, (q[1] + np[1]) / 2 + .34, (q[2] + np[2]) / 2],
+            "相似度 " + s.toFixed(2), C.p, 10.5);
+        });
+        e.text([q[0], q[1] + 1.0, q[2]], "查询：甲公司 CEO 之前在哪家公司任职？", C.p, 12);
+        e.text([nodes[ANS].p[0], nodes[ANS].p[1] + .8, nodes[ANS].p[2]],
+          "✕ 正确答案排第 " + ansRank() + "，没进前 " + TOP, C.a, 11.5);
+        e.text([0, 2.6, 0], "向量检索：只按「像不像」排队 —— 关系线全断开了", C.p, 12.5);
+      }
       nodes.forEach(function (n, k) {
         var isSel = k === sel;
         var isNb = !showPath && edges.some(function (ed) {
