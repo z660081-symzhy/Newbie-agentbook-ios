@@ -1,0 +1,31 @@
+name: 云端编译 IPA
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 编译
+        working-directory: AgentBook
+        run: |
+          xcodebuild -project AgentBook.xcodeproj -scheme AgentBook \
+            -configuration Release -sdk iphoneos \
+            -destination 'generic/platform=iOS' -derivedDataPath build \
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO build
+
+      - name: 打包成 ipa
+        working-directory: AgentBook
+        run: |
+          mkdir -p Payload
+          cp -R build/Build/Products/Release-iphoneos/AgentBook.app Payload/
+          zip -qr AgentBook.ipa Payload
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AgentBook-ipa
+          path: AgentBook/AgentBook.ipa
