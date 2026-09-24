@@ -3973,6 +3973,17 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     var pitch = opt.pitch != null ? opt.pitch : 0.42;
     var dist = opt.dist || 9, fov = opt.fov || 620;
     var auto = opt.auto !== false, dirty = true, drag = null, items = [], picks = [];
+    // 标签单独收集：几何画完后再统一排版落点，最后统一绘制。
+    // 标签若各自为政地画，同一片投影区里 5～10 个标签会叠成一团（走查报告第 3 类问题）。
+    var labels = [];
+    // 自动取景：fitK 是整体倍率，pan 是画布位移（像素）。
+    // 内容装不下（尤其旋转到侧面时）会被画布边缘硬切 —— 见 reframe()。
+    var fitK = 1, lastBox = null, settled = false;
+    var panX = 0, panY = 0;
+    // 允许放大的上限：1 表示只缩不放（默认，和原来行为一致）
+    var growMax = opt.grow === true ? 1.6 : 1;
+    // 本帧"实际画出来的可见内容"包围盒（淡色网格/地面不计入），取景靠它
+    var mb = null, reframed = false;
     var scene = null, running = false;
 
     function resize() {
@@ -3981,6 +3992,9 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       H = canvas.clientHeight || 340;
       canvas.width = Math.round(W * dpr);
       canvas.height = Math.round(H * dpr);
+      // 尺寸变了要重新取景：必须把上一轮的倍率也还原，
+      // 否则"按旧尺寸算出来的缩小量"会被一直背着走（内容会越缩越小、还会偏出画布）。
+      fitK = 1; panX = 0; panY = 0;
       dirty = true;
     }
     function proj(p) {
@@ -3989,8 +4003,9 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       var y1 = p[1] * cp - z1 * sp, z2 = p[1] * sp + z1 * cp;
       var zc = z2 + dist;
       if (zc < 0.35) return null;
-      var s = fov / zc;
-      return { x: W / 2 + x1 * s, y: H / 2 - y1 * s, z: zc, s: s };
+      var s = fov * fitK / zc;
+      var px = W / 2 + x1 * s + panX, py = H / 2 - y1 * s + panY;
+      return { x: px, y: py, z: zc, s: s };
     }
     api.proj = proj;
     function finite(p) {
@@ -4023,29 +4038,16 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
         var left = o.align === "left", center = o.align === "center";
         var dx = center ? 0 : (left ? -(rad + 5) : (rad + 5));
         var dy = o.dy || 0;
-        push(q.z - 0.02, function (g, ink) {
-          g.font = "600 " + size.toFixed(1) + "px -apple-system,'PingFang SC','Microsoft YaHei',sans-serif";
-          g.textAlign = center ? "center" : (left ? "right" : "left");
-          g.textBaseline = "middle";
-          // 手机屏幕窄，标签贴边会被裁掉 —— 把它夹回画布内
-          var tw = g.measureText(label).width, tx = q.x + dx;
-          if (center) tx = Math.max(tw / 2 + 4, Math.min(tx, W - tw / 2 - 4));
-          else if (left) tx = Math.max(tx, tw + 4);
-          else tx = Math.min(tx, W - tw - 4);
-          // 纵向也要夹：顶部/底部的标签会被画布切掉
-          var ty = Math.max(size, Math.min(H - size, q.y + dy));
-          // 极淡底板：文字压在色块上也能读清
-          g.globalAlpha = .6; g.fillStyle = paper(g);
-          g.fillRect(tx - (left ? tw : 0) - 3, ty - size * .78, tw + 6, size * 1.56);
-          g.globalAlpha = 1;
-          g.lineWidth = 2.6; g.strokeStyle = paper(g); g.strokeText(label, tx, ty);
-          g.fillStyle = o.color || ink; g.fillText(label, tx, ty);
+        labels.push({
+          str: label, x: q.x + dx, y: q.y + dy, fs: size, d: q.z - 0.02,
+          align: center ? "center" : (left ? "right" : "left"),
+          color: o.color || null, lw: 2.6
         });
       }
       picks.push({ x: q.x, y: q.y, r: rad, tag: tag, p: p });
     };
 
-    api.line = function (a, b, color, width, alpha) {
+    api.line = function (a, b, color, width, alpha, lay) {
       if (!finite(a) || !finite(b)) return;
       var qa = proj(a), qb = proj(b);
       if (!qa || !qb) return;
@@ -4056,10 +4058,10 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
         g.lineWidth = width || 1;
         g.strokeStyle = color; g.stroke();
         g.globalAlpha = 1;
-      });
+      }, lay);
     };
 
-    api.quad = function (pts, color, alpha, edge) {
+    api.quad = function (pts, color, alpha, edge, lay) {
       var q = [], dd = 0;
       for (var i = 0; i < pts.length; i++) {
         var pp = proj(pts[i]); if (!pp) return;
@@ -4075,7 +4077,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
         g.globalAlpha = Math.min(1, (alpha == null ? .22 : alpha) * 1.9);
         if (edge) { g.strokeStyle = edge; g.lineWidth = .8; g.stroke(); }
         g.globalAlpha = 1;
-      });
+      }, lay);
     };
 
     api.box = function (c, s, color, o) {
@@ -4104,23 +4106,10 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       if (!finite(p)) return;
       var q = proj(p); if (!q) return;
       var fs = Math.max(9.5, Math.min(15, (size || 12) * (0.72 + q.s / 900)));
-      push(q.z - 0.05, function (g, ink) {
-        g.font = "600 " + fs.toFixed(1) + "px -apple-system,'PingFang SC','Microsoft YaHei',sans-serif";
-        g.textAlign = align || "center"; g.textBaseline = "middle";
-        // 纵向夹取（之前只夹了横向）
-        var yy = Math.max(fs, Math.min(H - fs, q.y + (yOff || 0)));
-        var tw = g.measureText(str).width;
-        // 修正左右夹取方向：left 对齐时文字向右延伸，要保证右边界进画布；right 反之
-        var tx = align === "left" ? Math.min(q.x, W - tw - 4)
-               : align === "right" ? Math.max(q.x, tw + 4)
-               : Math.max(tw / 2 + 4, Math.min(q.x, W - tw / 2 - 4));
-        g.globalAlpha = .6; g.fillStyle = paper(g);
-        var bx = align === "left" ? tx - 3 : align === "right" ? tx - tw - 3 : tx - tw / 2 - 3;
-        g.fillRect(bx, yy - fs * .78, tw + 6, fs * 1.56);
-        g.globalAlpha = 1;
-        g.lineWidth = 3; g.strokeStyle = paper(g); g.strokeText(str, tx, yy);
-        g.fillStyle = color || ink; g.fillText(str, tx, yy);
-      }, 1);
+      labels.push({
+        str: str, x: q.x, y: q.y + (yOff || 0), fs: fs, d: q.z - 0.05,
+        align: align || "center", color: color || null, lw: 3
+      });
     };
 
     /// 竖直刻度尺：在 (x,z) 位置从 y0 到 y1 画一把带刻度和数值的尺子。
@@ -4149,16 +4138,121 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     api.grid = function (n, step, color, y0, alpha) {
       y0 = y0 == null ? -1.6 : y0;
       var ext = n * step;
+      // 地面必须"看得见"才有天地感。各场景传进来的 alpha 普遍在 .04-.10，
+      // 在白底上几乎不可见 —— 于是物体看起来像悬在虚空里。这里统一放大到可见区间。
+      var a = (alpha == null ? .16 : alpha) * 2.2;
+      a = Math.max(.06, Math.min(.24, a));
       for (var i = -n; i <= n; i++) {
-        api.line([i * step, y0, -ext], [i * step, y0, ext], color, .7, alpha == null ? .16 : alpha);
-        api.line([-ext, y0, i * step], [ext, y0, i * step], color, .7, alpha == null ? .16 : alpha);
+        api.line([i * step, y0, -ext], [i * step, y0, ext], color, .85, a);
+        api.line([-ext, y0, i * step], [ext, y0, i * step], color, .85, a);
       }
+    };
+
+    // 地面"台面"：光有网格线时，地面是一层无限延伸的雾，学生读不出"哪是地"。
+    // 补一块有轮廓的浅色台面，地面立刻有了边界 —— 这才是"地平线"的来源：
+    //   ① 台面填充（很淡，只用来把"地"和"空"在明度上分开）
+    //   ② 四条边线（清楚一些，勾出地面的形状）
+    // 两者都放在 lay = -1（永远最先画），所以台面轮廓永远不会横穿物体。
+    api.floor = function (n, step, y0, color, alpha) {
+      y0 = y0 == null ? -1.6 : y0;
+      var ext = n * step;
+      var a = alpha == null ? .05 : alpha;
+      api.quad([[-ext, y0, -ext], [ext, y0, -ext], [ext, y0, ext], [-ext, y0, ext]],
+        color, a, null, -1);
+      var e = Math.min(.42, Math.max(.22, a * 5.5));
+      var w = 1.25;
+      var c0 = [-ext, y0, -ext], c1 = [ext, y0, -ext], c2 = [ext, y0, ext], c3 = [-ext, y0, ext];
+      api.line(c0, c1, color, w, e, -1);
+      api.line(c1, c2, color, w, e, -1);
+      api.line(c2, c3, color, w, e, -1);
+      api.line(c3, c0, color, w, e, -1);
     };
 
     /* ---------- 渲染 ---------- */
     var TMP = document.createElement("canvas").getContext("2d");
     function paper() { return getComputedStyle(document.body).backgroundColor || "#fff"; }
     function inkColor() { return getComputedStyle(document.body).color || "#222"; }
+    function fontFor(fs) {
+      return "600 " + fs.toFixed(1) + "px -apple-system,'PingFang SC','Microsoft YaHei',sans-serif";
+    }
+
+    /* ---------- 标签排版：夹进画布 + 互相避让 ---------- */
+    // 每条标签只允许平移（不改字、不改对齐），保证"标签仍然指着它描述的东西"。
+    // 顺序：先给近处的标签定锚（它们通常是主角），远处的再让位；
+    // 绘制顺序相反（远→近），近处的标签压在最上面。
+    function boxOf(x, y, tw, hh, align) {
+      var x0 = align === "center" ? x - tw / 2 : align === "left" ? x : x - tw;
+      return { x0: x0, x1: x0 + tw, y0: y - hh, y1: y + hh };
+    }
+    function overlapOf(a, b) {
+      var ox = Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0);
+      var oy = Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0);
+      return (ox > 4 && oy > 1) ? ox * oy : 0;
+    }
+    function layoutLabels() {
+      var placed = [];
+      labels.sort(function (a, b) { return a.d - b.d; }); // 近的先定锚
+      for (var i = 0; i < labels.length; i++) {
+        var L = labels[i];
+        L.font = fontFor(L.fs);
+        TMP.font = L.font;
+        var tw = TMP.measureText(L.str).width;
+        L.tw = tw;
+        L.hh = L.fs * .62;
+        // 左右夹取：left 对齐时文字向右延伸，要保证右边界进画布；right 反之
+        var x = L.align === "center" ? Math.max(tw / 2 + 4, Math.min(L.x, W - tw / 2 - 4))
+              : L.align === "left" ? Math.min(L.x, W - tw - 4)
+              : Math.max(L.x, tw + 4);
+        var step = L.hh * 2 + 6;
+        var pick = null, fallback = null, fallbackCost = Infinity;
+        for (var k = 0; k <= 10; k++) {
+          var offs = k === 0 ? [0] : [-k * step, k * step];
+          for (var ci = 0; ci < offs.length; ci++) {
+            var y = L.y + offs[ci];
+            // 纵向夹取：顶部/底部的标签会被画布切掉
+            if (y - L.hh < 1 || y + L.hh > H - 1) continue;
+            var box = boxOf(x, y, tw, L.hh, L.align), cost = 0;
+            for (var pi = 0; pi < placed.length; pi++) cost += overlapOf(box, placed[pi]);
+            if (cost === 0) { pick = { x: x, y: y, b: box }; break; }
+            if (cost < fallbackCost) { fallbackCost = cost; fallback = { x: x, y: y, b: box }; }
+          }
+          if (pick) break;
+        }
+        if (!pick) {
+          if (fallback) pick = fallback;
+          else {
+            var y2 = Math.max(L.hh + 1, Math.min(H - L.hh - 1, L.y));
+            pick = { x: x, y: y2, b: boxOf(x, y2, tw, L.hh, L.align) };
+          }
+        }
+        L.px = pick.x; L.py = pick.y;
+        L.ax = L.x; L.ay = L.y; // 锚点（理想的落点），画引线时要用
+        placed.push(pick.b);
+      }
+      labels.sort(function (a, b) { return b.d - a.d; }); // 远的先画
+    }
+    function drawLabel(g, L, ink) {
+      g.font = L.font;
+      g.textAlign = L.align; g.textBaseline = "middle";
+      var tw = L.tw, hh = L.hh;
+      var bx = L.align === "center" ? L.px - tw / 2 : L.align === "left" ? L.px : L.px - tw;
+      // 被挤开的标签要留一根引线：否则读者不知道这行字指的是哪个点/哪条边
+      var dx = L.px - L.ax, dy = L.py - L.ay;
+      if (Math.hypot(dx, dy) > 7) {
+        var ex = Math.max(bx, Math.min(L.ax, bx + tw)), ey = Math.max(L.py - hh, Math.min(L.ay, L.py + hh));
+        g.globalAlpha = .38;
+        g.beginPath(); g.moveTo(L.ax, L.ay); g.lineTo(ex, ey);
+        g.lineWidth = 1; g.strokeStyle = ink; g.stroke();
+        g.globalAlpha = 1;
+      }
+      // 极淡底板：文字压在色块上也能读清
+      g.globalAlpha = .62; g.fillStyle = paper();
+      g.fillRect(bx - 3, L.py - hh - 1, tw + 6, hh * 2 + 2);
+      g.globalAlpha = 1;
+      g.lineWidth = L.lw; g.strokeStyle = paper();
+      g.strokeText(L.str, L.px, L.py);
+      g.fillStyle = L.color || ink; g.fillText(L.str, L.px, L.py);
+    }
     function shade(hex, k) {
       var h = hex.replace("#", "");
       if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
@@ -4166,18 +4260,117 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       function f(c) { return Math.max(0, Math.min(255, Math.round(c + 255 * k))); }
       return "rgb(" + f(r) + "," + f(g) + "," + f(b) + ")";
     }
+
+    /* ---------- 自动取景 ---------- */
+    // 为什么不在"预投影"阶段量包围盒：地面网格是一层铺到视野外的淡色脚手架，
+    // 把它算进去，内容永远"装不下"，取景就会一路退到地平线（画面缩成一小团）。
+    // 所以只统计真的画出来、且看得见的东西：不透明度 ≥ .45 的路径与文字。
+    function watchCtx(g) {
+      if (g.__e3watched) return;
+      g.__e3watched = true;
+      var steps = { moveTo: 2, lineTo: 2, rect: 4, arc: 3, bezierCurveTo: 6, quadraticCurveTo: 4 };
+      var path = [];
+      function mark(px, py) {
+        if (!mb || !isFinite(px) || !isFinite(py)) return;
+        if (px < mb.x0) mb.x0 = px;
+        if (py < mb.y0) mb.y0 = py;
+        if (px > mb.x1) mb.x1 = px;
+        if (py > mb.y1) mb.y1 = py;
+      }
+      Object.keys(steps).forEach(function (name) {
+        if (typeof g[name] !== "function") return;
+        var n = steps[name], orig = g[name].bind(g);
+        g[name] = function () {
+          var a = arguments;
+          if (mb) {
+            for (var k = 0; k + 1 < n; k += 2) path.push([a[k], a[k + 1]]);
+            // 圆要算上半径：否则贴边的球体看着出界、量出来却"在里头"
+            if (name === "arc" && isFinite(a[2])) {
+              path.push([a[0] - a[2], a[1] - a[2]]);
+              path.push([a[0] + a[2], a[1] + a[2]]);
+            }
+          }
+          return orig.apply(null, a);
+        };
+      });
+      ["fill", "stroke"].forEach(function (name) {
+        if (typeof g[name] !== "function") return;
+        var orig = g[name].bind(g);
+        g[name] = function () {
+          if (mb && (g.globalAlpha == null || g.globalAlpha >= .45)) {
+            for (var k = 0; k < path.length; k++) mark(path[k][0], path[k][1]);
+          }
+          path = [];
+          return orig.apply(null, arguments);
+        };
+      });
+      // 文字不进包围盒：标签本来就会被 layoutLabels() 夹回画布内，
+      // 把它们算进来，取景会和"夹取"互相追着跑（来回微调）。
+    }
+    // 内容确实装不下时：整体缩小 + 挪回画布中央。只缩不放，所以不会来回抖。
+    function reframe() {
+      if (!mb || mb.x1 <= mb.x0 || settled) return false;
+      lastBox = { x0: mb.x0, y0: mb.y0, x1: mb.x1, y1: mb.y1 };
+      var pad = 12, w = (mb.x1 - mb.x0) || 1, h = (mb.y1 - mb.y0) || 1;
+      // 已经装得下、也没偏出去 —— 那就什么都别做，保持原构图
+      var inside = mb.x0 >= 4 && mb.y0 >= 4 && mb.x1 <= W - 4 && mb.y1 <= H - 4;
+      // 增量倍率。投影对 fitK 是线性的，所以"内容当前占 w 像素"意味着
+      // 要占满画布还需再乘 (W-2pad)/w —— 这里 r 就是这个增量，不要再除 fitK。
+      var r = Math.min((W - pad * 2) / w, (H - pad * 2) / h);
+      // 放大只对显式要求 grow 的场景开放，并留一点余量、封顶到 growMax。
+      // 文字不进包围盒，放太狠会把标签顶到画布外（会被夹回来，但会挤成一团）。
+      // 注意：没开 grow 时必须"只缩不放"—— 一旦允许缩过的场景再长回去，
+      // 那些本来就需要缩小才装得下的场景会立刻出界（ch12、ch16 就是这么被顶出去的）。
+      if (r > 1) {
+        // 没开 grow 就必须是"只缩不放"：写成 .98 会让每个画面本来装得下的场景
+        // 每帧缩 2%，几十帧后全部退到 .58 下限（实测过）。
+        if (growMax <= 1) r = 1;
+        else r = Math.min(r * .96, growMax / fitK);
+      }
+      if (inside && r >= .995) {
+        if (!auto) settled = true;
+        return false;
+      }
+      // 缩小兜底：最终 fitK 不低于 .58，别把内容缩成一小撮
+      r = Math.max(r, .58 / fitK);
+      // 一帧最多放大 28%、缩小到 .72，宁可分几帧逼近，也别一步到位
+      r = r > 1 ? Math.min(r, 1.28) : Math.max(r, .72);
+      // 缩放绕画布中心进行：按新倍率把内容中心挪回画布正中（偏了也一并挪回来）
+      var cx = (mb.x0 + mb.x1) / 2, cy = (mb.y0 + mb.y1) / 2;
+      var nx = (W / 2 + panX - cx) * r, ny = (H / 2 + panY - cy) * r;
+      if (Math.abs(r - 1) < .012 && Math.abs(nx - panX) < 1.2 && Math.abs(ny - panY) < 1.2) {
+        // 对齐了就收工 —— 但只在"不再自己转"的场景里收工。
+        // 自动旋转时每帧朝向都在变，内容范围跟着变；一旦冻结取景，
+        // 转到侧面就会顶出画布（ch16 左出界 45px 就是这个原因）。
+        if (!auto) settled = true;
+        return false;
+      }
+      fitK = Math.max(.58, Math.min(growMax, fitK * r));
+      panX = nx; panY = ny;
+      return true;
+    }
     function render() {
       var g = canvas.getContext("2d");
+      watchCtx(g);
       g.setTransform(dpr, 0, 0, dpr, 0, 0);
       g.clearRect(0, 0, W, H);
-      items = []; picks = [];
-      if (scene) scene(api);
-      // 两趟绘制：先几何（按深度），再文字（按深度）—— 文字永远不会被色块或球体压住
+      function runScene() { items = []; picks = []; labels = []; if (scene) scene(api); }
+      mb = { x0: 1e9, y0: 1e9, x1: -1e9, y1: -1e9 };
+      runScene();
+      // 三趟：先几何（按深度）→ 再给标签排版（避让）→ 最后按深度画标签。
+      // 文字既不会被色块球体压住，也不会互相叠成一团。
       items.sort(function (a, b) { return (a.lay - b.lay) || (b.d - a.d); });
       var ink = inkColor();
       for (var i = 0; i < items.length; i++) items[i].fn(g, ink);
+      layoutLabels();
+      for (var j = 0; j < labels.length; j++) drawLabel(g, labels[j], ink);
+      // 量完这一帧真正画出来的内容，再决定要不要收一收取景（改动下一帧生效）
+      reframed = reframe();
+      mb = null;
     }
-    api.render = function () { dirty = true; };
+    // 场景内容变了（拖滑块、点按钮）就要重新取景一次，
+    // 否则上一轮算好的倍率会一直背着走，新内容可能顶出画布。
+    api.render = function () { dirty = true; settled = false; };
     api.scene = function (fn) { scene = fn; dirty = true; };
     api.setAuto = function (v) { auto = v; };
     api.isAuto = function () { return auto; };
@@ -4185,6 +4378,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       yaw = opt.yaw != null ? opt.yaw : -0.65;
       pitch = opt.pitch != null ? opt.pitch : 0.42;
       dist = opt.dist || 9;
+      fitK = 1; panX = 0; panY = 0; settled = false; // 复位同时重新取景
       dirty = true;
     };
     api.zoom = function (k) { dist = Math.max(2.2, Math.min(30, dist * k)); dirty = true; };
@@ -4202,6 +4396,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     /* ---------- 交互 ---------- */
     canvas.style.touchAction = "none";
     canvas.addEventListener("pointerdown", function (e) {
+      settled = true; // 用户开始自己转之后就别再自动改取景，免得跟他抢
       drag = { x: e.clientX, y: e.clientY, moved: 0 };
       canvas.setPointerCapture(e.pointerId);
     });
@@ -4223,17 +4418,24 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     });
     canvas.addEventListener("wheel", function (e) {
       e.preventDefault();
+      settled = true;
       api.zoom(e.deltaY > 0 ? 1.09 : 0.92);
     }, { passive: false });
 
     function loop() {
       if (auto) { yaw += 0.0022; dirty = true; }
-      if (dirty) { render(); dirty = false; }
+      // 取景若在本帧被收紧，需要再画一帧才算落到画面上
+      if (dirty) { render(); dirty = reframed; reframed = false; }
       requestAnimationFrame(loop);
     }
     var ro = window.ResizeObserver ? new ResizeObserver(function () { resize(); }) : null;
     if (ro) ro.observe(canvas);
     window.addEventListener("resize", resize);
+    // 调试用：从控制台就能看到取景状态（canvas.__e3.__dbg()）
+    api.__dbg = function () {
+      return { fitK: fitK, panX: panX, panY: panY, W: W, H: H, dist: dist, fov: fov, settled: settled, lastBox: lastBox };
+    };
+    canvas.__e3 = api;
     resize();
     if (!running) { running = true; loop(); }
     return api;
@@ -4273,7 +4475,10 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       dist: (o.dist || 10) * k,
       fov: 620 * k,
       yaw: o.yaw,
-      pitch: o.pitch
+      pitch: o.pitch,
+      // grow: 内容明显偏小时允许取景放大（默认关）。留给"只有几个球/几根线、
+      // 四周一大片留白"的场景用，把画面填满，读起来才不费劲。
+      grow: o.grow === true
     });
     var bA = btn("暂停旋转"), bR = btn("复位视角");
     if (!sc.isAuto()) bA.textContent = "继续旋转";
@@ -4361,7 +4566,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch3 = function (host) {
     var m = mount(host, "KV Cache：上下文越长、并发越高，占的“体积”越大",
       "每一层都要为每个位置缓存一份 Key 和 Value；同时服务几个用户，就要存几份。",
-      { dist: 17, pitch: .46, yaw: -.6, h: 420 });
+      { dist: 17, pitch: .46, yaw: -.6, h: 420, grow: true });
     var n = 16, L = 12, U = 3;
     slider(m, "上下文长度", 4, 64, 1, n, " 个位置", function (v) { n = v; m.sc.render(); note(); });
     slider(m, "层数", 4, 32, 1, L, " 层", function (v) { L = v; m.sc.render(); note(); });
@@ -4416,6 +4621,8 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       "下面平铺的是结果——也就是<b>注意力矩阵</b>。播放时高亮的那一行和那一列相乘相加，就得到结果里的一格。";
     m.sc.scene(function (e) {
       e.grid(5, 1.5, C.m, -2.6, .08);
+      // 补一块有边框的台面：只有淡淡的网格线时，物体看着像悬在虚空里。
+      e.floor(5, 1.5, -2.6, C.m, .05);
       var x0 = -5.4, z0 = -3.4, cell = .62;
       // Q 面板（竖立，xz 平面上的列）
       for (var t = 0; t < T; t++) for (var d = 0; d < D; d++) {
@@ -4647,7 +4854,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch11 = function (host) {
     var m = mount(host, "知识图谱：把文档变成一张能“顺着走”的网",
       "点是实体，线是关系。点一个节点看它的关系；也可以看一次两跳推理是怎么走出来的。",
-      { dist: 15, pitch: .36, h: 440 });
+      { dist: 15, pitch: .36, h: 440, grow: true });
     var nodes = [
       { t: "甲公司", p: [0, .6, 0], c: C.a },
       { t: "张三", p: [2.6, 1.7, -.7], c: C.b },
@@ -4689,6 +4896,9 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     }
     m.sc.scene(function (e) {
       e.grid(6, 1.4, C.m, -2.6, .06);
+      // 原始 alpha 是 .12，在白底上等于没画 —— 七个实体看上去全飘在空中。
+      // 落地线要真的看得见，"谁高谁低"才是这张图的信息。
+      e.floor(6, 1.4, -2.6, C.m, .05);
       edges.forEach(function (ed, k) {
         var a = nodes[ed[0]].p, b = nodes[ed[1]].p;
         var hot = showPath && k <= t1;
@@ -4704,7 +4914,8 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
           return (ed[0] === sel && ed[1] === k) || (ed[1] === sel && ed[0] === k);
         });
         var onPath = showPath && (k === 0 || (t1 >= 1 && k === 1) || (t1 >= 2 && k === 2));
-        e.line([n.p[0], n.p[1], n.p[2]], [n.p[0], -2.6, n.p[2]], C.m, .6, .12);
+        e.line([n.p[0], n.p[1], n.p[2]], [n.p[0], -2.6, n.p[2]], C.m, .8, .32);
+        e.ball([n.p[0], -2.6, n.p[2]], .07, C.m, null, null);
         e.ball(n.p, isSel || onPath ? .38 : .28,
           isSel ? C.a : (onPath ? C.g : (isNb ? C.y : n.c)), n.t, k);
       });
@@ -4737,6 +4948,19 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     }
     m.sc.scene(function (e) {
       e.grid(6, 1.4, C.m, -2.4, .05);
+      e.floor(6, 1.4, -2.4, C.m, .05);
+      // 把螺旋在地面上的投影画出来 —— 这一圈圈落在地上的影子半径，
+      // 就是"上下文体积"。不压缩时影子的半径一直往外扩，勾上压缩就停住了，
+      // 比只看悬空的螺旋直观得多。
+      var prevG = null;
+      for (var gk = 0; gk < steps; gk++) {
+        var gp = pos(gk), gOn = [gp[0], -2.4, gp[2]];
+        if (prevG) e.line(prevG, gOn, compress ? C.g : C.a, 1.4, .3);
+        prevG = gOn;
+      }
+      var lastG = pos(steps - 1);
+      e.line([0, -2.4, 0], [lastG[0], -2.4, lastG[2]], compress ? C.g : C.a, 1.2, .5);
+      e.text([lastG[0] / 2, -2.36, lastG[2] / 2], "半径 = 上下文体积", compress ? C.g : C.a, 11);
       // 螺旋轨迹
       for (var k = 0; k < steps; k++) {
         if (k > 0) e.line(pos(k - 1), pos(k), C.b, 1.6, .35);
@@ -4766,7 +4990,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch15 = function (host) {
     var m = mount(host, "微调就像让小球沿山谷滚下去",
       "学习率决定每一步迈多大。太小走不动，太大直接跨过谷底甚至飞出去。",
-      { dist: 15, pitch: .78, yaw: -.7, h: 430 });
+      { dist: 15, pitch: .78, yaw: -.7, h: 430, grow: true });
     var lr = .25, k = 0, x = 2.6, z = 2.2, trail = [], timer = null;
     function loss(a, b) { return .5 * (a * a + .6 * b * b); }
     slider(m, "学习率", .02, 1.2, .02, lr, "", function (v) { lr = v; reset(); });
@@ -4835,7 +5059,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch16 = function (host) {
     var m = mount(host, "容器与 Kubernetes：一个节点挂了会怎样",
       "容器像集装箱，节点像货轮。点“模拟节点故障”，看调度和自愈把箱子搬走。",
-      { dist: 16, pitch: .5, h: 410 });
+      { dist: 16, pitch: .5, h: 410, grow: true });
     var reps = 6, down = -1, prog = 1, tween = null;
     var nodes = [[-4.6, 0, 0], [0, 0, 0], [4.6, 0, 0]];
     slider(m, "副本数量", 3, 9, 1, reps, " 个", function (v) { reps = v; down = -1; prog = 1; m.sc.render(); note(); });
@@ -4893,7 +5117,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch18 = function (host) {
     var m = mount(host, "AI Infra 六层架构：像拆模型一样把它拆开看",
       "拖动“展开程度”把六层拉开，点任意一层看它解决什么问题。",
-      { dist: 15, pitch: .34, h: 470 });
+      { dist: 15, pitch: .34, h: 470, grow: true });
     var LAY = [
       { n: "应用层", d: "具体做事的 Agent：客服、内容运营、考核、销售辅助。这一层是给业务方看价值的地方。", c: C.a },
       { n: "编排层", d: "Harness（循环、上下文、工具、记忆、反馈）与 Agent 集群（注册、发现、路由、协作协议）。", c: C.y },
@@ -4912,11 +5136,15 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     m.sc.scene(function (e) {
       e.grid(6, 1.5, C.m, -6.4, .05);
       LAY.forEach(function (L, k) {
-        var y = -4.2 + k * (1.15 + gap * .22), on = k === sel;
+        // 教材第 18 章那张表是"从上到下"排的：6 应用层在顶、1 基础设施层在底。
+        // 原来按数组顺序往上堆，把应用层压到了最底下，和图正好倒过来。
+        // 这里把第 k 层放到"第 (总层数-1-k) 格"，既纠正了上下，整体高度也不变。
+        var y = -4.2 + (LAY.length - 1 - k) * (1.15 + gap * .22), on = k === sel;
         e.box([0, y, 0], [8.4, .42, 5.2], L.c,
           { alpha: on ? .3 : .12, edge: L.c, lw: on ? 1.8 : .9, edgeA: on ? 1 : .6 });
         e.text([0, y + .12, 3.1], L.n, L.c, on ? 14 : 12.5);
       });
+      e.text([0, 2.6, 0], "从上到下：应用层 → 基础设施层", C.m, 11.5);
       e.text([0, -5.4, 0],
         "新业务从“0.5”开始：申请额度 → 配数据源 → 注册工具 → 建测试集 → 标准发布", C.b, 12);
     });
@@ -4927,7 +5155,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch25 = function (host) {
     var m = mount(host, "Agent 集群：一个请求怎么被接住、分派、办完",
       "中心是协调者，中间是专家 Agent，外面是工具。点“发一个请求”看它怎么走。",
-      { dist: 17, pitch: .42, h: 470 });
+      { dist: 17, pitch: .42, h: 470, grow: true });
     var experts = ["客服 Agent", "订单 Agent", "内容 Agent", "考核 Agent"];
     var tools = ["查订单", "退换货", "知识库", "工单", "素材库", "发送消息"];
     var EXP = experts.map(function (t, i) {
@@ -4964,6 +5192,13 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     }
     m.sc.scene(function (e) {
       e.grid(6, 1.6, C.m, -2.2, .05);
+      // 落地线 + 台面：节点原本一律悬在半空，看不出"谁站在哪一层"。
+      // 每根竖线把节点连回地面，高度差（专家在上、工具在下）才读得出来。
+      e.floor(6, 1.6, -2.2, C.m, .045);
+      EXP.concat(TOL).forEach(function (p) {
+        e.line([p[0], -2.2, p[2]], p, C.m, .8, .3);
+        e.ball([p[0], -2.2, p[2]], .07, C.m, null, null);
+      });
       EXP.forEach(function (p) { e.line([0, .2, 0], p, C.m, 1, .3); });
       EXP.forEach(function (p, i) {
         var a = i / experts.length * Math.PI * 2 - .6;
@@ -4994,7 +5229,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch2b = function (host) {
     var m = mount(host, "多头注意力：把向量切开，四个头各看各的，再拼回去",
       "输入向量被切成四段，每段交给一个头独立做注意力，最后拼成完整输出。点“播放”看这个拆装过程。",
-      { dist: 17, pitch: .34, yaw: -.85, h: 430 });
+      { dist: 17, pitch: .34, yaw: -.85, h: 430, grow: true });
     var D = 8, H = 4, per = D / H, sel = 0, stage = 0, timer = null;
     var bGo = btn("播放拆装过程", "primary");
     bGo.onclick = function () {
@@ -5146,15 +5381,33 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch3c = function (host) {
     var m = mount(host, "量化：用更少的位存同一个数，代价是什么",
       "同一个波形，用高精度采得很细，用低精度只能采几个台阶。拖动位数，看显存和误差怎么换。",
-      { dist: 15, pitch: .48, h: 420 });
+      { dist: 15, pitch: .48, h: 420, grow: true });
     var bits = 8;
     slider(m, "每个数的存储位数", 2, 16, 1, bits, " bit", function (v) { bits = v; m.sc.render(); note(); });
     function wave(x) { return Math.sin(x * 1.1) * .8 + Math.sin(x * 2.3) * .3; }
-    function quant(v, lv) { var s = Math.round(v * lv / 1.4) / (lv / 1.4); return Math.max(-1.1, Math.min(1.1, s)); }
+    // 量化步长 = 取值范围 / 档位数。档位数就是 2^bits —— 这里原来多除了个 4，
+    // 于是 8 bit 画出了 64 档、16 bit 画出 16384 档，图上必然是条平滑曲线，
+    // 标题却写着"台阶"（图文不符）。按真实档位数来，低位数才真的画得出台阶。
+    var QMIN = -1.1, QMAX = 1.1;
+    function quant(v, bits2) {
+      var lv = Math.pow(2, bits2);
+      var step = (QMAX - QMIN) / lv;
+      var q = QMIN + Math.round((v - QMIN) / step) * step;
+      return Math.max(QMIN, Math.min(QMAX, q));
+    }
     function note() {
-      var gb = 14 * bits / 16, err = Math.pow(2, -bits) * 100;
+      var gb = 14 * bits / 16;
+      // 误差不再用公式估，而是把这条波形真的量化一遍，量出最大偏差。
+      // 图上的落差和这里的数字来自同一次计算，对得上。
+      var em = 0;
+      for (var i = 0; i <= 400; i++) {
+        var raw = wave(i / 400 * 6), vq = quant(raw, bits);
+        if (Math.abs(raw - vq) > em) em = Math.abs(raw - vq);
+      }
+      var err = em / 1.1 * 100;
       m.note.innerHTML = "<b>当前 " + bits + " bit</b>：一个 7B 模型大约要占 <b>" + gb.toFixed(1) +
-        " GB</b> 显存，单点的相对误差量级约 <b>" + err.toFixed(2) + "%</b>。<br>" +
+        " GB</b> 显存，这条波形的最大偏差约 <b>" + err.toFixed(2) + "%</b>（每 " +
+        (QMAX - QMIN).toFixed(1) + " 的取值范围切成 " + Math.pow(2, bits) + " 档）。<br>" +
         (bits >= 15 ? "FP16/BF16：训练和高质量推理都用它，精度损失可以忽略，但显存最贵。"
           : bits >= 8 ? "INT8：显存差不多减半，精度损失很小，是最稳妥的推理方案。"
           : bits >= 4 ? "INT4：显存降到四分之一，常见做法，复杂推理任务上会开始变笨。"
@@ -5165,7 +5418,6 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     m.sc.scene(function (e) {
       e.grid(6, 1.5, C.m, -2.6, .05);
       var x0 = -6.4, span = 8.4, N = 60;
-      var lv = Math.pow(2, bits) / 4;
       // 原始波形（高处）
       var prev = null;
       for (var i = 0; i <= N; i++) {
@@ -5174,15 +5426,29 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
         prev = p;
       }
       e.text([x0 + span / 2, 2.6, -1.3], "原始数值（FP16 精度）", C.b, 12);
-      // 量化后的阶梯（低处）
-      var prev2 = null;
+      // 量化后的真台阶（低处）：先横走再竖跳，才画得出"台阶"而不是斜坡
+      var px = null, py = null;
       for (var j = 0; j <= N; j++) {
-        var x2 = j / N, v = quant(wave(x2 * 6), lv);
-        var p2 = [x0 + x2 * span, -1.1 + v * .55, 1.3];
-        if (prev2) e.line(prev2, p2, C.a, 2.2, .9);
-        prev2 = p2;
+        var x2 = j / N, raw = wave(x2 * 6), v = quant(raw, bits);
+        var sx = x0 + x2 * span, sy = -1.1 + v * .55;
+        if (px != null) {
+          e.line([px, py, 1.3], [sx, py, 1.3], C.a, 2.2, .9);   // 横：保持当前档位
+          if (Math.abs(sy - py) > 1e-6) e.line([sx, py, 1.3], [sx, sy, 1.3], C.a, 2.2, .9); // 竖：跳到下一档
+        }
+        px = sx; py = sy;
       }
-      e.text([x0 + span / 2, .1, 1.3], "量化后的台阶（" + bits + " bit）", C.a, 12);
+      // 原始与量化之间的落差，就是"精度损失"。每隔几个点标一根细竖线，落差越大越显眼。
+      for (var t = 0; t <= N; t += 4) {
+        var xt = t / N, rawT = wave(xt * 6), vT = quant(rawT, bits);
+        e.line([x0 + xt * span, -1.1 + vT * .55, 1.3],
+          [x0 + xt * span, -1.1 + rawT * .55, 1.3], C.p, 1.1, .5);
+      }
+      // 标签说实话：位数高了台阶本来就小到看不出来，这是结论不是画错了
+      e.text([x0 + span / 2, .1, 1.3],
+        bits <= 6 ? "量化后的台阶（" + bits + " bit）：档位粗，台阶一眼可见"
+          : bits <= 10 ? "量化后的台阶（" + bits + " bit）：台阶已经很细，只能看见一点毛刺"
+            : "量化后（" + bits + " bit）：台阶细到与曲线重合 —— 这正是「高精度」的含义",
+        C.a, 12);
       // 显存柱
       var bx = x0 + span + 2.0;
       var blocks = Math.max(1, Math.round(bits / 2));
@@ -5266,6 +5532,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     }
     m.sc.scene(function (e) {
       e.grid(7, 1.4, C.m, -2.4, .05);
+      e.floor(7, 1.4, -2.4, C.m, .05);
       // 闸门：一排竖条，像收费站
       for (var gz = -2; gz <= 2; gz++) {
         e.box([-2.6, .2, gz * 1.15], [.22, 3.0, .5], shut ? C.a : C.b,
@@ -5668,6 +5935,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     }
     m.sc.scene(function (e) {
       e.grid(7, 1.6, C.m, -2.6, .04);
+      e.floor(7, 1.6, -2.6, C.m, .05);
       ED.forEach(function (ed) {
         var a = ND[ed[0]].p, b = ND[ed[1]].p;
         var cond = ed[2] || "";
@@ -5898,11 +6166,16 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     note();
   };
 
-  /* ============ 第 21 章：七环流水线与数据反哺 ============ */
+  /* ============ 第 21 章：六环流水线与数据反哺 ============ */
   S.ch21 = function (host) {
-    var m = mount(host, "七环流水线：最后一环必须回到第一环",
+    // 标题原本写"七环"，但教材正文（21-project-content.md 第二节）明确是
+    // "六个环节"，第 6 环"发布与回收"里就包含数据回收与反哺。
+    // 外面那条弧线画的是第 6 环做的事，不是第 7 环 —— 标题跟着正文改成六环。
+    var m = mount(host, "六环流水线：最后一环必须回到第一环",
       "六个生产环节围成一圈，外面那条弧线是数据反哺。点“跑一圈”，看优质内容怎么变成下一轮的素材和规则。",
-      { dist: 17, pitch: .42, h: 440 });
+      // pitch 原来只有 .42，六边形的环被压成一条扁带，六个阶段名挤在一起；
+      // 抬到 .95 接近俯视，环铺开成圆，节点和标签各就各位。
+      { dist: 17, pitch: .95, h: 440, grow: true });
     var ST = ["① 选题", "② 取素材", "③ 生成文案", "④ 配图", "⑤ 合规审核", "⑥ 发布与回收"];
     var at = -1, lap = 0, timer = null;
     var bGo = btn("跑一圈", "primary"), bRe = btn("重来");
@@ -6003,7 +6276,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch23 = function (host) {
     var m = mount(host, "以文搜图：文字和图片被编码进同一片空间",
       "方块是图片素材，圆球是文字查询。点一句话，看向量指向哪几张图——它不用靠文件名匹配。",
-      { dist: 14, pitch: .34, h: 450 });
+      { dist: 14, pitch: .34, h: 450, grow: true });
     var pts = [
       { t: "图·卡其风衣正面", p: [2.20, -.55, 2.00], img: 1, ly: -.62 },
       { t: "图·卡其风衣侧拍", p: [2.60, -.85, 2.25], img: 1, ly: -1.16 },
@@ -6099,6 +6372,27 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     }
     m.sc.scene(function (e) {
       e.grid(7, 1.4, C.m, -3.4, .04);
+      // 三层"台阶"：光靠三个悬空的圈，学生看不出"往下沉"这件事 ——
+      // 每个圈下面垫一块同色浅盘，三层高低一目了然，天地也有了参照。
+      RING.forEach(function (r, ri) {
+        var on = (phase - 1 === ri);
+        var pts = [], rr = r.r + .62;
+        for (var q = 0; q < 30; q++) {
+          var aa = q / 30 * Math.PI * 2;
+          pts.push([Math.cos(aa) * rr, r.y, Math.sin(aa) * rr]);
+        }
+        e.quad(pts, r.c, on ? .16 : .09, null, -1);
+        // 盘沿描一圈，把每一层的边界勾出来
+        for (var q2 = 0; q2 < 30; q2++) {
+          var b1 = q2 / 30 * Math.PI * 2, b2 = (q2 + 1) / 30 * Math.PI * 2;
+          e.line([Math.cos(b1) * rr, r.y, Math.sin(b1) * rr],
+            [Math.cos(b2) * rr, r.y, Math.sin(b2) * rr],
+            r.c, on ? 1.4 : .8, on ? .6 : .22, -1);
+        }
+      });
+      // 中轴：从最上一层的盘面一直穿到地面，"经验往下沉"就落在这根线上
+      e.line([0, RING[0].y, 0], [0, -3.4, 0], C.m, 1.1, .28);
+      e.text([0, -3.4 + .28, 4.6], "经验沉淀的方向：每跑完一圈，往下沉一层", C.m, 11.5);
       RING.forEach(function (r, ri) {
         var on = (phase - 1 === ri);
         for (var i = 0; i < 14; i++) {
@@ -6195,7 +6489,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch31 = function (host) {
     var m = mount(host, "权限必须挡在检索之前",
       "知识块按”谁来都能看 / 主管能看 / 只有总监能看“分成三层摆放。切换身份，看哪些块连被检索到的资格都没有。",
-      { dist: 21, pitch: .34, yaw: -.3, h: 480, auto: false, flat: true });
+      { dist: 21, pitch: .34, yaw: -.3, h: 480, auto: false, flat: true, grow: true });
     var ROLES = [{ n: "普通销售", lv: 0 }, { n: "部门主管", lv: 1 }, { n: "销售总监", lv: 2 }];
     var KB = [
       { t: "退换货政策", lv: 0 }, { t: "商品规格表", lv: 0 }, { t: "话术模板", lv: 0 },
@@ -6344,6 +6638,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     }
     m.sc.scene(function (e) {
       e.grid(9, 1.5, C.m, -2.8, .05);
+      e.floor(9, 1.5, -2.8, C.m, .05);
       [[0, "不压缩", raw(), C.a], [1, "压缩后", cmpTok(), C.g]].forEach(function (cfg) {
         var x = cfg[0] ? 4.2 : -4.2, tok = cfg[2], col = cfg[3];
         var h = Math.min(5.2, tok / 6000);
@@ -6658,7 +6953,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch2c = function (host) {
     var m = mount(host, "位置编码：不告诉模型先后，它就分不清“猫追狗”和“狗追猫”",
       "上下两排词完全一样，只是顺序不同。关掉位置编码，两排的注意力一模一样；打开，它们才分开。",
-      { dist: 17, pitch: .34, yaw: -.35, h: 460, auto: false, flat: true });
+      { dist: 17, pitch: .34, yaw: -.35, h: 460, auto: false, flat: true, grow: true });
     var on = 1;
     var A = ["猫", "追", "狗"], B = ["狗", "追", "猫"];
     var bOn = btn("打开位置编码", "primary"), bOff = btn("关掉位置编码");
@@ -6679,7 +6974,10 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     }
     m.sc.scene(function (e) {
       e.grid(8, 1.5, C.m, -3.0, .05);
-      [[A, 2.3, C.b], [B, -2.3, C.p]].forEach(function (row, ri) {
+      // 注意：yaw 为负时，z 越小投影到屏幕上越靠上。
+      // 所以「猫追狗」这排要放在 z = -2.3，它才是画面上真正的“上排”——
+      // 原来放在 +2.3，标签写着“上排”、实际画在下面，和 note 里的说法正好相反。
+      [[A, -2.3, C.b], [B, 2.3, C.p]].forEach(function (row, ri) {
         var words = row[0], z = row[1], col = row[2];
         words.forEach(function (w, i) {
           var x = -4.4 + i * 4.4;
@@ -6918,6 +7216,13 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     ];
     function ai(d) { return Math.max(0, Math.min(100, d.h + d.e * (1 - clr))); }
     function M(v) { return -3.3 + v / 100 * 6.6; }
+    // 12 个维度全挤在轴的一小段里，名字全标出来会把点埋掉 ——
+    // 只标偏差最大的 4 个（其余在图注里点名），点才看得见。
+    function topNames() {
+      return DIMS.slice().sort(function (a, b) {
+        return Math.abs(ai(b) - b.h) - Math.abs(ai(a) - a.h);
+      }).slice(0, 4).map(function (d) { return d.n; });
+    }
     // 八向循环避让：密集场景里只上下交替不够用（走查报告实测 ch22b 有 16 处叠字）
     var CYCLE = [
       { align: "left", dy: 0 }, { align: "right", dy: 0 },
@@ -6944,6 +7249,8 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
           : "（偏低：说明评分卡本身写得不清，不是模型不行）") +
         "<br>偏离对角线超过 8 分的维度：" +
         (bad.length ? "<b>" + bad.map(function (d) { return d.n; }).join("、") + "</b>" : "无") +
+        "<br>图上只标出偏得最远的 4 个（其他点同样在图上，只是不写名字）：<b>" +
+        topNames().join("、") + "</b>。" +
         "<br><b>校准的做法</b>：取一批样本让人工和 AI 同时打分，比对一致性。" +
         "一致性差的维度 → 回去重写判断标准、补示例 → 再校准一次。" +
         "这就是“把主观评价变成可复现流程”的全部功夫，也是这个项目里最能体现专业度的一步。";
@@ -6967,7 +7274,8 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
         var col = dev > 8 ? C.a : C.g;
         e.line([x, 0, z], [x, 0, x], col, 1.4, .45);       // 偏离到对角线的“落差线"
         var opt = CYCLE[i % CYCLE.length];
-        e.ball([x, .12, z], dev > 8 ? .3 : .24, col, d.n, null, opt);
+        var named = topNames().indexOf(d.n) >= 0;
+        e.ball([x, .12, z], dev > 8 ? .3 : .24, col, named ? d.n : null, d.n, opt);
       });
       e.text([0, 2.2, 0], "红点 = 与人工打分偏差超过 8 分 → 这个维度的标准要重写", C.a, 12);
     });
@@ -7028,7 +7336,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   S.ch10b = function (host) {
     var m = mount(host, "先过滤还是先检索：同一个问题，能用的资料差很多",
       "紫点是查询，绿球是符合条件（有权限）的资料，灰块不符合。离查询最近的八条全是灰块——这正是坑所在。",
-      { dist: 19, pitch: .34, yaw: -.4, h: 450, auto: false, flat: true });
+      { dist: 19, pitch: .34, yaw: -.4, h: 450, auto: false, flat: true, grow: true });
     var k = 4, pre = 0;
     // 近距离八条全是不合格，远处才是合格的
     var PTS = [];
