@@ -53,6 +53,16 @@ echo "-----------------------------------------------"
 echo ""
 read -r -p "准备好了就按回车开始推送…" _
 
+echo ""
+echo "▶ 先同步远端最新内容…"
+if ! git pull --rebase origin main; then
+  echo "  rebase 有冲突，改用普通合并再试一次…"
+  git rebase --abort 2>/dev/null
+  git pull --no-rebase origin main || true
+fi
+
+echo ""
+echo "▶ 开始推送…"
 if git push -u origin main; then
   echo ""
   echo "==============================================="

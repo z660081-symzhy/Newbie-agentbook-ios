@@ -1,12 +1,17 @@
 import SwiftUI
 import UIKit
 
-/// 原生外壳：左侧是目录（SwiftUI 列表 + 搜索 + 进度），右侧是教材正文（WKWebView）。
-/// iPhone 上 NavigationSplitView 会自动折叠成"目录 → 正文"的层级导航。
+/// 原生外壳：左边目录，右边教材正文。
+///
+/// iPhone 上的关键点：侧边栏必须用「带选择绑定的 List」，
+/// 点击某一行时把 selection 改掉，NavigationSplitView 才会把详情列推出来。
+/// 用普通 Button 包裹行是不行的（点了不会有任何反应）。
 struct ContentView: View {
     @StateObject private var store = BookStore()
     @State private var query = ""
     @State private var showBackup = false
+    /// 当前选中的章节 id。iPhone 上就是它把正文推出来。
+    @State private var selection: String?
 
     var body: some View {
         NavigationSplitView {
@@ -17,6 +22,10 @@ struct ContentView: View {
                 .navigationTitle(store.currentChapter?.shortTitle ?? "Agent 就业教材全集")
                 .navigationBarTitleDisplayMode(.inline)
         }
+        .onChange(of: selection) { newValue in
+            guard let id = newValue else { return }
+            store.jump(to: id)
+        }
         .preferredColorScheme(store.colorScheme)
         .sheet(isPresented: $showBackup) { BackupView(store: store) }
     }
@@ -24,7 +33,7 @@ struct ContentView: View {
     // MARK: - 侧边栏
 
     private var sidebar: some View {
-        List {
+        List(selection: $selection) {
             Section {
                 progressHeader
             }
@@ -37,7 +46,7 @@ struct ContentView: View {
                 }
             }
 
-            ForEach(filteredGroups, id: \.part) { group in
+            ForEach(filteredGroups) { group in
                 Section(group.part) {
                     ForEach(group.items) { c in
                         chapterRow(c)
@@ -84,8 +93,9 @@ struct ContentView: View {
             ProgressView(value: store.progress)
                 .tint(Color.accentColor)
             if let c = store.currentChapter {
+                // 点它 = 选中这一章，iPhone 上会直接进正文
                 Button {
-                    store.jump(to: c.id)
+                    selection = c.id
                 } label: {
                     Label("继续：\(c.shortTitle)", systemImage: "arrow.right.circle")
                         .font(.footnote)
@@ -118,32 +128,30 @@ struct ContentView: View {
         .accessibilityLabel("切换主题")
     }
 
+    /// 注意最后的 .tag(c.id)：没有它，List 就不知道这一行代表哪个值，
+    /// 选中也不会生效。这是上一个版本打不开章节的原因。
     private func chapterRow(_ c: Chapter) -> some View {
-        Button {
-            store.jump(to: c.id)
-        } label: {
-            HStack(spacing: 8) {
-                Image(systemName: store.isRead(c.id) ? "checkmark.circle.fill" : "circle")
-                    .foregroundStyle(store.isRead(c.id) ? Color.green : Color.secondary)
-                    .font(.footnote)
-                Text(c.shortTitle)
-                    .lineLimit(2)
-                    .font(.callout)
-                Spacer(minLength: 4)
-                if store.isBookmarked(c.id) {
-                    Image(systemName: "bookmark.fill")
-                        .font(.caption2)
-                        .foregroundStyle(Color.accentColor)
-                }
-                if store.current == c.id {
-                    Image(systemName: "chevron.right")
-                        .font(.caption2)
-                        .foregroundStyle(.tertiary)
-                }
+        HStack(spacing: 8) {
+            Image(systemName: store.isRead(c.id) ? "checkmark.circle.fill" : "circle")
+                .foregroundStyle(store.isRead(c.id) ? Color.green : Color.secondary)
+                .font(.footnote)
+            Text(c.shortTitle)
+                .lineLimit(2)
+                .font(.callout)
+            Spacer(minLength: 4)
+            if store.isBookmarked(c.id) {
+                Image(systemName: "bookmark.fill")
+                    .font(.caption2)
+                    .foregroundStyle(Color.accentColor)
             }
-            .contentShape(Rectangle())
+            if store.current == c.id {
+                Image(systemName: "chevron.right")
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+            }
         }
-        .buttonStyle(.plain)
+        .contentShape(Rectangle())
+        .tag(c.id)
     }
 
     // MARK: - 过滤
@@ -203,9 +211,9 @@ struct BackupView: View {
                             message = "备份码无效"
                         }
                     } label: {
-                        Label("从剪贴板内容导入", systemImage: "square.and.arrow.down")
+                        Label("从上面的内容导入", systemImage: "square.and.arrow.down")
                     }
-                    Button("直接粘贴剪贴板") {
+                    Button("粘贴剪贴板内容") {
                         input = UIPasteboard.general.string ?? ""
                     }
                 }

@@ -26,6 +26,7 @@ struct BookWebView: UIViewRepresentable {
         webView.scrollView.backgroundColor = .clear
         webView.allowsBackForwardNavigationGestures = false
         webView.scrollView.contentInsetAdjustmentBehavior = .never
+        webView.navigationDelegate = context.coordinator
         context.coordinator.webView = webView
         context.coordinator.load(into: webView)
         return webView
@@ -102,7 +103,7 @@ struct BookWebView: UIViewRepresentable {
     })();
     """
 
-    final class Coordinator: NSObject, WKScriptMessageHandler {
+    final class Coordinator: NSObject, WKScriptMessageHandler, WKNavigationDelegate {
         private let store: BookStore
         weak var webView: WKWebView?
         private var appliedTheme: String?
@@ -136,7 +137,37 @@ struct BookWebView: UIViewRepresentable {
 
         func jump(to id: String, in webView: WKWebView) {
             guard isLoaded else { return }
-            webView.evaluateJavaScript("window.__bookJumpTo && window.__bookJumpTo('\(id)')")
+            // 不依赖注入脚本：即使桥接脚本没跑起来，这段自带兜底也能滚过去
+            let js = """
+            (function () {
+              var el = document.getElementById('\(id)');
+              if (!el) return 'no-element';
+              if (window.__bookJumpTo) { window.__bookJumpTo('\(id)'); return 'bridge'; }
+              var top = el.getBoundingClientRect().top + window.scrollY - 56;
+              window.scrollTo({ top: top, behavior: 'smooth' });
+              return 'inline';
+            })();
+            """
+            webView.evaluateJavaScript(js) { _, error in
+                if let error = error {
+                    NSLog("[BookWebView] 跳转失败 \(id)：\(error.localizedDescription)")
+                }
+            }
+        }
+
+        // MARK: - 网页加载完成：兜底把 isLoaded 打开
+
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            // 正常情况下桥接脚本会发 ready 消息；这里再兜一层，
+            // 保证即使消息丢了，点目录依然能跳转。
+            if !isLoaded {
+                isLoaded = true
+                if let t = lastThemeRequest {
+                    appliedTheme = nil
+                    applyTheme(t, to: webView)
+                }
+            }
+            applyPendingNavigation(store: store, in: webView)
         }
 
         func userContentController(_ controller: WKUserContentController,
