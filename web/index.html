@@ -110,6 +110,90 @@ font-weight:400;vertical-align:middle}
  table,pre,.callout{page-break-inside:avoid}
  a.q{display:none}
 }
+
+/* ================= 移动端适配 ================= */
+/* 桌面：侧栏常驻；手机：侧栏变抽屉，正文占满宽度 */
+#menu{display:none}
+#scrim{position:fixed;inset:0;background:rgba(20,17,14,.5);z-index:50;display:none;
+  -webkit-tap-highlight-color:transparent}
+body.nav-open #scrim{display:block}
+
+@media (max-width: 900px){
+  html{-webkit-text-size-adjust:100%}
+  body{font-size:16px;line-height:1.85;overflow-x:hidden}
+  #sidebar{width:min(86vw,330px);transform:translateX(-103%);
+    transition:transform .26s cubic-bezier(.22,.61,.36,1);z-index:60;
+    padding-top:calc(16px + env(safe-area-inset-top))}
+  body.nav-open #sidebar{transform:translateX(0)}
+  main{margin-left:0}
+  #menu{display:inline-flex;align-items:center}
+  #topbar{padding-top:env(safe-area-inset-top)}
+  #topbar .wrap{padding:9px 14px;gap:8px;overflow-x:auto;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none}
+  #topbar .wrap::-webkit-scrollbar{display:none}
+  #topbar span{white-space:nowrap}
+  /* 按钮不许被压扁：保持单行宽度，超出的横向滑动 */
+  #topbar .tool{flex:0 0 auto;white-space:nowrap;min-height:32px;padding:5px 11px;
+    font-size:12.5px}
+  #topbar .sp{flex:1 1 8px;min-width:8px}
+  .wrap{padding:0 15px;max-width:100%}
+  .cover{padding:32px 0 22px}
+  .cover .kicker{font-size:11.5px;letter-spacing:.2em}
+  .cover h1{font-size:27px;line-height:1.42}
+  .cover p{font-size:14.5px}
+  h1.part{font-size:22px;margin:40px 0 16px;padding-top:16px}
+  h2{font-size:20.5px;margin:36px 0 14px;scroll-margin-top:56px}
+  h3{font-size:17.5px;margin:26px 0 10px;scroll-margin-top:56px}
+  h4{font-size:16px}
+  ul,ol{padding-left:22px}
+  table{display:block;overflow-x:auto;font-size:13.5px;-webkit-overflow-scrolling:touch}
+  table thead{display:table-header-group}
+  th,td{padding:8px 10px;white-space:normal;min-width:76px}
+  th:first-child,td:first-child{min-width:96px}
+  .callout{padding:13px 14px;border-radius:10px}
+  blockquote{padding:2px 14px}
+  .viz{padding:13px 14px 15px;margin:22px 0 26px}
+  .viz::before{left:12px;font-size:10.5px}
+  .vz-t{font-size:15.5px}
+  .vz-s{font-size:13px}
+  .vz-btn,.qbtn,.vz-chip{min-height:34px;padding:6px 12px;font-size:12.5px}
+  .vz-ctl-row{flex-wrap:wrap;gap:6px 10px}
+  .vz-ctl-l{width:100%}
+  .vz-ctl-v{width:auto;margin-left:auto}
+  .vz-ctl-row input[type=range]{flex:1 1 100%}
+  .vz-chips{gap:6px}
+  .vz-bl{width:33%;font-size:12.5px}
+  .vz-bv{width:22%;font-size:11.5px}
+  .vz-legend{font-size:12px;gap:10px}
+  .qitem{padding:11px 12px;margin:10px 0}
+  .qtext{font-size:15px}
+  .qans{font-size:14px}
+  .fc-card{min-height:84px;padding:15px}
+  .fc-term{font-size:17.5px}
+  .modal{padding:0;align-items:flex-end}
+  .mbox{max-width:100%;border-radius:16px 16px 0 0;max-height:92vh;overflow:auto;
+    padding-bottom:env(safe-area-inset-bottom)}
+  .mhead{padding:12px 16px}
+  .mbody{padding:16px}
+  .qz-q{font-size:16px}
+  .qz-score{font-size:30px}
+  .qz-list{max-height:38vh}
+  #up{right:14px;bottom:calc(16px + env(safe-area-inset-bottom))}
+}
+
+@media (max-width: 560px){
+  .vz-bl{width:40%}
+  .vz-bv{width:18%}
+  .vz-bar{gap:6px;font-size:12px}
+  h2{font-size:19.5px}
+  .cover h1{font-size:25px}
+}
+
+/* 在原生 App 里：网页自带的侧栏隐藏 —— App 有自己的原生目录 */
+html.in-app #sidebar,
+html.in-app #menu,
+html.in-app #scrim{display:none!important}
+html.in-app main{margin-left:0!important}
 </style>
 <style>/* ============ 章节交互动画 ============ */
 .viz{margin:26px 0 34px;border:1px solid var(--line);border-radius:14px;
@@ -259,6 +343,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 </head>
 <body>
 <div id="bar"></div>
+<div id="scrim"></div>
 <nav id="sidebar">
   <h1>AGENT 就业教材全集</h1>
   <div class="search"><input id="q" type="search" placeholder="搜索章节…"></div>
@@ -266,6 +351,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 </nav>
 <main>
   <div id="topbar"><div class="wrap">
+    <button class="tool" id="menu" aria-label="打开目录">目录</button>
     <span>进度 <b id="pct">0%</b></span><span class="sp"></span>
     <button class="tool" id="theme">夜间模式</button>
     <button class="tool" id="quizBtn">随机抽题</button>
@@ -2682,6 +2768,20 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   tb.onclick=function(){var d=document.documentElement.dataset.theme==='dark';
     document.documentElement.dataset.theme=d?'light':'dark';st.theme=document.documentElement.dataset.theme;save();sync();};
   // 搜索
+  // 移动端：目录抽屉
+  var menuBtn=document.getElementById('menu'), scrimEl=document.getElementById('scrim');
+  function closeNav(){document.body.classList.remove('nav-open');}
+  if(menuBtn)menuBtn.addEventListener('click',function(){
+    document.body.classList.toggle('nav-open');
+  });
+  if(scrimEl)scrimEl.addEventListener('click',closeNav);
+  document.querySelectorAll('#nav a').forEach(function(a){
+    a.addEventListener('click',function(){ if(window.innerWidth<=900)closeNav(); });
+  });
+  window.addEventListener('keydown',function(e){ if(e.key==='Escape')closeNav(); });
+  window.addEventListener('resize',function(){ if(window.innerWidth>900)closeNav(); });
+
+  // 搜索
   document.getElementById('q').addEventListener('input',function(e){
     var v=e.target.value.trim().toLowerCase();
     document.querySelectorAll('.grp').forEach(function(g){
@@ -3918,13 +4018,20 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       });
       if (label) {
         var size = Math.max(10, Math.min(14, 9 + q.s * .6));
-        var left = o.align === "left";
-        var dx = left ? -(rad + 5) : (rad + 5), dy = o.dy || 0;
+        var left = o.align === "left", center = o.align === "center";
+        var dx = center ? 0 : (left ? -(rad + 5) : (rad + 5));
+        var dy = o.dy || 0;
         push(q.z - 0.02, function (g, ink) {
           g.font = "600 " + size.toFixed(1) + "px -apple-system,'PingFang SC','Microsoft YaHei',sans-serif";
-          g.textAlign = left ? "right" : "left"; g.textBaseline = "middle";
-          g.lineWidth = 3; g.strokeStyle = paper(g); g.strokeText(label, q.x + dx, q.y + dy);
-          g.fillStyle = o.color || ink; g.fillText(label, q.x + dx, q.y + dy);
+          g.textAlign = center ? "center" : (left ? "right" : "left");
+          g.textBaseline = "middle";
+          // 手机屏幕窄，标签贴边会被裁掉 —— 把它夹回画布内
+          var tw = g.measureText(label).width, tx = q.x + dx;
+          if (center) tx = Math.max(tw / 2 + 4, Math.min(tx, W - tw / 2 - 4));
+          else if (left) tx = Math.max(tx, tw + 4);
+          else tx = Math.min(tx, W - tw - 4);
+          g.lineWidth = 3; g.strokeStyle = paper(g); g.strokeText(label, tx, q.y + dy);
+          g.fillStyle = o.color || ink; g.fillText(label, tx, q.y + dy);
         });
       }
       picks.push({ x: q.x, y: q.y, r: rad, tag: tag, p: p });
@@ -3993,8 +4100,10 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
         g.font = "600 " + fs.toFixed(1) + "px -apple-system,'PingFang SC','Microsoft YaHei',sans-serif";
         g.textAlign = "center"; g.textBaseline = "middle";
         var yy = q.y + (yOff || 0);
-        g.lineWidth = 3.2; g.strokeStyle = paper(g); g.strokeText(str, q.x, yy);
-        g.fillStyle = color || ink; g.fillText(str, q.x, yy);
+        var tw = g.measureText(str).width;
+        var tx = Math.max(tw / 2 + 4, Math.min(q.x, W - tw / 2 - 4));
+        g.lineWidth = 3.2; g.strokeStyle = paper(g); g.strokeText(str, tx, yy);
+        g.fillStyle = color || ink; g.fillText(str, tx, yy);
       });
     };
 
@@ -4108,7 +4217,10 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     host.appendChild(mk("div", "vz-t", title));
     host.appendChild(mk("div", "vz-s", sub));
     var cv = mk("canvas", "v3-cv");
-    cv.style.height = (o.h || 380) + "px";
+    // 手机上把画布压矮一些，否则一屏放不下、也没法滚动
+    var wantH = o.h || 380;
+    var hCap = Math.max(230, Math.round(window.innerWidth * 0.78));
+    cv.style.height = Math.round(Math.min(wantH, hCap)) + "px";
     host.appendChild(cv);
     var bar = mk("div", "v3-bar");
     var note = mk("div", "vz-note", "");
@@ -4292,10 +4404,10 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     var m = mount(host, "语义空间：把句子放到三维坐标里",
       "拖着转一圈，看“意思近”的句子是怎么抱团的。点任意一句，看它和谁最近。", { dist: 13, pitch: .34, h: 420 });
     var pts = [
-      { t: "想退货", p: [2.10, -.70, 2.00], o: { align: "left" } },
+      { t: "想退货", p: [2.10, -.70, 2.00], o: { align: "left", dy: 10 } },
       { t: "七天无理由", p: [3.30, -.20, 2.60], o: { dy: -10 } },
       { t: "不合适想退", p: [1.30, -1.70, 1.35], o: { dy: 11 } },
-      { t: "不支持退货", p: [2.34, -.86, 2.10], o: { dy: -11 } },
+      { t: "不支持退货", p: [2.34, -.86, 2.10], o: { align: "center", dy: -15 } },
       { t: "物流太慢", p: [-2.40, -1.20, 1.20], o: { align: "left" } },
       { t: "快递不行", p: [-2.95, -.70, .70], o: { dy: -10 } },
       { t: "颜色好看", p: [.80, 1.90, -1.40] },
@@ -6073,9 +6185,8 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     note();
   };
 
-  window.__S3 = S;
-
   /* ---------- 挂载 ---------- */
+  window.__S3 = S;
   Array.prototype.forEach.call(document.querySelectorAll("[data-v3]"), function (el) {
     var k = el.getAttribute("data-v3"), fn = S[k];
     if (!fn) { el.style.display = "none"; return; }

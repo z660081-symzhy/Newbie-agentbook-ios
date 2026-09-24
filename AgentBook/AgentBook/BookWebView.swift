@@ -47,6 +47,9 @@ struct BookWebView: UIViewRepresentable {
     (function () {
       if (window.__bookBridgeReady) return;
       window.__bookBridgeReady = true;
+      // 告诉网页：我在原生 App 里。App 有自己的原生目录，
+      // 所以网页自带的侧栏/抽屉要隐藏掉，正文占满整屏。
+      document.documentElement.classList.add('in-app');
       function post(o) { try { window.webkit.messageHandlers.book.postMessage(o); } catch (e) {} }
 
       // 原生点目录 → 网页滚过去并闪一下
