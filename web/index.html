@@ -366,7 +366,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       <p>一本写给"想学懂、想去用、想找工作"的人的书。不讲代码细节，只讲原理、判断和怎么用。
       全书 34 章 + 5 个附录，配套可勾选的学习 Todolist。</p>
       <p><b>每一章都配了可以动手玩的演示</b>：平面动画 + 术语闪卡 + 自测题 + 话术演练，
-      其中 12 章还有<b>可以拖动旋转的三维课堂模型</b>（语义空间、矩阵乘法、切块重叠、HNSW 分层图、
+      其中 26 章、共 47 个场景配了<b>可以拖动旋转的三维课堂模型</b>（语义空间、矩阵乘法、切块重叠、HNSW 分层图、
       知识图谱、Agent 螺旋循环、损失曲面、容器调度、六层架构、集群路由……）。
       先玩一遍，再读正文，理解会快很多。</p>
     </div>
@@ -512,9 +512,9 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c8">每日固定动作（贯穿全程）<a class="q" href="javascript:void 0" data-q="c8">#</a><button class="mark-read" data-c="c8">标记已读</button></h2>
 <ul class="tasks"><li class="task" data-k="cf7f1f84f2ae"><input type="checkbox"><span>每天 30 分钟：读昨天写的笔记，做一次&quot;合上书复述&quot;</span></li><li class="task" data-k="fa3b702bfd20"><input type="checkbox"><span>每天 15 分钟：把当天学到的一个概念，用&quot;给外行讲&quot;的方式写 200 字</span></li><li class="task" data-k="a4514b51e12f"><input type="checkbox"><span>每周 1 次：把本周的 5 个概念串成一段 3 分钟的口述</span></li><li class="task" data-k="5120fae6af8f"><input type="checkbox"><span>每周 1 次：更新简历里的一个项目条目</span></li></ul>
 <h3>0.6 这本书怎么读：三遍阅读法</h3>
-<p>这本书有 33 章，加上附录，正常读一遍需要 20 到 30 小时。但<strong>读一遍是不够的</strong>。请按下面三遍来：</p>
+<p>这本书有 34 章（第 0 章导论 + 第 1–33 章），加上 5 个附录，正常读一遍需要 20 到 30 小时。但<strong>读一遍是不够的</strong>。请按下面三遍来：</p>
 <p><strong>第一遍：通读，不求甚解（约 15 小时）</strong></p>
-<p>像看小说一样往下看，遇到不懂的术语不要停下查。这一遍的目的是<strong>建立地图</strong>——你要知道这 33 章分别讲什么、彼此什么关系。你会记住大概 20%。</p>
+<p>像看小说一样往下看，遇到不懂的术语不要停下查。这一遍的目的是<strong>建立地图</strong>——你要知道这 34 章分别讲什么、彼此什么关系。你会记住大概 20%。</p>
 <p><strong>第二遍：精读 + 写笔记（约 40 小时）</strong></p>
 <p>一章一章来，每读完一章做两件事：</p>
 <ol><li><strong>合上书，用嘴复述这一章在讲什么</strong>（2 分钟，可以说给自己听，最好录音）。</li><li><strong>在本子上写下三个回答</strong>：这章解决什么问题？核心原理一句话是什么？面试官会怎么问？</li></ol>
@@ -2691,7 +2691,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 横切关注点：权限与审计 · 成本与配额 · 评测与回归 · 可观测性</pre>
 <hr>
 <h2 id="c46">附录 E　自测题使用方法<a class="q" href="javascript:void 0" data-q="c46">#</a><button class="mark-read" data-c="c46">标记已读</button></h2>
-<p>本书共 33 章，每章 6 到 11 道自测题，合计约 300 题。使用方法：</p>
+<p>本书共 34 章，每章 6 到 11 道自测题，合计约 320 题。使用方法：</p>
 <ol><li><strong>第一遍（学完一章）</strong>：读完当章内容后立刻做，检验是否真的看懂。</li><li><strong>第二遍（每周末）</strong>：把本周所有章节的题重做一次，只做错过的。</li><li><strong>第三遍（面试前）</strong>：随机抽 60 题，口述回答，全程不看资料。</li></ol>
 <p><strong>关于答案</strong>：本书没有单独列出答案页，因为<strong>答案就在每一章的正文里，而且都是可以自己推导的</strong>。如果你能说出这道题在问什么概念，就已经答对了一半；如果你想不起这个概念，回去看那一章的正文比看答案更有用。</p>
 <p><strong>唯一需要留意的三类题</strong>：</p>
@@ -3998,7 +3998,9 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     }
 
     /* ---------- 图元 ---------- */
-    function push(d, fn) { items.push({ d: d, fn: fn }); }
+    // lay：绘制层次。0 = 几何体，1 = 文字。
+    // 标签不参与几何体的深度排序 —— 否则靠前的面会把文字盖住（走查报告里最大的一类问题）。
+    function push(d, fn, lay) { items.push({ d: d, fn: fn, lay: lay || 0 }); }
 
     api.ball = function (p, r, color, label, tag, o) {
       o = o || {};
@@ -4030,8 +4032,14 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
           if (center) tx = Math.max(tw / 2 + 4, Math.min(tx, W - tw / 2 - 4));
           else if (left) tx = Math.max(tx, tw + 4);
           else tx = Math.min(tx, W - tw - 4);
-          g.lineWidth = 3; g.strokeStyle = paper(g); g.strokeText(label, tx, q.y + dy);
-          g.fillStyle = o.color || ink; g.fillText(label, tx, q.y + dy);
+          // 纵向也要夹：顶部/底部的标签会被画布切掉
+          var ty = Math.max(size, Math.min(H - size, q.y + dy));
+          // 极淡底板：文字压在色块上也能读清
+          g.globalAlpha = .6; g.fillStyle = paper(g);
+          g.fillRect(tx - (left ? tw : 0) - 3, ty - size * .78, tw + 6, size * 1.56);
+          g.globalAlpha = 1;
+          g.lineWidth = 2.6; g.strokeStyle = paper(g); g.strokeText(label, tx, ty);
+          g.fillStyle = o.color || ink; g.fillText(label, tx, ty);
         });
       }
       picks.push({ x: q.x, y: q.y, r: rad, tag: tag, p: p });
@@ -4099,16 +4107,20 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       push(q.z - 0.05, function (g, ink) {
         g.font = "600 " + fs.toFixed(1) + "px -apple-system,'PingFang SC','Microsoft YaHei',sans-serif";
         g.textAlign = align || "center"; g.textBaseline = "middle";
-        var yy = q.y + (yOff || 0);
+        // 纵向夹取（之前只夹了横向）
+        var yy = Math.max(fs, Math.min(H - fs, q.y + (yOff || 0)));
         var tw = g.measureText(str).width;
-        var pad = align === "left" ? tw + 4 : (align === "right" ? 0 : tw / 2 + 4);
-        var tx = align === "left" ? Math.max(q.x, tw + 4)
-               : align === "right" ? Math.min(q.x, W - 4)
+        // 修正左右夹取方向：left 对齐时文字向右延伸，要保证右边界进画布；right 反之
+        var tx = align === "left" ? Math.min(q.x, W - tw - 4)
+               : align === "right" ? Math.max(q.x, tw + 4)
                : Math.max(tw / 2 + 4, Math.min(q.x, W - tw / 2 - 4));
-        void pad;
-        g.lineWidth = 3.2; g.strokeStyle = paper(g); g.strokeText(str, tx, yy);
+        g.globalAlpha = .6; g.fillStyle = paper(g);
+        var bx = align === "left" ? tx - 3 : align === "right" ? tx - tw - 3 : tx - tw / 2 - 3;
+        g.fillRect(bx, yy - fs * .78, tw + 6, fs * 1.56);
+        g.globalAlpha = 1;
+        g.lineWidth = 3; g.strokeStyle = paper(g); g.strokeText(str, tx, yy);
         g.fillStyle = color || ink; g.fillText(str, tx, yy);
-      });
+      }, 1);
     };
 
     /// 竖直刻度尺：在 (x,z) 位置从 y0 到 y1 画一把带刻度和数值的尺子。
@@ -4119,7 +4131,10 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
         var t = i / steps, y = y0 + (y1 - y0) * t;
         api.line([x - .26, y, z], [x + .26, y, z], color, .9, .5);
         var v = v0 + (v1 - v0) * t;
-        api.text([x - .45, y, z], String(Math.round(v)) + (suffix || ""), color, 9.5, 0, "right");
+        // 按量程自动定小数位：0–1 的轴用 Math.round 会全印成 0/1
+        var span = Math.abs(v1 - v0);
+        var dec = span >= 10 ? 0 : (span >= 1 ? 1 : 2);
+        api.text([x - .45, y, z], v.toFixed(dec) + (suffix || ""), color, 9.5, 0, "right");
       }
     };
 
@@ -4157,7 +4172,8 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       g.clearRect(0, 0, W, H);
       items = []; picks = [];
       if (scene) scene(api);
-      items.sort(function (a, b) { return b.d - a.d; });
+      // 两趟绘制：先几何（按深度），再文字（按深度）—— 文字永远不会被色块或球体压住
+      items.sort(function (a, b) { return (a.lay - b.lay) || (b.d - a.d); });
       var ink = inkColor();
       for (var i = 0; i < items.length; i++) items[i].fn(g, ink);
     }
@@ -6236,9 +6252,9 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
         e.box(p, [2.6, .8, 1.6], pass ? col : C.m,
           { faces: pass, alpha: pass ? .3 : .0, edge: pass ? col : C.m,
             lw: pass ? 1.5 : .7, edgeA: pass ? .95 : .3 });
-        // 标签错开：同一层的相邻块上下交替，避免挤在一起
-        e.text([p[0], p[1] + .78 + (i % 2 ? .34 : 0), p[2]], k.t + (pass ? "" : "（无权）"),
-          pass ? col : C.m, 11);
+        // 无权的块把标签放到下面，和有权那批从垂直方向错开（否则两排标签会互相压）
+        e.text([p[0], p[1] + (pass ? .8 + (i % 2 ? .34 : 0) : -1.0), p[2]],
+          k.t + (pass ? "" : "（无权）"), pass ? col : C.m, 11);
       });
       var LY = ["谁来都能看", "主管能看", "只有总监能看"];
       [0, 1, 2].forEach(function (lv) {
@@ -6902,6 +6918,13 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     ];
     function ai(d) { return Math.max(0, Math.min(100, d.h + d.e * (1 - clr))); }
     function M(v) { return -3.3 + v / 100 * 6.6; }
+    // 八向循环避让：密集场景里只上下交替不够用（走查报告实测 ch22b 有 16 处叠字）
+    var CYCLE = [
+      { align: "left", dy: 0 }, { align: "right", dy: 0 },
+      { align: "center", dy: -15 }, { align: "center", dy: 15 },
+      { align: "left", dy: -13 }, { align: "right", dy: -13 },
+      { align: "left", dy: 13 }, { align: "right", dy: 13 }
+    ];
     slider(m, "评分标准的清晰程度", 0, 1, .05, clr, "", function (v) { clr = v; m.sc.render(); note(); });
     function corr() {
       var xs = DIMS.map(function (d) { return d.h; }), ys = DIMS.map(ai);
@@ -6943,7 +6966,8 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
         var x = M(d.h), z = M(ai(d)), dev = Math.abs(ai(d) - d.h);
         var col = dev > 8 ? C.a : C.g;
         e.line([x, 0, z], [x, 0, x], col, 1.4, .45);       // 偏离到对角线的“落差线"
-        e.ball([x, .12, z], dev > 8 ? .3 : .24, col, d.n, null, { dy: i % 2 ? -13 : 13 });
+        var opt = CYCLE[i % CYCLE.length];
+        e.ball([x, .12, z], dev > 8 ? .3 : .24, col, d.n, null, opt);
       });
       e.text([0, 2.2, 0], "红点 = 与人工打分偏差超过 8 分 → 这个维度的标准要重写", C.a, 12);
     });
