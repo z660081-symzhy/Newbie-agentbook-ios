@@ -3999,6 +3999,12 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     }
     function proj(p) {
       var cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+      // ⚠️ 这里 sp 取负号是必须的：相机必须站在"地平线"之上往斜下看。
+      // 原来 sp = +sin(pitch)，视线方向的 Y 分量为正（等于往上看），
+      // 相机世界高度算出来是 −sin(pitch)·dist —— 47 个场景里 46 个都跑到了
+      // 地面下面，等于在楼板底下仰视地面，于是物体全都"浮"着，天地分不开。
+      // 取负号后：相机高度 = +sin(pitch)·dist > 地面，视线朝下 —— 才是俯视地板。
+      sp = -sp;
       var x1 = p[0] * cy - p[2] * sy, z1 = p[0] * sy + p[2] * cy;
       var y1 = p[1] * cp - z1 * sp, z2 = p[1] * sp + z1 * cp;
       var zc = z2 + dist;
