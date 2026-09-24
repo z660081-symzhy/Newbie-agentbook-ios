@@ -337,7 +337,10 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 .qz-list{max-height:44vh;overflow:auto;margin-top:12px;border:1px solid var(--line);border-radius:10px}
 .qz-row{padding:9px 12px;border-bottom:1px solid var(--line);font-size:13.5px;line-height:1.7}
 .qz-row:last-child{border-bottom:0}
-.qz-row a{color:var(--accent2);text-decoration:none;font-size:12px;margin-right:8px}
+.qz-row a{color:var(--accent2);text-decoration:none;font-size:12px;margin-right:8px;
+  border-bottom:1px dashed currentColor;white-space:nowrap}
+.qz-row a:hover{opacity:.75}
+.qz-rt{display:inline}
 .qz-empty{color:var(--muted);font-size:14px;padding:12px 0}
 </style>
 </head>
@@ -4094,7 +4097,23 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   var BANK = window.__Q || [], TERMS = window.__TERMS || {};
 
   /* ---------- 一、逐题自查 ---------- */
+  // 把"逐题列表"的样式与实际记录对齐。
+  // 原来只有点击本题的按钮时才会同步，所以在别处改了记录（随机抽题里答题、
+  // 或者清空错题本）列表上的"答对了/没答上"标记就还留着 —— 数据清了、标记没清。
+  function syncItems() {
+    Array.prototype.forEach.call(document.querySelectorAll(".qitem"), function (li) {
+      var v = st.q[li.getAttribute("data-q")];
+      li.classList.toggle("ok", v === "ok");
+      li.classList.toggle("no", v === "no");
+      var bar = li.querySelector(".qbar");
+      if (!bar) return;
+      var bOk = bar.querySelector(".ok"), bNo = bar.querySelector(".no");
+      if (bOk) bOk.classList.toggle("on", v === "ok");
+      if (bNo) bNo.classList.toggle("on", v === "no");
+    });
+  }
   function refreshStats() {
+    syncItems();
     Array.prototype.forEach.call(document.querySelectorAll(".qstat"), function (el) {
       var list = el.previousElementSibling;
       if (!list || !list.classList.contains("qlist")) return;
@@ -4200,12 +4219,30 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     }
     return a;
   }
-  function chLink(n) { return '<a href="#c0" onclick="return false“>第 ' + n + ' 章</a>'; }
+  // 题干里可能带 < > &（比如"检索质量 > 提示词"），直接塞进 innerHTML 会被吃掉或错位
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+  // 章节锚点是 build.py 按 h2 出现顺序编号的（c1、c2……），不能想当然用"第 N 章 → cN"。
+  // 这里按标题文字去找，找到哪个就跳到哪个，链接永远指得对。
+  function chapEl(n) {
+    var hs = document.querySelectorAll("h2");
+    for (var i = 0; i < hs.length; i++) {
+      if ((hs[i].textContent || "").indexOf("第 " + n + " 章") >= 0) return hs[i];
+    }
+    return null;
+  }
+  function chLink(n, text) {
+    var el = chapEl(n);
+    return '<a href="' + (el ? "#" + el.id : "#") + '" data-ch="' + n + '">'
+      + (text || ("第 " + n + " 章")) + "</a>";
+  }
 
   var sess = null;
   function start(count, pool) {
     var list = pool || BANK;
-    if (!list.length) { open("没有可用的题目"); mbody.innerHTML = '<div class="qz-empty”>题库为空。</div>'; return; }
+    if (!list.length) { open("没有可用的题目"); mbody.innerHTML = '<div class="qz-empty">题库为空。</div>'; return; }
     sess = { list: shuffle(list.slice()).slice(0, count || list.length), i: 0, ok: 0, wrong: [] };
     open("随机抽题 · " + sess.list.length + " 题");
     drawQuiz();
@@ -4223,7 +4260,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
         var box = mk("div", "qz-list");
         sess.wrong.forEach(function (t) {
           var r = mk("div", "qz-row");
-          r.innerHTML = "<b>第 " + t[0] + " 章</b>　" + t[2];
+          r.innerHTML = "<b>第 " + t[0] + " 章</b>　" + esc(t[2]);
           box.appendChild(r);
         });
         mbody.appendChild(box);
@@ -4280,7 +4317,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     var box = mk("div", "qz-list");
     list.forEach(function (t) {
       var r = mk("div", "qz-row");
-      r.innerHTML = '<a href="#c" data-ch="' + t[0] + '“>第 ' + t[0] + ' 章</a>' + t[2];
+      r.innerHTML = chLink(t[0]) + '<span class="qz-rt">' + esc(t[2]) + "</span>";
       box.appendChild(r);
     });
     mbody.appendChild(box);
