@@ -676,7 +676,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>模型最后一步是&quot;算出每个词的概率，然后选一个&quot;。怎么选，就是这些参数决定的。</p>
 <table><thead><tr><th>参数</th><th>它在控制什么</th><th>调高的效果</th><th>什么时候用</th></tr></thead><tbody><tr><td>temperature（温度）</td><td>概率分布的&quot;陡峭程度&quot;</td><td>高 = 更随机、更有创意，也更容易胡说</td><td>写文案 0.7-1.0；抽取数据/结构化输出用 0</td></tr><tr><td>top_p（核采样）</td><td>只从累计概率前 p% 的词里选</td><td>低 = 更保守</td><td>一般 0.9-0.95，与温度二选一调</td></tr><tr><td>top_k</td><td>只从概率最高的 k 个词里选</td><td>低 = 更保守</td><td>用得比 top_p 少</td></tr><tr><td>repetition_penalty</td><td>惩罚重复出现过的词</td><td>高 = 更少复读</td><td>模型爱复读时调</td></tr><tr><td>presence / frequency penalty</td><td>惩罚&quot;已经出现过的内容&quot;</td><td>高 = 更敢换话题</td><td>长文生成</td></tr><tr><td>max_tokens</td><td>最多生成多少字</td><td>——</td><td>一定要设，防止跑飞烧钱</td></tr><tr><td>stop（停止词）</td><td>遇到这些字符串就停</td><td>——</td><td>控制输出边界</td></tr><tr><td>seed（随机种子）</td><td>固定随机性</td><td>——</td><td>做可复现的测试用</td></tr></tbody></table>
 <p><strong>一句话记住</strong>：<strong>做抽取和结构化输出，温度用 0；做创意内容，温度调高。</strong> 温度 0 不等于 100% 确定（因为底层浮点运算和批处理会有微小差异），但会稳定得多。</p>
-<h3>四、幻觉：为什么模型会一本正经地胡说</h3>
+<div class="viz v3d" data-v3="ch3d"></div><h3>四、幻觉：为什么模型会一本正经地胡说</h3>
 <p>幻觉（Hallucination）不是一个 bug，而是这个机制的<strong>必然副产品</strong>。原因有四种，你要能分开讲：</p>
 <table><thead><tr><th>类型</th><th>成因</th><th>表现</th><th>对应的解法</th></tr></thead><tbody><tr><td>知识缺失型</td><td>训练数据里根本没有这个信息</td><td>编造不存在的法条、论文</td><td>用 RAG 把资料喂给它</td></tr><tr><td>知识过时型</td><td>训练数据的截止时间早</td><td>说错最新价格、最新政策</td><td>用 RAG 或工具查实时数据</td></tr><tr><td>目标错配型</td><td>它的训练目标就是&quot;生成最像样的下一个词&quot;，不是&quot;说真话&quot;</td><td>不知道也硬答</td><td>提示词里明确允许&quot;不知道&quot;，并要求引用来源</td></tr><tr><td>上下文冲突型</td><td>你给的资料本身矛盾或太长</td><td>把多份文档混着编</td><td>优化切块、加重排、缩减上下文</td></tr></tbody></table>
 <p><strong>最重要的一个认知</strong>：幻觉不可能被彻底消灭，只能被<strong>管理</strong>。所以专业的产品设计一定包含&quot;兜底机制&quot;：答不出来就说不知道、给出原文引用让用户自己核、关键动作（比如退款、下单）必须走人工确认。</p>
@@ -1149,7 +1149,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>这就带来一个技术难题：<strong>先过滤还是先检索？</strong></p>
 <table><thead><tr><th>方式</th><th>做法</th><th>问题</th></tr></thead><tbody><tr><td>先检索后过滤（Post-filter）</td><td>先找 100 条最近的，再筛掉不符合条件的</td><td>筛完可能只剩 2 条，甚至一条都不剩</td></tr><tr><td>先过滤后检索（Pre-filter）</td><td>先按条件缩小范围，再在里面找最近的</td><td>用精确索引时可能退化成暴力搜索，很慢</td></tr></tbody></table>
 <p><strong>好的向量数据库会同时支持两种，并自动选择。</strong> 这也是选型时一个实际的考察点：你的数据里过滤条件复杂吗？</p>
-<h3>四、产品怎么选（这一节面试很实用）</h3>
+<div class="viz v3d" data-v3="ch10b"></div><h3>四、产品怎么选（这一节面试很实用）</h3>
 <table><thead><tr><th>类型</th><th>代表</th><th>特点</th><th>适合</th></tr></thead><tbody><tr><td>专业向量数据库</td><td>Milvus、Qdrant、Weaviate、Pinecone</td><td>功能全、性能强、要单独部署或付费</td><td>数据量大、对性能有要求</td></tr><tr><td>关系库扩展</td><td>PostgreSQL + pgvector</td><td>和业务数据放在一起，事务一致，运维简单</td><td>百万级以内、已经在用 PG</td></tr><tr><td>搜索引擎扩展</td><td>Elasticsearch / OpenSearch</td><td>天然支持关键词 + 向量的混合检索</td><td>已经有一套搜索体系</td></tr><tr><td>内存库</td><td>FAISS</td><td>只是一个库，不是数据库，无服务、无持久化</td><td>离线实验、单机场景</td></tr><tr><td>云平台托管</td><td>各家云厂商的向量检索服务</td><td>免运维、按量付费</td><td>团队小、不想运维</td></tr></tbody></table>
 <p><strong>一句话选型逻辑</strong>：</p>
 <ul><li>数据在百万级以内、已经用 PostgreSQL → pgvector。</li><li>已经有一套 Elasticsearch 搜索 → 直接用它做混合检索。</li><li>数据在千万级以上、要专门优化 → 上 Milvus 或 Qdrant。</li><li>做实验、单机跑 → FAISS 足够。</li></ul>
@@ -1463,7 +1463,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>数据质量的三条铁律：</strong></p>
 <ol><li><strong>质量远重于数量。</strong> 一千条精准的样本，胜过十万条含噪声的样本。业界的共识是：<strong>把标注质量提上去，比把数据量翻十倍有效得多。</strong></li><li><strong>分布要贴近真实。</strong> 如果训练数据里都是&quot;标准提问&quot;，线上用户用方言和错别字提问，模型就崩了。<strong>要把真实的长尾问题放进去。</strong></li><li><strong>要有负例。</strong> 只教它&quot;该怎么做&quot;不够，还要教它&quot;什么时候该说不知道&quot;&quot;什么话不能说&quot;。</li></ol>
 <p><strong>关于合成数据的一个现实提醒</strong>：用强模型生成训练数据已经是主流做法，但有两个坑——一是&quot;模型味&quot;，生成的数据风格过于一致，训出来的小模型也带着这种腔调；二是&quot;错误传播&quot;，生成的答案本身有错，训进去就成了系统性偏差。<strong>结论：合成数据必须过人工筛选这道关。</strong></p>
-<h3>四、数据标注平台要有什么</h3>
+<div class="viz v3d" data-v3="ch15c"></div><h3>四、数据标注平台要有什么</h3>
 <p>如果要在一个公司里做数据标注，你需要一个平台。它至少要解决五件事：</p>
 <table><thead><tr><th>能力</th><th>解决什么</th></tr></thead><tbody><tr><td>任务分发与权限</td><td>把任务分给不同的人，控制谁看得到什么数据</td></tr><tr><td>标注界面</td><td>按业务定制（分类、抽取、排序、对话评分）</td></tr><tr><td>质检机制</td><td>抽检、双标、交叉校验</td></tr><tr><td>一致性评估</td><td>不同标注员对同一批样本的判断是否一致</td></tr><tr><td>版本管理</td><td>数据集的每一版都可追溯、可回滚</td></tr></tbody></table>
 <p><strong>其中&quot;一致性评估&quot;是专业的标志。</strong> 如果两个人对同一批样本的判断只有六成一致，说明<strong>标注规范本身有问题</strong>，不是标注员不认真。这时候要做的是改规范、加示例，而不是继续堆人。</p>
@@ -1934,7 +1934,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>如果员工知道 AI 在按评分卡打分，他可能会&quot;表演&quot;——硬套话术、机械提问。</p>
 <p>对策：</p>
 <ul><li>评分维度里加入<strong>结果类指标</strong>（成交率、复购率、客户满意度），不能只看过程动作。</li><li>定期更新评分卡，避免被完全套路化。</li><li>强调这是&quot;辅助工具&quot;而不是&quot;奖惩依据&quot;，降低表演动机。</li></ul>
-<h3>五、更重要的一个视角：这是培训系统，不是处罚系统</h3>
+<div class="viz v3d" data-v3="ch22b"></div><h3>五、更重要的一个视角：这是培训系统，不是处罚系统</h3>
 <p><strong>这一句话会把你的项目从&quot;能用&quot;提升到&quot;有价值&quot;。</strong></p>
 <p>如果 AI 考核只用来扣钱，员工的反应一定是抵触和作假。但如果它用来<strong>帮员工变强</strong>，效果完全不同：</p>
 <ul><li>每个员工收到一份个性化的改进建议（&quot;你在异议处理这一项平均得分偏低，这是一段优秀录音，对比听一下&quot;）。</li><li>好的话术被自动提取出来，变成组织资产（这就是发言稿里说的&quot;新人不用人带，AI 就能培训&quot;）。</li><li>管理者能看到团队整体在哪个环节薄弱，针对性做培训。</li></ul>
@@ -4092,19 +4092,43 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       });
     };
 
-    api.text = function (p, str, color, size, yOff) {
+    api.text = function (p, str, color, size, yOff, align) {
       if (!finite(p)) return;
       var q = proj(p); if (!q) return;
       var fs = Math.max(9.5, Math.min(15, (size || 12) * (0.72 + q.s / 900)));
       push(q.z - 0.05, function (g, ink) {
         g.font = "600 " + fs.toFixed(1) + "px -apple-system,'PingFang SC','Microsoft YaHei',sans-serif";
-        g.textAlign = "center"; g.textBaseline = "middle";
+        g.textAlign = align || "center"; g.textBaseline = "middle";
         var yy = q.y + (yOff || 0);
         var tw = g.measureText(str).width;
-        var tx = Math.max(tw / 2 + 4, Math.min(q.x, W - tw / 2 - 4));
+        var pad = align === "left" ? tw + 4 : (align === "right" ? 0 : tw / 2 + 4);
+        var tx = align === "left" ? Math.max(q.x, tw + 4)
+               : align === "right" ? Math.min(q.x, W - 4)
+               : Math.max(tw / 2 + 4, Math.min(q.x, W - tw / 2 - 4));
+        void pad;
         g.lineWidth = 3.2; g.strokeStyle = paper(g); g.strokeText(str, tx, yy);
         g.fillStyle = color || ink; g.fillText(str, tx, yy);
       });
+    };
+
+    /// 竖直刻度尺：在 (x,z) 位置从 y0 到 y1 画一把带刻度和数值的尺子。
+    /// 教科书里的所有量化图形都靠它 —— 有了刻度，读者才知道柱子的高矮意味着什么。
+    api.vScale = function (x, z, y0, y1, v0, v1, steps, color, suffix) {
+      api.line([x, y0, z], [x, y1, z], color, 1.2, .55);
+      for (var i = 0; i <= steps; i++) {
+        var t = i / steps, y = y0 + (y1 - y0) * t;
+        api.line([x - .26, y, z], [x + .26, y, z], color, .9, .5);
+        var v = v0 + (v1 - v0) * t;
+        api.text([x - .45, y, z], String(Math.round(v)) + (suffix || ""), color, 9.5, 0, "right");
+      }
+    };
+
+    /// 地面参考线：把某条数值基线铺满整个场景，用来做"阈值/水位/上限"的可视化
+    api.planeGrid = function (y, extent, step, color, alpha) {
+      for (var i = -extent; i <= extent; i += step) {
+        api.line([i, y, -extent], [i, y, extent], color, .7, alpha);
+        api.line([-extent, y, i], [extent, y, i], color, .7, alpha);
+      }
     };
 
     api.grid = function (n, step, color, y0, alpha) {
@@ -6069,23 +6093,28 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     note();
   };
 
-  /* ============ 第 26 章：七个项目长在一起的样子 ============ */
+  /* ============ 第 26 章：七个项目的分层依赖图（重做） ============ */
   S.ch26 = function (host) {
     var m = mount(host, "七个项目长在一起的样子",
-      "下面是地基，上面是业务。点一个模块，看它依赖谁、被谁依赖——注意有一条是双向的。",
-      { dist: 20, pitch: .4, yaw: -.5, h: 480 });
+      "按四层排：数据层在地基、业务层在最上面。点一个模块看它的依赖，紫色是那条双向回流。",
+      { dist: 21, pitch: .22, yaw: -.28, h: 500 });
+    // 统一尺寸、严格分层 —— 上一版盒子大小不一、层看不出来
     var ND = [
-      { n: "数据中台", p: [-6.0, -2.2, 0], c: C.b, d: "地基。接入、清洗、质量、目录、服务。上层几乎全部依赖它。" },
-      { n: "素材中心", p: [-1.4, -2.2, 2.6], c: C.b, d: "统一管图片视频文案：入库、打标、检索、权限、生命周期。" },
-      { n: "知识检索", p: [2.6, -.8, -1.6], c: C.g, d: "RAG 中台：解析、切块、索引、检索、评测统一。" },
-      { n: "模型网关", p: [0, -.8, 0], c: C.g, d: "所有模型调用的唯一入口：路由、缓存、额度、降级、计费。" },
-      { n: "Harness + 集群", p: [0, 1.2, 0], c: C.y, d: "Agent 的循环、上下文、工具、记忆，以及多 Agent 的注册与路由。" },
-      { n: "客服 Agent", p: [-5.6, 2.9, 1.6], c: C.a, d: "接知识检索与模型网关，解决高频重复咨询，包含实时语音。" },
-      { n: "内容 Agent", p: [0, 2.9, -2.4], c: C.a, d: "取素材、生成内容、合规审核、发布并回收数据。" },
-      { n: "考核 Agent", p: [5.6, 2.9, 1.6], c: C.a, d: "基于数据中台的业务数据做全量质检与培训建议。" }
+      { n: "数据中台", p: [-3.4, -2.9, 0], c: C.b, d: "地基。接入、清洗、质量、目录、服务。上层几乎全部依赖它。" },
+      { n: "素材中心", p: [3.4, -2.9, 0], c: C.b, d: "统一管图片视频文案：入库、打标、检索、权限、生命周期。" },
+      { n: "模型网关", p: [-3.4, -1.1, 0], c: C.g, d: "所有模型调用的唯一入口：路由、缓存、额度、降级、计费。" },
+      { n: "知识检索", p: [3.4, -1.1, 0], c: C.g, d: "RAG 中台：解析、切块、索引、检索、评测统一。" },
+      { n: "Harness + 集群", p: [0, .8, 0], c: C.y, d: "Agent 的循环、上下文、工具、记忆，以及多 Agent 的注册与路由。" },
+      { n: "客服 Agent", p: [-6.2, 2.9, 0], c: C.a, d: "接知识检索与模型网关，解决高频重复咨询，含实时语音。" },
+      { n: "内容 Agent", p: [0, 2.9, 0], c: C.a, d: "取素材、生成内容、合规审核、发布并回收数据。" },
+      { n: "考核 Agent", p: [6.2, 2.9, 0], c: C.a, d: "基于数据中台的业务数据做全量质检与培训建议。" }
     ];
     var ED = [[0, 2], [0, 7], [0, 1], [1, 6], [3, 2], [3, 4], [4, 5], [4, 6], [4, 7], [2, 5], [6, 1]];
-    var sel = 3;
+    var LAY = [
+      { y: -2.9, t: "数据层" }, { y: -1.1, t: "能力层" },
+      { y: .8, t: "编排层" }, { y: 2.9, t: "业务层" }
+    ];
+    var sel = 2;
     m.sc.onPick = function (h) { sel = h.tag; m.sc.render(); note(); };
     function note() {
       var dep = [], back = [], bi = false;
@@ -6098,49 +6127,63 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       m.note.innerHTML = "<b>当前模块：" + ND[sel].n + "</b><br>" + ND[sel].d +
         "<br><b>它依赖：</b>" + (dep.length ? dep.join("、") : "（它是地基，谁都不依赖）") +
         "<br><b>被谁依赖：</b>" + (back.length ? back.join("、") : "（暂无）") +
-        (bi ? "<br><b>注意这条线是双向的</b>（紫色）：内容 Agent 从素材中心取素材，" +
-          "它产出的优质内容又回流入库，让素材中心本身更丰富。" +
-          "这种反向回流是“体系”成熟的标志——大部分人只会讲上层依赖下层。" : "") +
-        "<br>面试时你要能一边画这张图，一边说清每一层“解决什么问题”。";
+        (bi ? "<br><b>紫色那条线是双向的</b>：内容 Agent 从素材中心取素材，" +
+          "产出的优质内容又回流入库，让素材中心本身更丰富。" +
+          "这种反向回流是“体系”成熟的标志——多数人只会讲上层依赖下层。" : "") +
+        "<br>面试时你要能一边画这张分层图，一边说清每一层“解决什么问题”。";
     }
     m.sc.scene(function (e) {
-      e.grid(8, 1.5, C.m, -3.6, .04);
+      // 每一层铺一块半透明地板，让层级一眼可见
+      LAY.forEach(function (L) {
+        e.quad([[-8.4, L.y - .45, -1.6], [8.4, L.y - .45, -1.6],
+                [8.4, L.y - .45, 1.6], [-8.4, L.y - .45, 1.6]], C.m, .07, null);
+        e.text([-8.9, L.y - .45, 1.6], L.t, C.m, 11.5, 0, "right");
+      });
       ED.forEach(function (ed) {
         var a = ND[ed[0]].p, b = ND[ed[1]].p;
         var hot = (ed[0] === sel || ed[1] === sel);
         var twin = ED.some(function (o) { return o[0] === ed[1] && o[1] === ed[0]; });
-        e.line(a, b, hot ? C.a : (twin ? C.p : C.m), hot ? 2.8 : (twin ? 2.2 : .9),
-          hot ? .9 : (twin ? .75 : .25));
+        if (twin) {
+          // 双向线画成两条平行线，一眼看出是“来回都有"
+          [.28, -.28].forEach(function (off) {
+            e.line([a[0] + off, a[1], a[2]], [b[0] + off, b[1], b[2]],
+              hot ? C.a : C.p, hot ? 3.4 : 2.6, hot ? .95 : .8);
+          });
+        } else {
+          e.line(a, b, hot ? C.a : C.m, hot ? 3.4 : 1.5, hot ? .9 : .42);
+        }
       });
       ND.forEach(function (n, i) {
         var on = (i === sel);
         var nb = ED.some(function (ed) { return (ed[0] === i && ed[1] === sel) || (ed[1] === i && ed[0] === sel); });
-        e.box([n.p[0], n.p[1], n.p[2]], [2.9, .85, 1.5], on ? C.a : (nb ? C.y : n.c),
-          { alpha: on ? .32 : .14, edge: on ? C.a : (nb ? C.y : n.c), lw: on ? 1.9 : 1 });
-        e.text([n.p[0], n.p[1] + .72, n.p[2]], n.n, on ? C.a : (nb ? C.y : n.c), 12);
+        var col = on ? C.a : (nb ? C.y : n.c);
+        e.box(n.p, [3.1, .9, 1.6], col, { alpha: on ? .34 : .16, edge: col, lw: on ? 2 : 1.2 });
+        e.text([n.p[0], n.p[1] + .95, n.p[2]], n.n, col, on ? 13 : 12);
       });
-      e.text([0, -3.2, 0], "地基在下、业务在上；紫色线是那条双向回流", C.p, 12.5);
     });
     note();
   };
 
-  /* ============ 第 31 章：多租户权限挡在检索之前 ============ */
+  /* ============ 第 31 章：多租户权限（重做） ============ */
   S.ch31 = function (host) {
     var m = mount(host, "权限必须挡在检索之前",
-      "知识块按权限等级分层摆放。切换身份，看哪些块连“被检索到”的资格都没有。",
-      { dist: 18, pitch: .42, yaw: -.42, h: 450, auto: false });
-    var role = 0;
-    var ROLES = [
-      { n: "普通销售", lv: 0 },
-      { n: "部门主管", lv: 1 },
-      { n: "销售总监", lv: 2 }
-    ];
+      "知识块按”谁来都能看 / 主管能看 / 只有总监能看“分成三层摆放。切换身份，看哪些块连被检索到的资格都没有。",
+      { dist: 21, pitch: .34, yaw: -.3, h: 480, auto: false });
+    var ROLES = [{ n: "普通销售", lv: 0 }, { n: "部门主管", lv: 1 }, { n: "销售总监", lv: 2 }];
     var KB = [
       { t: "退换货政策", lv: 0 }, { t: "商品规格表", lv: 0 }, { t: "话术模板", lv: 0 },
-      { t: "常见故障处理", lv: 0 }, { t: "部门月度目标", lv: 1 }, { t: "客户分级名单", lv: 1 },
-      { t: "区域价格策略", lv: 1 }, { t: "年度销售目标", lv: 2 }, { t: "成本与毛利", lv: 2 },
-      { t: "高管会议纪要", lv: 2 }
+      { t: "常见故障处理", lv: 0 },
+      { t: "部门月度目标", lv: 1 }, { t: "客户分级名单", lv: 1 }, { t: "区域价格策略", lv: 1 },
+      { t: "年度销售目标", lv: 2 }, { t: "成本与毛利", lv: 2 }, { t: "高管会议纪要", lv: 2 }
     ];
+    var role = 0, fly = -1, timer = null;
+    var bGo = btn("发一次检索", "primary");
+    bGo.onclick = function () {
+      if (timer) return;
+      fly = 0;
+      timer = setInterval(function () { fly++; m.sc.render(); if (fly > 2) { clearInterval(timer); timer = null; } }, 550);
+    };
+    m.bar.appendChild(bGo);
     var btns = ROLES.map(function (r, i) {
       var b = btn(r.n, i === 0 ? "primary" : "");
       b.onclick = function () {
@@ -6154,38 +6197,278 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     function note() {
       var ok = KB.filter(function (k) { return k.lv <= role; }).length;
       m.note.innerHTML = "<b>" + ROLES[role].n + "能检索到 " + ok + " / " + KB.length + " 类知识</b>" +
-        "<br>被挡住的是：" + KB.filter(function (k) { return k.lv > role; }).map(function (k) { return k.t; }).join("、") +
+        "<br>被挡住的是：" + (KB.filter(function (k) { return k.lv > role; }).map(function (k) { return k.t; }).join("、") || "无") +
         "<br><b>关键设计：过滤发生在检索之前，而不是生成之后。</b>" +
-        "如果先检索到敏感内容、再去过滤输出，那些内容已经进入了模型上下文——" +
-        "在合规上是不可接受的，因为你无法证明它没有被用于别处。" +
+        "如果先检索到敏感内容、再去过滤输出，那些内容已经进入模型上下文，在合规上不可接受。" +
         "<br>这也是 B 端 AI 工作台和 C 端聊天产品最大的区别之一：<b>同一句话，不同的人应该得到不同的答案</b>。";
     }
+    // 整齐网格：x 方向 4 列、z 方向按权限分层、y 按权限抬高
+    function pos(i) {
+      var k = KB[i];
+      var sameLevel = KB.filter(function (x) { return x.lv === k.lv; });
+      var idx = sameLevel.indexOf(k);
+      var n = sameLevel.length;
+      var x = (idx - (n - 1) / 2) * 3.6;
+      return [x, -1.6 + k.lv * 1.5, -2.2 + k.lv * 2.2];
+    }
     m.sc.scene(function (e) {
-      e.grid(8, 1.4, C.m, -3.0, .04);
+      e.grid(8, 1.5, C.m, -2.6, .05);
       // 用户
-      e.ball([-9.6, 0, 0], .42, C.p, ROLES[role].n, null);
+      e.ball([-10.4, .2, 0], .42, C.p, ROLES[role].n, null);
       // 权限盾
-      e.quad([[-7.4, -2.0, -3.0], [-7.4, 2.4, -3.0], [-7.4, 2.4, 3.0], [-7.4, -2.0, 3.0]],
+      e.quad([[-8.2, -1.9, -3.1], [-8.2, 3.3, -3.1], [-8.2, 3.3, 3.1], [-8.2, -1.9, 3.1]],
         C.a, .1, C.a);
-      e.text([-7.4, 2.8, 0], "权限盾（检索前就过滤）", C.a, 12);
-      e.line([-8.8, 0, 0], [-7.6, 0, 0], C.p, 2, .7);
-      // 知识块
+      e.text([-8.2, 3.7, 0], "权限盾：检索前就过滤", C.a, 12);
       KB.forEach(function (k, i) {
-        var pass = (k.lv <= role);
-        var x = -3.6 + (i % 5) * 3.0, z = i < 5 ? -1.8 : 1.8;
-        var y = -1.2 + k.lv * 1.3;
-        e.box([x, y, z], [2.3, .7, 1.3], pass ? (k.lv === 0 ? C.g : (k.lv === 1 ? C.y : C.b)) : C.m,
-          { faces: pass, alpha: pass ? .34 : .0, edge: pass ? (k.lv === 0 ? C.g : (k.lv === 1 ? C.y : C.b)) : C.m,
+        var pass = (k.lv <= role), p = pos(i);
+        var col = k.lv === 0 ? C.g : (k.lv === 1 ? C.y : C.b);
+        e.box(p, [2.6, .8, 1.6], pass ? col : C.m,
+          { faces: pass, alpha: pass ? .3 : .0, edge: pass ? col : C.m,
             lw: pass ? 1.5 : .7, edgeA: pass ? .95 : .3 });
-        e.text([x, y + .65, z], k.t + (pass ? "" : "（无权）"), pass ? C.b : C.m, 10.5);
+        // 标签错开：同一层的相邻块上下交替，避免挤在一起
+        e.text([p[0], p[1] + .78 + (i % 2 ? .34 : 0), p[2]], k.t + (pass ? "" : "（无权）"),
+          pass ? col : C.m, 11);
       });
-      e.text([-3.6, -2.4, 0], "按权限等级分层摆放：低（绿）→ 中（黄）→ 高（蓝）", C.m, 11.5);
-      e.text([-3.6, 3.0, 0], "当前身份：" + ROLES[role].n, C.p, 13);
+      var LY = ["谁来都能看", "主管能看", "只有总监能看"];
+      [0, 1, 2].forEach(function (lv) {
+        var y = -1.6 + lv * 1.5 - .55, z = -2.2 + lv * 2.2;
+        e.line([-6.4, y, z], [6.4, y, z], C.m, .8, .25);
+        e.text([6.9, y, z], LY[lv], C.m, 11, 0, "left");
+      });
+      if (fly >= 0) {
+        var tx = fly === 0 ? -10.4 : (fly === 1 ? -8.2 : -5.0);
+        e.ball([tx, .2, 0], .3, fly === 2 ? C.a : C.p, fly === 2 ? "只剩有权限的" : null, null);
+      }
+    });
+    note();
+  };
+  /* ---------- 挂载 ---------- */
+  /* ============ 第 15 章（4）：数据量 × 质量 → 效果曲面 ============ */
+  S.ch15c = function (host) {
+    var m = mount(host, "效果曲面：数量很快到顶，质量才是持续变量",
+      "横轴是数据量（对数），纵深是标注质量，高度是最终效果。表面在数据量那一侧很快变平。",
+      { dist: 16, pitch: .82, yaw: -.42, h: 470, auto: false });
+    var n = 3000, q = 85;
+    function eff(a, b) { return 40 + Math.min(1, a / 5000) * 6 + (b - 50) * .62; }
+    function X(a) { return -3.3 + (Math.log10(a) - 2) / (Math.log10(20000) - 2) * 6.6; }
+    function Z(b) { return -3.3 + (b - 50) / 50 * 6.6; }
+    function Y(v) { return -2.5 + v * .052; }
+    slider(m, "样本数量", 100, 20000, 100, n, " 条", function (v) { n = v; m.sc.render(); note(); });
+    slider(m, "标注质量（一致性）", 50, 100, 1, q, "%", function (v) { q = v; m.sc.render(); note(); });
+    function note() {
+      var v = eff(n, q), gainN = Math.min(1, n / 5000) * 6, gainQ = (q - 50) * .62;
+      m.note.innerHTML = "<b>效果分 " + v.toFixed(0) + "　（基准 40 分）</b><br>" +
+        "数量的贡献 <b>+" + gainN.toFixed(1) + "</b>（最多也就 +6，到 5000 条就封顶）<br>" +
+        "质量的贡献 <b>+" + gainQ.toFixed(1) + "</b>（从 50% 到 100% 是 +31，一共还在涨）" +
+        "<br>看那个竖直的白色平面：<b>过了它，继续加数据几乎不再有效果</b>。" +
+        "而把标注一致性从 70% 提到 90%，只是挪一下另一个滑块，效果却能涨十几分。" +
+        "<br>所以微调里最贵、也最值的从来不是“多标数据”，而是<b>把标准说清楚</b>。";
+    }
+    m.sc.scene(function (e) {
+      var N = 12;
+      e.vScale(-4.4, -3.6, -2.5, 3.2, 40, 100, 6, C.m, "");
+      e.text([-4.4, 3.7, -3.6], "效果分", C.m, 12);
+      // 曲面网格
+      for (var i = 0; i <= N; i++) {
+        var pts = [];
+        for (var j = 0; j <= N; j++) {
+          var a = Math.pow(10, 2 + (4.301 - 2) * i / N), b = 50 + 50 * j / N;
+          pts.push([X(a), Y(eff(a, b)), Z(b)]);
+        }
+        var col = i % 2 ? C.b : C.p;
+        for (var t = 0; t < pts.length - 1; t++) e.line(pts[t], pts[t + 1], col, .85, .42);
+      }
+      for (var j2 = 0; j2 <= N; j2++) {
+        var pts2 = [], b2 = 50 + 50 * j2 / N;
+        for (var i2 = 0; i2 <= N; i2++) {
+          var a2 = Math.pow(10, 2 + (4.301 - 2) * i2 / N);
+          pts2.push([X(a2), Y(eff(a2, b2)), Z(b2)]);
+        }
+        for (var t2 = 0; t2 < pts2.length - 1; t2++) e.line(pts2[t2], pts2[t2 + 1], C.m, .7, .26);
+      }
+      // 数量收益封顶的平面
+      var xc = X(5000);
+      e.quad([[xc, -2.5, -3.3], [xc, 3.0, -3.3], [xc, 3.0, 3.3], [xc, -2.5, 3.3]], C.a, .1, C.a);
+      e.text([xc, 3.35, 0], "过了这条线，加数据基本不涨", C.a, 11.5);
+      // 当前点
+      var px = X(n), pz = Z(q), py = Y(eff(n, q));
+      e.line([px, -2.5, pz], [px, py, pz], C.a, 2, .55);
+      e.ball([px, py, pz], .32, C.a, "当前设置", null, { align: "center", dy: -14 });
+      e.text([-3.3, -2.9, 3.9], "数据量 →（对数刻度）", C.m, 11.5);
+      e.text([4.4, -2.9, -3.3], "↑ 标注质量", C.m, 11.5);
     });
     note();
   };
 
-  /* ---------- 挂载 ---------- */
+  /* ============ 第 22 章（2）：人工 vs AI 一致性校准 ============ */
+  S.ch22b = function (host) {
+    var m = mount(host, "一致性校准：AI 打分和人工打分对得上吗",
+      "横轴是人工打分，纵深是 AI 打分。点越贴近对角线，说明两边判断越一致；偏得远的维度，就是评分标准没写清。",
+      { dist: 15, pitch: .5, yaw: -.55, h: 460, auto: false });
+    var clr = .45;
+    var DIMS = [
+      { n: "开场", h: 88, e: 2 }, { n: "需求挖掘", h: 62, e: -9 }, { n: "产品介绍", h: 85, e: 4 },
+      { n: "异议处理", h: 92, e: -3 }, { n: "收尾", h: 78, e: 6 }, { n: "合规", h: 95, e: 1 },
+      { n: "语气", h: 80, e: -7 }, { n: "准确性", h: 86, e: 3 }, { n: "效率", h: 74, e: -12 },
+      { n: "记录完整", h: 90, e: 2 }, { n: "跟进", h: 83, e: 5 }, { n: "合规意识", h: 70, e: -6 }
+    ];
+    function ai(d) { return Math.max(0, Math.min(100, d.h + d.e * (1 - clr))); }
+    function M(v) { return -3.3 + v / 100 * 6.6; }
+    slider(m, "评分标准的清晰程度", 0, 1, .05, clr, "", function (v) { clr = v; m.sc.render(); note(); });
+    function corr() {
+      var xs = DIMS.map(function (d) { return d.h; }), ys = DIMS.map(ai);
+      var mx = xs.reduce(function (a, b) { return a + b; }, 0) / xs.length;
+      var my = ys.reduce(function (a, b) { return a + b; }, 0) / ys.length;
+      var sxy = 0, sxx = 0, syy = 0;
+      for (var i = 0; i < xs.length; i++) {
+        sxy += (xs[i] - mx) * (ys[i] - my); sxx += Math.pow(xs[i] - mx, 2); syy += Math.pow(ys[i] - my, 2);
+      }
+      return sxy / Math.sqrt(sxx * syy || 1);
+    }
+    function note() {
+      var bad = DIMS.filter(function (d) { return Math.abs(ai(d) - d.h) > 8; });
+      var r = corr();
+      m.note.innerHTML = "<b>与人工打分的一致性 r = " + r.toFixed(2) + "</b>" +
+        (r >= .9 ? "（很高，可以信任这个维度的自动打分）" : r >= .75 ? "（还行，但有几个维度要回去改标准）"
+          : "（偏低：说明评分卡本身写得不清，不是模型不行）") +
+        "<br>偏离对角线超过 8 分的维度：" +
+        (bad.length ? "<b>" + bad.map(function (d) { return d.n; }).join("、") + "</b>" : "无") +
+        "<br><b>校准的做法</b>：取一批样本让人工和 AI 同时打分，比对一致性。" +
+        "一致性差的维度 → 回去重写判断标准、补示例 → 再校准一次。" +
+        "这就是“把主观评价变成可复现流程”的全部功夫，也是这个项目里最能体现专业度的一步。";
+    }
+    m.sc.scene(function (e) {
+      e.grid(8, 1.4, C.m, -2.4, .04);
+      // 坐标轴与刻度
+      e.line([M(0), 0, M(0)], [M(100), 0, M(0)], C.m, 1.2, .5);
+      e.line([M(0), 0, M(0)], [M(0), 0, M(100)], C.m, 1.2, .5);
+      for (var v = 0; v <= 100; v += 25) {
+        e.text([M(v), -.35, M(0)], String(v), C.m, 10);
+        e.text([M(0), -.35, M(v)], String(v), C.m, 10);
+      }
+      e.text([M(50), .5, M(0)], "人工打分 →", C.m, 12);
+      e.text([M(0), .5, M(50)], "AI 打分 ↑", C.m, 12);
+      // 对角线 = 完全一致
+      e.line([M(0), .05, M(0)], [M(100), .05, M(100)], C.b, 2.4, .8);
+      e.text([M(88), .5, M(92)], "完全一致线", C.b, 11);
+      DIMS.forEach(function (d, i) {
+        var x = M(d.h), z = M(ai(d)), dev = Math.abs(ai(d) - d.h);
+        var col = dev > 8 ? C.a : C.g;
+        e.line([x, 0, z], [x, 0, x], col, 1.4, .45);       // 偏离到对角线的“落差线"
+        e.ball([x, .12, z], dev > 8 ? .3 : .24, col, d.n, null, { dy: i % 2 ? -13 : 13 });
+      });
+      e.text([0, 2.2, 0], "红点 = 与人工打分偏差超过 8 分 → 这个维度的标准要重写", C.a, 12);
+    });
+    note();
+  };
+  /* ============ 第 3 章（4）：温度与采样 ============ */
+  S.ch3d = function (host) {
+    var m = mount(host, "温度：同一个概率分布，采样出来完全不同",
+      "八根柱子是八个候选词的概率，前面那堆小球是“采 20 次会落在哪”。拖温度，看分布被压平或拉尖。",
+      { dist: 18, pitch: .4, yaw: -.32, h: 460, auto: false });
+    var T = 1.0;
+    var W = [.34, .21, .14, .11, .08, .05, .04, .03];
+    var NW = ["客服", "订单", "退货", "物流", "价格", "发票", "投诉", "其他"];
+    function dist() {
+      var e = W.map(function (w) { return Math.pow(w, 1 / Math.max(.05, T)); });
+      var s = e.reduce(function (a, b) { return a + b; }, 0);
+      return e.map(function (x) { return x / s; });
+    }
+    slider(m, "温度 temperature", .05, 2, .05, T, "", function (v) { T = v; m.sc.render(); note(); });
+    function note() {
+      var d = dist(), ent = 0;
+      d.forEach(function (p) { if (p > 0) ent -= p * Math.log2(p); });
+      m.note.innerHTML = "<b>温度 " + T.toFixed(2) + "　第一名概率 " + (d[0] * 100).toFixed(0) +
+        "%　分布熵 " + ent.toFixed(2) + " bit</b><br>" +
+        (T <= .2 ? "极低温 ≈ 贪心：几乎每次都是同一个词。抽取、分类、结构化输出要的就是这种确定性。"
+          : T <= .8 ? "偏低：答案稳定，但已经有一点变化。"
+          : T <= 1.2 ? "接近模型原本的分布。"
+          : "高温：分布被抹平，冷门词也有机会被选中——“有创意”和“胡说”是同一个开关的两面。") +
+        "<br>前面那 20 个小球，就是按当前分布采 20 次的结果：<b>低温全堆在第一根柱子上，高温散成一片</b>。" +
+        "<br>工程口径：<b>抽取任务温度设 0，创意任务 0.7 到 1.0</b>。";
+    }
+    m.sc.scene(function (e) {
+      e.grid(8, 1.4, C.m, -2.6, .04);
+      var d = dist();
+      e.vScale(-7.2, -3.2, -2.2, 2.6, 0, 40, 4, C.m, "%");
+      e.text([-7.2, 3.1, -3.2], "出现概率", C.m, 11.5);
+      d.forEach(function (p, i) {
+        var x = -5.6 + i * 1.6, h = Math.max(.05, p * 12);
+        e.box([x, -2.2 + h / 2, 0], [1.15, h, 1.4], i === 0 ? C.a : C.b,
+          { alpha: .3, edge: i === 0 ? C.a : C.b, lw: 1.3 });
+        e.text([x, -2.6, .9], NW[i], C.m, 10.5);
+        e.text([x, -2.2 + h + .3, 0], (p * 100).toFixed(0) + "%", i === 0 ? C.a : C.b, 11);
+      });
+      // 20 次采样：按概率确定式分布，低温集中、高温散开
+      var k = 0;
+      d.forEach(function (p, i) {
+        var n = Math.round(p * 20), x = -5.6 + i * 1.6;
+        for (var j = 0; j < n && k < 20; j++, k++) {
+          e.ball([x + ((k % 3) - 1) * .32, -1.9 + Math.floor(k / 3) * .32, 2.1], .13, C.p, null, null);
+        }
+      });
+      e.text([0, 3.3, 0], "小球 = 20 次采样分别落在哪个词上", C.p, 12);
+    });
+    note();
+  };
+
+  /* ============ 第 10 章（2）：先过滤还是先检索 ============ */
+  S.ch10b = function (host) {
+    var m = mount(host, "先过滤还是先检索：同一个问题，能用的资料差很多",
+      "紫点是查询，绿球是符合条件（有权限）的资料，灰块不符合。离查询最近的八条全是灰块——这正是坑所在。",
+      { dist: 19, pitch: .34, yaw: -.4, h: 450, auto: false });
+    var k = 4, pre = 0;
+    // 近距离八条全是不合格，远处才是合格的
+    var PTS = [];
+    for (var i = 0; i < 24; i++) {
+      var ok = i >= 8, dd = 2 + i * .26, a = i * .62;
+      PTS.push({ p: [Math.cos(a) * dd * .75, -1.8 + dd * .30, Math.sin(a) * dd * .75], ok: ok, ord: i });
+    }
+    var b1 = btn("后过滤（先检索再筛）", "primary"), b2 = btn("前过滤（先筛再检索）");
+    b1.onclick = function () { pre = 0; b1.className = "vz-btn primary"; b2.className = "vz-btn"; m.sc.render(); note(); };
+    b2.onclick = function () { pre = 1; b2.className = "vz-btn primary"; b1.className = "vz-btn"; m.sc.render(); note(); };
+    m.bar.appendChild(b1); m.bar.appendChild(b2);
+    slider(m, "召回数量 k", 2, 10, 1, k, " 条", function (v) { k = v; m.sc.render(); note(); });
+    function result() {
+      var pool = pre ? PTS.filter(function (q) { return q.ok; }) : PTS;
+      var top = pool.slice(0, k);
+      return { top: top, useful: top.filter(function (q) { return q.ok; }).length };
+    }
+    function note() {
+      var r = result();
+      m.note.innerHTML = "<b>进入上下文的合格资料：" + r.useful + " 条</b>" +
+        "（" + (pre ? "前过滤" : "后过滤") + "，k = " + k + "）<br>" +
+        (pre
+          ? "<b>前过滤</b>：先把不符合条件的全筛掉，再在剩下的里面找最近的 —— 所以取到的每一条都合格。" +
+            "<br>代价：范围变小，如果符合条件的资料本身就很少，召回质量会下降。"
+          : "<b>后过滤</b>：先找最近的 k 条，再筛掉不合格的 —— 问题是<b>最近的往往不是你要的</b>，" +
+            "筛完可能一条不剩，甚至直接为空。") +
+        "<br>所以成熟方案是<b>两者都支持、按数据分布自动选</b>；权限这种硬约束，一定要做在前过滤。";
+    }
+    m.sc.scene(function (e) {
+      e.grid(8, 1.5, C.m, -2.2, .04);
+      var r = result(), inTop = {};
+      r.top.forEach(function (q) { inTop[q.ord] = 1; });
+      // 从查询连到被选中的那几条，让"最近的 k 条是哪些"一目了然
+      r.top.forEach(function (q) {
+        e.line([0, -2.2, 0], q.p, q.ok ? C.g : C.a, 1.6, .55);
+      });
+      PTS.forEach(function (q) {
+        var picked = inTop[q.ord];
+        var skip = pre && !q.ok;
+        var col = q.ok ? C.g : C.m;
+        if (picked) col = q.ok ? C.g : C.a;
+        if (skip) { e.box(q.p, [.42, .42, .42], C.m, { faces: false, edge: C.m, lw: .6, edgeA: .18 }); return; }
+        if (q.ok) e.ball(q.p, picked ? .34 : .22, col, null, null);
+        else e.box(q.p, [.5, .5, .5], col, { faces: picked, alpha: picked ? .5 : .0,
+          edge: col, lw: picked ? 1.8 : .8, edgeA: picked ? 1 : .35 });
+      });
+      e.ball([0, -2.2, 0], .36, C.p, "查询", null);
+      e.text([0, 3.0, 0], (pre ? "前过滤" : "后过滤") + "：最近 " + k + " 条里合格 " + r.useful + " 条", C.a, 13);
+      e.text([-8.6, 2.4, -3.0], "绿球 = 合格资料　　灰块 = 不合格（无权限/不相关）", C.m, 11.5);
+    });
+    note();
+  };
   window.__S3 = S;
   Array.prototype.forEach.call(document.querySelectorAll("[data-v3]"), function (el) {
     var k = el.getAttribute("data-v3"), fn = S[k];
