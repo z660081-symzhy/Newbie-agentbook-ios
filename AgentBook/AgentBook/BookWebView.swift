@@ -52,16 +52,33 @@ struct BookWebView: UIViewRepresentable {
       document.documentElement.classList.add('in-app');
       function post(o) { try { window.webkit.messageHandlers.book.postMessage(o); } catch (e) {} }
 
+      var jumping = null;   // 正在程序跳转的目标 id；跳转期间不上报"当前位置"
+      function topOf(el) { return el.getBoundingClientRect().top + window.scrollY - 56; }
+
       // 原生点目录 → 网页滚过去并闪一下
       window.__bookJumpTo = function (id) {
         var el = document.getElementById(id);
-        if (!el) return;
-        var top = el.getBoundingClientRect().top + window.scrollY - 56;
-        window.scrollTo({ top: top, behavior: 'smooth' });
+        if (!el) return false;
+        jumping = id;
+        // 一律"瞬时跳"，不用 behavior:'smooth'。原因有两条，都是实测踩出来的：
+        //   1. 平滑滚动在 WKWebView 里会被丢掉（5 次里丢 3 次），表现就是"点了目录没反应"；
+        //   2. 如果在平滑滚动还在跑的时候再补一次硬跳，两段滚动会叠加，直接冲过头
+        //      （实测想跳到 64051，结果停在了 97524 —— 也就是"跳到后面去了"）。
+        // 网页自带的目录链接之所以每次都准，就是因为它走的是瞬时跳转。
+        window.scrollTo({ top: topOf(el), behavior: 'auto' });
+        // 再校正一帧：万一布局晚一拍（表格/图片把高度撑开），把位置纠回来。
+        requestAnimationFrame(function () {
+          var e2 = document.getElementById(id);
+          if (e2 && Math.abs(e2.getBoundingClientRect().top - 56) > 40) {
+            window.scrollTo({ top: topOf(e2), behavior: 'auto' });
+          }
+          setTimeout(function () { jumping = null; report(); }, 60);
+        });
         var old = el.style.backgroundColor;
         el.style.transition = 'background-color .5s';
         el.style.backgroundColor = 'rgba(140,61,46,.16)';
         setTimeout(function () { el.style.backgroundColor = old || ''; }, 900);
+        return true;
       };
 
       // 原生切主题 → 同时写回 localStorage，保持网页自己的开关同步
@@ -88,18 +105,38 @@ struct BookWebView: UIViewRepresentable {
       };
 
       // 滚动到哪一章就上报给原生（只报变化，不刷屏）
+      //
+      // 这里原来用 IntersectionObserver，有两个坑，实测都会踩到：
+      //   1. 一次回调可能带多个条目，取"数组里最后一个"并不等于"最靠上的那个"，
+      //      于是可能把很靠后的一章报成当前章节；
+      //   2. 页面刚加载时它会先把所有 h2 的状态报一遍，最后一条往往是最末一节
+      //      （附录 E）—— 原生拿到后会把"上次读到哪"写成附录 E，下次启动就跳到附录 E。
+      // 现在改成按滚动位置直接算，并且"刚加载完不报"。
       var last = null;
-      try {
-        var obs = new IntersectionObserver(function (entries) {
-          entries.forEach(function (en) {
-            if (en.isIntersecting && en.target.id !== last) {
-              last = en.target.id;
-              post({ type: 'location', id: last, read: window.__bookReadSet() });
-            }
-          });
-        }, { rootMargin: '-10% 0px -80% 0px' });
-        document.querySelectorAll('h2[id]').forEach(function (h) { obs.observe(h); });
-      } catch (e) {}
+      function currentId() {
+        var hs = document.querySelectorAll('h2[id]'), best = null;
+        for (var i = 0; i < hs.length; i++) {
+          // 取"最后一个已经滚过视口顶部"的小节 —— 就是读者眼睛所在的那一节
+          if (hs[i].getBoundingClientRect().top <= 120) best = hs[i].id; else break;
+        }
+        return best || (hs.length ? hs[0].id : null);
+      }
+      function report(force) {
+        if (jumping) return;
+        var id = currentId();
+        if (!id) return;
+        if (id === last && !force) return;
+        last = id;
+        post({ type: 'location', id: id, read: window.__bookReadSet() });
+      }
+      var ticking = false;
+      window.addEventListener('scroll', function () {
+        if (jumping || ticking) return;
+        ticking = true;
+        requestAnimationFrame(function () { ticking = false; report(false); });
+      }, { passive: true });
+      // 首次不上报：刚加载完时"当前位置"没有意义，报了反而会把 App 记住的位置覆盖错。
+      last = currentId();
 
       post({ type: 'ready', total: document.querySelectorAll('h2[id]').length,
              read: window.__bookReadSet() });
@@ -143,11 +180,13 @@ struct BookWebView: UIViewRepresentable {
             // 不依赖注入脚本：即使桥接脚本没跑起来，这段自带兜底也能滚过去
             let js = """
             (function () {
-              var el = document.getElementById('\(id)');
+              var id = '\(id)';
+              if (window.__bookJumpTo && window.__bookJumpTo(id)) return 'bridge';
+              var el = document.getElementById(id);
               if (!el) return 'no-element';
-              if (window.__bookJumpTo) { window.__bookJumpTo('\(id)'); return 'bridge'; }
               var top = el.getBoundingClientRect().top + window.scrollY - 56;
-              window.scrollTo({ top: top, behavior: 'smooth' });
+              // 兜底用硬跳：平滑滚动在 WKWebView 里会被丢掉，兜底就不要再冒险了
+              window.scrollTo({ top: top, behavior: 'auto' });
               return 'inline';
             })();
             """

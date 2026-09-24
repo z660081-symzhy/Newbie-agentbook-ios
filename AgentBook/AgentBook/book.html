@@ -3159,18 +3159,24 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     if(!confirm('清除所有勾选和已读标记？'))return;
     st.tasks={};st.read={};save();location.reload();
   };
-  // 高亮当前
-  var obs=new IntersectionObserver(function(es){
-    es.forEach(function(en){
-      if(en.isIntersecting){
-        var id=en.target.id;
-        document.querySelectorAll('.kids a').forEach(function(a){
-          a.classList.toggle('on',a.dataset.c===id);
-        });
-      }
-    });
-  },{rootMargin:'-15% 0px -75% 0px'});
-  document.querySelectorAll('h2[id]').forEach(function(h){obs.observe(h);});
+  // 高亮当前章节
+  // 原来用 IntersectionObserver 遍历回调条目、取"数组里最后一个"来高亮：一次回调可能
+  // 带多个条目，顺序又不保证，于是会高亮到错的那一节（实测会跳到很靠后的一章）。
+  // 改成按滚动位置直接算：取"最后一个已经滚过视口顶部"的小节。
+  var navLinks=document.querySelectorAll('.kids a'), navTick=false;
+  function markCurrent(){
+    var hs=document.querySelectorAll('h2[id]'), id=null;
+    for(var i=0;i<hs.length;i++){
+      if(hs[i].getBoundingClientRect().top<=120) id=hs[i].id; else break;
+    }
+    if(!id&&hs.length) id=hs[0].id;
+    navLinks.forEach(function(a){a.classList.toggle('on',a.dataset.c===id);});
+  }
+  window.addEventListener('scroll',function(){
+    if(navTick)return; navTick=true;
+    requestAnimationFrame(function(){navTick=false;markCurrent();});
+  },{passive:true});
+  markCurrent();
 })();
 </script>
 <script>(function () {

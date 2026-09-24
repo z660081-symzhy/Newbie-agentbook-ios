@@ -88,6 +88,10 @@ final class BookStore: ObservableObject {
     }
 
     func setCurrent(_ id: String) {
+        // 只接受目录里真实存在的锚点。
+        // 网页那边一旦报了个不存在的/错的值（比如页面刚加载时误报成最后一节），
+        // 这里会把它写进 UserDefaults，下次启动就跳到错误的位置 —— 所以在入口挡一道。
+        guard chapters.contains(where: { $0.id == id }) else { return }
         guard current != id else { return }
         current = id
         defaults.set(id, forKey: "current")

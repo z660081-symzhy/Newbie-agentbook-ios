@@ -1,5 +1,5 @@
 /* Agent 教材离线缓存：装一次，之后断网也能看 */
-const CACHE = 'agentbook-e5fda583';
+const CACHE = 'agentbook-ecb4ac0c';
 const ASSETS = ['./', './index.html', './manifest.webmanifest',
                 './icon-180.png', './icon-192.png', './icon-512.png'];
 
