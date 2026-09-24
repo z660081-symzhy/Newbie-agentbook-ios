@@ -55,11 +55,14 @@ read -r -p "准备好了就按回车开始推送…" _
 
 echo ""
 echo "▶ 先同步远端最新内容…"
-if ! git pull --rebase origin main; then
-  echo "  rebase 有冲突，改用普通合并再试一次…"
-  git rebase --abort 2>/dev/null
-  git pull --no-rebase origin main || true
+# -X ours：万一有冲突（比如 workflow 文件你在网页上也加过），
+# 以远端版本为准。这样重放本地提交时不会卡住，也不会改动远端已有的文件。
+if ! git pull --rebase -X ours origin main; then
+  echo "  （同步没成功，可能只是网络慢，继续尝试推送）"
+  git rebase --abort 2>/dev/null || true
 fi
+echo "  本地提交："
+git log --oneline origin/main..HEAD | sed 's/^/    /' || true
 
 echo ""
 echo "▶ 开始推送…"
