@@ -375,24 +375,24 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     </div>
     <h1 class="part">第 0 部分　出发之前，先看清战场</h1>
 <h2 id="c1">第 0 章　这本教材是什么，你该怎么用它<a class="q" href="javascript:void 0" data-q="c1">#</a><button class="mark-read" data-c="c1">标记已读</button></h2>
-<h3>0.1 先说一句实话：你拿到的那份发言稿里，其实没有知识</h3>
-<p>（如果你手上没有这份稿子，不影响阅读——它的三条主张我下面原样复述了：一张知识地图、一套焦虑话术、一批极端案例。你照着看就行。）</p>
-<p>你给我的那份《Agent 秒杀对手学习路线》发言稿，从头到尾是一份<strong>招生广告</strong>。它干了三件事：</p>
+<h3>0.1 先说一句实话：招生文案里没有知识</h3>
+<p>这本书的起点，是一份招生文案（《Agent 秒杀对手学习路线》）。你可能也见过同类的东西： 标题里带着&quot;秒杀对手&quot;&quot;降维打击&quot;，正文一路催你赶紧报名。</p>
+<p><strong>这类文案不是教材，是招生广告。</strong> 它通常做三件事：</p>
 <p>第一，给了一张<strong>知识地图</strong>（Python、大模型原理、RAG、LangChain、MCP、Agent Loop、部署……）。这部分是<strong>真有用的</strong>，因为它列的这些名词，确实是 2024-2026 年大模型应用岗面试里反复出现的真实考点。</p>
 <p>第二，用<strong>焦虑话术</strong>推着你掏钱。&quot;两三天学不会 Python 那就别干了&quot;&quot;面试官在我面前就是明牌&quot;&quot;用大炮轰蚊子&quot;——这些话的功能不是教你，是让你觉得自己很弱、时间很紧。</p>
-<p>第三，用<strong>极端案例</strong>制造紧迫感。&quot;零基础、13K、友商学了 5 个月找不到工作、来我这儿 12 天拿到 28K&quot;。这类故事无法证实也无法证伪，但它对你有害：它会让你以为存在一条捷径，于是你在第 20 天还没拿到 offer 时会开始怀疑自己，而不是继续积累。</p>
+<p>第三，用<strong>极端案例</strong>制造紧迫感。这类文案里常见的说法是&quot;零基础、13K，在别人那儿学了五个月找不到工作，来我这儿 12 天拿到 28K&quot;。这类故事无法证实也无法证伪，但它对你有害：它会让你以为存在一条捷径，于是你在第 20 天还没拿到 offer 时会开始怀疑自己，而不是继续积累。</p>
 <p>所以这本教材的做法是：</p>
 <blockquote><p><strong>目录照单全收，内容由我从公开的工程知识里补齐，夸张的部分我做校准。</strong></p></blockquote>
 <p>他画的是一张藏宝图的轮廓。这本书的活儿，是把每个岛上都长什么样、怎么上岛、岛上有什么坑，全部讲清楚。</p>
 <div class="callout warn"><div class="ct">关于&quot;真实性&quot;的一件事</div><p>我在这本书里不会编造任何技术细节。所有原理层面的内容（注意力机制、向量检索、Agent Loop、微调方法、云原生架构）都是公开可查、业内通用的知识。你可以用任意一个搜索引擎交叉验证我说的每一句。</p>
-<p>区别只在于：<strong>我把它们按&quot;面试 + 上手&quot;的顺序重新组织了一遍</strong>，并且补上了&quot;这块知识在面试里怎么用&quot;这一层。这才是那份发言稿真正卖的东西——不是知识，是组织方式和表达方式。</p></div>
+<p>区别只在于：<strong>我把它们按&quot;面试 + 上手&quot;的顺序重新组织了一遍</strong>，并且补上了&quot;这块知识在面试里怎么用&quot;这一层。这才是那份招生文案真正在卖的东西——不是知识，是组织方式和表达方式。</p></div>
 <div class="viz" data-viz="ch0"></div><h3>0.2 三个承诺，三个不承诺</h3>
 <p>先说<strong>我能承诺</strong>的：</p>
 <ol><li><strong>每一章都让你能&quot;合上书讲出来&quot;。</strong> 这是本书唯一的验收标准。读完不算学会，能对着空气讲三分钟才算。</li><li><strong>全程不讲代码细节。</strong> 你要的是原理和判断力，不是语法。书中出现的所有技术名词，我都会先用生活语言解释一遍，再说它的工程含义。</li><li><strong>每个知识点都带&quot;面试怎么用&quot;。</strong> 每章末尾都有【面试怎么说】和【自测题】，你可以直接拿去用。</li></ol>
 <p>再说<strong>我不能承诺</strong>的，这几条比上面的更重要：</p>
-<ol><li><strong>我不承诺你两周拿到 28K。</strong> 真实的市场情况是：跨行业、零基础转大模型应用方向，通常需要 <strong>3 到 6 个月</strong>的高强度学习和几十次投递。有人更快，有人更慢，取决于你的学历背景、所在城市、以及你原来做什么。任何跟你说&quot;12 天&quot;的人，要么在卖课，要么在拿极端个例当普遍规律。</li><li><strong>我不承诺你可以完全不动手。</strong> 你可以不写代码，但你必须<strong>动手用工具</strong>：调通一次 API、在向量数据库里搜一次、把一个文档喂给 RAG、跑一次微调。区别在于，你是&quot;点按钮 + 看结果 + 想明白为什么&quot;，而不是&quot;从零手写&quot;。</li><li><strong>我不承诺背完就能过面试。</strong> 面试官只要往下追问三层，背诵就会塌。这本书真正教你的，是<strong>让每一层追问都有东西可答</strong>。</li></ol>
+<ol><li><strong>我不承诺你两周拿到高薪。</strong> 真实的市场情况是：跨行业、零基础转大模型应用方向，通常需要 <strong>3 到 6 个月</strong>的高强度学习和几十次投递。有人更快，有人更慢，取决于你的学历背景、所在城市、以及你原来做什么。任何跟你说&quot;12 天&quot;的人，要么在卖课，要么在拿极端个例当普遍规律。</li><li><strong>我不承诺你可以完全不动手。</strong> 你可以不写代码，但你必须<strong>动手用工具</strong>：调通一次 API、在向量数据库里搜一次、把一个文档喂给 RAG、跑一次微调。区别在于，你是&quot;点按钮 + 看结果 + 想明白为什么&quot;，而不是&quot;从零手写&quot;。</li><li><strong>我不承诺背完就能过面试。</strong> 面试官只要往下追问三层，背诵就会塌。这本书真正教你的，是<strong>让每一层追问都有东西可答</strong>。</li></ol>
 <h3>0.3 &quot;秒杀&quot;这件事，正确的理解是什么</h3>
-<p>发言稿把&quot;秒杀&quot;讲成了&quot;你会的东西比对手多&quot;。这个理解是错的，至少是不完整的。</p>
+<p>这类文案最爱讲&quot;秒杀&quot;：你会的东西比对手多，就能赢。这个理解是错的，至少是不完整的。</p>
 <p>真实的面试场景是这样的：面试官一天要看七八份简历、面三四个人，他脑子里其实只有一个问题——</p>
 <blockquote><p><strong>&quot;这个人来了，能不能接住我们手上的活？&quot;</strong></p></blockquote>
 <p>所以真正的&quot;秒杀&quot;，是<strong>叙事完整度</strong>上的秒杀。同一个项目，两个人的说法差这么远：</p>
@@ -531,13 +531,13 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>第三遍：只看速查卡和自测题（约 5 小时，面试前一天做）</strong></p>
 <p>附录 C 是速查卡，附录 B 是自测题答案。第三遍只做这两件事：快速扫一遍速查卡，把自测题全部刷一次，错的标记出来。</p>
 <h3>0.7 每章的固定结构（你熟悉它以后，阅读会快很多）</h3>
-<p>每一章都按同一个骨架写，这样你可以带着问题读：</p>
-<table><thead><tr><th>板块</th><th>它回答的问题</th></tr></thead><tbody><tr><td>一句话结论</td><td>这一章，只记一句话的话，记什么？</td></tr><tr><td>为什么它重要</td><td>这个概念在真实业务和面试里出现在哪？</td></tr><tr><td>核心原理（生活类比）</td><td>用完全不需要技术的例子，把它讲通</td></tr><tr><td>概念逐个拆解</td><td>把术语拆成一张表，谁是谁、什么关系</td></tr><tr><td>动手体验</td><td>不用写代码，但你一定要亲眼看一次结果</td></tr><tr><td>现实校准</td><td>业界的真实情况，以及常见的夸大说法</td></tr><tr><td>面试怎么说</td><td>可以直接改一改用的话术</td></tr><tr><td>自测题</td><td>8 到 10 道，检验你是否真的看懂</td></tr><tr><td>术语卡</td><td>这一章需要记住的名词，附一句话解释</td></tr></tbody></table>
+<p>每一章都按同一个骨架写，这样你可以带着问题读（个别章会多一两节，骨架是一样的）：</p>
+<table><thead><tr><th>板块</th><th>它回答的问题</th></tr></thead><tbody><tr><td>一句话结论</td><td>这一章，只记一句话的话，记什么？</td></tr><tr><td>这一章解决什么问题</td><td>这个概念在真实业务和面试里出现在哪？</td></tr><tr><td>分节正文</td><td>每章 4 到 9 节：先用生活类比把原理讲通，再把术语拆成表</td></tr><tr><td>动手体验</td><td>不用写代码，但你一定要亲眼看一次结果</td></tr><tr><td>现实校准</td><td>业界的真实情况，以及常见的夸大说法</td></tr><tr><td>面试怎么说</td><td>可以直接改一改用的话术</td></tr><tr><td>自测题</td><td>6 到 12 道，检验你是否真的看懂</td></tr><tr><td>本章术语卡</td><td>这一章需要记住的名词，附一句话解释</td></tr></tbody></table>
 <h3>0.8 五个诚实提醒</h3>
 <p>最后，在正式开始之前，我想对你说五句真心话。它们会决定你这次能不能真的学成。</p>
 <p><strong>第一，不写代码不等于不动手。</strong> 你可以不去学 Python 的语法，但你必须亲手体验过一次&quot;我改了一个参数，结果变了&quot;。原理如果没有体感支撑，就只是背下来的词。所有的&quot;感觉&quot;都来自动手。</p>
 <p><strong>第二，术语不是知识。</strong> 能说出&quot;我们用了 HNSW 索引&quot;不叫懂。能说出&quot;HNSW 是近似最近邻，它用一半的内存换 20 倍的检索速度，代价是召回率从 99% 掉到 97%，在我们的场景里可以接受&quot;才叫懂。</p>
-<p><strong>第三，项目不是越多越好，是一个体系。</strong> 简历上写&quot;金融一个、医疗一个、教育一个&quot;，面试官一眼就知道这是练习项目。写&quot;基于电商业务的七个模块，从数据进入系统到最终被使用&quot;才是体系。这也是那份发言稿里唯一一条我完全认同的判断。</p>
+<p><strong>第三，项目不是越多越好，是一个体系。</strong> 简历上写&quot;金融一个、医疗一个、教育一个&quot;，面试官一眼就知道这是练习项目。写&quot;基于电商业务的七个模块，从数据进入系统到最终被使用&quot;才是体系。（第 26 章会把这件事讲透。）</p>
 <p><strong>第四，简历不是编出来的，是排出来的。</strong> 你真实做过的事情，一定比你以为的多。问题在于你有没有把它排列成一个有逻辑的结构。第三部分会专门讲这个。</p>
 <p><strong>第五，面试挂了不代表你不行。</strong> 大模型应用岗的面试挂掉，九成原因是&quot;没准备好怎么讲&quot;，而不是&quot;不会做&quot;。这两件事的补救成本差十倍。</p>
 <p>好，废话到此为止。翻页，正式开始。</p>
@@ -577,7 +577,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <ol><li><strong>装一个能跑 Python 的图形界面工具</strong>。推荐 VS Code（免费），或者直接用 Jupyter Notebook（浏览器里跑代码，最友好）。装好能打开的界面就算成功。</li><li><strong>跑通第一段官方示例代码</strong>。去你注册的大模型平台上，找&quot;快速开始&quot;页面，它一般会给你一段示例代码，写着&quot;复制到你的编辑器里运行&quot;。<strong>复制粘贴，运行，看到结果</strong>。这一步的意义是打破神秘感。</li><li><strong>只改三个参数再跑一次</strong>：把模型换成另一个、把温度从 0 改成 1、把你问的问题换掉。观察输出有什么变化。<strong>这一步是本章最重要的动作</strong>——你在建立&quot;参数 → 结果&quot;的因果感。</li><li><strong>故意制造一次报错</strong>。把 API Key 改错一个字符，运行，看报错长什么样。然后再改回来。<strong>能读懂报错，你就不会怕报错。</strong></li></ol>
 <p>做完这四步，你就已经比 90% &quot;只看了视频没动过手&quot;的人强了。</p>
 <h3>现实校准</h3>
-<p>发言稿里说：&quot;我看很多人学个 Python 墨迹个把月，两三天学不会，那就别干了。&quot;</p>
+<p>有一句很冲的话是这样说的：&quot;我看很多人学个 Python 墨迹个把月，两三天学不会，那就别干了。&quot;</p>
 <p>这句话<strong>前半句有一点道理，后半句是错的</strong>。</p>
 <p>有道理的部分：如果你要<strong>自己写</strong>一个完整的 Agent 系统，确实不该在语法上耗一个月。语法本身很简单，真正的难度在设计和调试。</p>
 <p>错的部分：&quot;两三天学不会就别干了&quot;——这是在把&quot;学习速度&quot;和&quot;适不适合这个行业&quot;划等号。事实是：</p>
@@ -1280,7 +1280,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h3>一句话结论</h3>
 <p>普通 RAG 找的是&quot;跟这个问题<strong>像</strong>的资料&quot;，Graph RAG 找的是&quot;跟这个问题<strong>有关联</strong>的资料&quot;。<strong>相似</strong>和<strong>关联</strong>是两件事，这就是它的全部价值。</p>
 <div class="viz" data-viz="ch11"></div><h3>这一章解决什么问题</h3>
-<p>发言稿说&quot;你不一定项目能用上，但是你得知道&quot;。这句话这次是对的。因为面试里 Graph RAG 是一道<strong>分水岭题</strong>：知道的人一眼就能看出你在关注行业前沿，不知道的人会把它和普通 RAG 混为一谈。</p>
+<p>有一句话是&quot;你不一定项目能用上，但是你得知道&quot;——这句话是对的。因为面试里 Graph RAG 是一道<strong>分水岭题</strong>：知道的人一眼就能看出你在关注行业前沿，不知道的人会把它和普通 RAG 混为一谈。</p>
 <p>你不需要会搭它，但你必须能说清：<strong>它解决什么普通 RAG 解决不了的问题。</strong></p>
 <h3>一、普通 RAG 的三个盲区</h3>
 <p>先看普通 RAG 在什么情况下会失灵：</p>
@@ -1363,7 +1363,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h3>一句话结论</h3>
 <p>LangChain 提供的是<strong>标准零件</strong>，LangGraph 提供的是<strong>装配图纸</strong>。前者让你不用从零造轮子，后者让你能画出带分支和回路的复杂流程。</p>
 <div class="viz" data-viz="ch12"></div><h3>这一章解决什么问题</h3>
-<p>发言稿说&quot;几乎每家公司都会问&quot;。这句话是准的——只要岗位描述里写了&quot;熟悉 LangChain / LangGraph&quot;，面试大概率会问。</p>
+<p>有一句话是&quot;几乎每家公司都会问 LangChain / LangGraph&quot;——这句话是准的：只要岗位描述里写了&quot;熟悉 LangChain / LangGraph&quot;，面试大概率会问。</p>
 <p>但面试官不会问&quot;LangChain 有哪些组件&quot;（这是背的）。他会问：<strong>你为什么用 LangChain？有没有觉得它不好用的地方？</strong> 这个问题在考你的判断力。</p>
 <p>所以这一章除了讲清它们是什么，还会诚实地讲它们的缺点。</p>
 <h3>一、为什么会有框架</h3>
@@ -1436,7 +1436,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h3>一句话结论</h3>
 <p><strong>MCP 解决&quot;Agent 怎么连上外部能力&quot;，Skills 解决&quot;Agent 怎么学会一套做法&quot;。</strong> 前者是接口标准，后者是知识封装。</p>
 <div class="viz" data-viz="ch13"></div><h3>这一章解决什么问题</h3>
-<p>发言稿说这是&quot;重中之重&quot;。这个判断是对的，因为 MCP 是 2024 年底之后行业最大的一个结构性变化——它把&quot;每个模型各自接工具&quot;变成了&quot;所有模型共用一套工具协议&quot;。</p>
+<p>这份路线把 MCP 列成&quot;重中之重&quot;。这个判断是对的，因为 MCP 是 2024 年底之后行业最大的一个结构性变化——它把&quot;每个模型各自接工具&quot;变成了&quot;所有模型共用一套工具协议&quot;。</p>
 <p>面试里如果你能讲清 MCP 为什么会出现、它和 Function Calling 什么关系，会被认为<strong>跟得上行业</strong>。</p>
 <h3>一、MCP 出现之前的问题：M 乘 N 的泥潭</h3>
 <p>假设你有 5 个模型（不同厂商）、10 个数据源（数据库、文件系统、工单系统、CRM……）。在 MCP 之前，你要为<strong>每一对组合</strong>写一次对接代码：</p>
@@ -1510,7 +1510,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h3>一句话结论</h3>
 <p><strong>Harness 就是套在模型外面的那层&quot;工作台&quot;</strong>——它决定模型能看到什么、能做什么、做到什么程度算完、以及做错了怎么办。模型决定上限，Harness 决定下限。</p>
 <div class="viz" data-viz="ch14"></div><h3>这一章解决什么问题</h3>
-<p>&quot;Harness&quot;是这份发言稿里最实的一个词。因为 2025 年之后，行业里越来越多的人意识到一件事：</p>
+<p>&quot;Harness&quot;是那份路线里最实在的一个词。因为 2025 年之后，行业里越来越多的人意识到一件事：</p>
 <blockquote><p><strong>同一个模型，换一个 Harness，效果能差出一个数量级。</strong></p></blockquote>
 <p>所以面试官问 Harness，问的不是一个名词，而是<strong>&quot;你知不知道 Agent 是一个系统工程，而不是一个提示词&quot;</strong>。这一章就把这套系统性讲清楚。</p>
 <h3>一、先建立画面：模型是&quot;大脑&quot;，Harness 是&quot;身体&quot;</h3>
@@ -1547,14 +1547,14 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <div class="viz v3d" data-v3="ch14b"></div><div class="viz v3d" data-v3="ch14d"></div><h3>五、工具设计：Agent 的手好不好用</h3>
 <p>第 5 章讲过工具描述的写法，这里补充<strong>Agent 场景下额外要考虑的四点</strong>：</p>
 <ol><li><strong>搜索优于遍历</strong>：不要把&quot;列出所有文件&quot;当主要手段，要提供&quot;按关键词搜索&quot;的能力。遍历会把上下文撑爆。</li><li><strong>读取要精准</strong>：不要&quot;读整个文件&quot;，要能&quot;读某一段&quot;。上下文很贵。</li><li><strong>写入要最小化</strong>：编辑文件用&quot;精确替换某几行&quot;，不要&quot;重写整个文件&quot;。这样出错可回退，也省 Token。</li><li><strong>危险动作要拦截</strong>：删除、覆盖、对外发送、涉及钱的，都必须经过确认。<strong>这不是为了合规，是因为模型确实会做错。</strong></li></ol>
-<h3>六、Claude Code 原理拆解（本节是发言稿里那句&quot;我们有一个项目的启发就来自它&quot;的答案）</h3>
+<h3>六、Claude Code 原理拆解（值得单独研究的成熟实现）</h3>
 <p>Claude Code 是命令行里的编程 Agent。它的架构代表了当前&quot;生产级 Harness&quot;的主流形态。下面按 Harness 的模块拆开看它做了什么设计（以下都是公开文档和实际使用中可观察到的设计思路）：</p>
 <table><thead><tr><th>模块</th><th>它的设计</th><th>为什么这么做</th></tr></thead><tbody><tr><td>循环</td><td>标准的 Agent Loop，多轮工具调用直到任务完成</td><td>这是 Agent 的基本形态</td></tr><tr><td>工具集</td><td>读文件、搜索、精确编辑、执行命令、以及派发子任务</td><td>覆盖&quot;看、找、改、跑、分派&quot;五类动作</td></tr><tr><td>上下文</td><td>按需读取（需要哪个文件才读哪个）、自动压缩、把项目约定写进项目说明文件</td><td>上下文是有限资源，必须精打细算</td></tr><tr><td>权限</td><td>默认保守，敏感操作要用户确认；也可配置白名单放行</td><td>安全和效率的平衡</td></tr><tr><td>记忆</td><td>项目根目录的说明文件（比如 AGENTS.md 这类约定文件）作为长期记忆</td><td>让知识沉淀成文件，而不是留在会话里</td></tr><tr><td>计划模式</td><td>先输出计划，人工确认后再动手</td><td>避免&quot;方向错了还一路狂奔&quot;</td></tr><tr><td>子代理</td><td>探索类任务隔离到独立上下文，只回传结论</td><td>保护主上下文，并行提速</td></tr><tr><td>可观测</td><td>每一步都可见、可中断</td><td>让人能随时叫停和纠偏</td></tr></tbody></table>
 <p><strong>从它身上能提炼出五条可直接搬到你项目里的原则：</strong></p>
 <ol><li><strong>上下文按需加载，不要一次性全给。</strong></li><li><strong>工具要可组合，且粒度合适</strong>（读、找、改、跑分开）。</li><li><strong>高风险动作必须有人在环</strong>（确认机制）。</li><li><strong>项目知识要沉淀成文件</strong>，让 Agent 每轮都能读到，而不是靠人在对话里反复叮嘱。</li><li><strong>先计划后执行</strong>，尤其是大任务。</li></ol>
 <p>这五条，你可以直接写进自己项目的设计文档，也是面试里回答&quot;你从 Claude Code 学到什么&quot;的标准答案。</p>
 <h3>七、&quot;自进化&quot;：把玄学讲成工程</h3>
-<p>发言稿把&quot;自进化&quot;说得很猛。我们把它落到实处。现实中，&quot;自进化&quot;有三个层次，成熟度依次降低：</p>
+<p>&quot;自进化&quot;这个词被说得太猛了。我们把它落到实处。现实中，&quot;自进化&quot;有三个层次，成熟度依次降低：</p>
 <p><strong>第一层：记忆沉淀（成熟，现在就能做）</strong></p>
 <p>把 Agent 每次踩过的坑、用户纠正过的说法、成功的处理方式，<strong>写成规则文件</strong>，下次作为上下文加载。</p>
 <p>例子：Agent 第一次把一个型号答错了，用户纠正；系统把&quot;XX 型号的规格表见某文档&quot;这条经验写进知识库，下次就不会再错。</p>
@@ -1837,7 +1837,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>AI 让&quot;写代码&quot;变便宜了十倍，于是<strong>瓶颈自动转移到了&quot;审查、验证、对齐&quot;这三个环节</strong>。谁解决这三个环节，谁就能带团队。</p>
 <div class="viz" data-viz="ch17"></div><h3>这一章解决什么问题</h3>
 <p>这一章是<strong>冲 Leader 岗、或者想在面试里显得&quot;有管理视角&quot;的关键内容</strong>。因为绝大多数候选人只会讲技术，讲不了组织。</p>
-<p>发言稿说&quot;AI 一天可以写一万行代码，代码怎么审核？团队怎么配合？&quot;——这个问题问得很准。这一章给你完整的答案。</p>
+<p>有一句被反复提起的话：&quot;AI 一天可以写一万行代码，那代码怎么审核？团队怎么配合？&quot;——这个问题问得很准。这一章给你完整的答案。</p>
 <h3>一、瓶颈是怎么转移的</h3>
 <p>先看一张对比：</p>
 <table><thead><tr><th>环节</th><th>传统研发</th><th>AI 辅助研发</th></tr></thead><tbody><tr><td>写代码</td><td>慢，是主要瓶颈</td><td>快，几乎不再是瓶颈</td></tr><tr><td>提需求 / 写规格</td><td>一句话口头交代</td><td><strong>变成瓶颈</strong>：规格不清楚，AI 就会写出错的东西</td></tr><tr><td>审查代码</td><td>人手看，但量小</td><td><strong>变成瓶颈</strong>：量大了几十倍，看不过来</td></tr><tr><td>验证正确性</td><td>靠测试和人工</td><td><strong>变成瓶颈</strong>：AI 写的代码&quot;看起来对&quot;的概率很高，实际上可能有隐蔽错误</td></tr><tr><td>部署运维</td><td>相对固定</td><td>变化不大</td></tr><tr><td>知识沉淀</td><td>靠口口相传</td><td><strong>变成瓶颈</strong>：新人（包括 AI）需要上下文才能干活</td></tr></tbody></table>
@@ -1908,7 +1908,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h3>一句话结论</h3>
 <p>做一个 Agent 是手工作坊，做一百个 Agent 是工厂。<strong>AI Infra 就是那套工厂流水线：把每个 Agent 都要重复做一遍的事，抽出来做成公共设施。</strong></p>
 <div class="viz" data-viz="ch18"></div><h3>这一章解决什么问题</h3>
-<p>发言稿说这一块&quot;对去找 Leader 岗非常有帮助&quot;&quot;想薪资突破 30K 以上&quot;。这个判断是对的，因为：</p>
+<p>把这一块说成&quot;对够到 Leader 岗很有帮助&quot;&quot;想薪资突破 30K 就靠它&quot;——这个判断是对的，因为：</p>
 <blockquote><p><strong>能搭一个 Agent 的人很多，能设计一套支撑一百个 Agent 的基础设施的人很少。</strong></p></blockquote>
 <p>这一章给你一套完整的分层框架。学完它，你在面试里聊架构时不会只能说&quot;我们用 LangChain 做了一个 RAG&quot;。</p>
 <h3>一、核心判断：什么东西该抽出来</h3>
@@ -1948,7 +1948,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>成本与配额中心</strong></p>
 <p>按业务线、按 Agent、按用户维度统计花费，设配额和告警。<strong>没有这个，AI 成本会失控——这是真实踩过的坑。</strong></p>
 <h3>五、&quot;0.5 到 1&quot;到底是什么意思</h3>
-<p>发言稿里说了一句很关键的话：&quot;我能不能 0.5 到 1 都要去做基础设施。&quot;</p>
+<p>这里有一句很关键的话：&quot;能不能不做 0 到 1、只做 0.5 到 1，也要把基础设施补上。&quot;</p>
 <p>这句话的意思是：<strong>不要每个业务都从 0 开始做</strong>。新业务应该站在已有的基础设施上，从&quot;0.5&quot;出发。</p>
 <p>具体来说，一个新业务 Agent 的搭建应该是这样的：</p>
 <table><thead><tr><th>步骤</th><th>传统做法</th><th>有基础设施之后</th></tr></thead><tbody><tr><td>接模型</td><td>自己申请密钥、写对接代码</td><td>在模型网关上申请一个额度</td></tr><tr><td>做检索</td><td>自己搭向量库、调切块</td><td>接入知识中台，配数据源</td></tr><tr><td>接工具</td><td>自己写每个系统的对接</td><td>在 MCP 网关注册或复用已有工具</td></tr><tr><td>做评估</td><td>自己临时测</td><td>在评测平台建测试集</td></tr><tr><td>上线</td><td>自己搞部署</td><td>走发布的标准化流程</td></tr></tbody></table>
@@ -1997,7 +1997,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h3>一句话结论</h3>
 <p>数据中台解决的是<strong>&quot;AI 吃的粮从哪来、干不干净、谁来负责&quot;</strong>。所有上层 Agent 的效果上限，都由这一层决定。</p>
 <div class="viz" data-viz="ch19"></div><h3>一、为什么这个项目排第一个</h3>
-<p>发言稿说&quot;数据质量决定大模型上限，未来企业之争就是数据之争&quot;。这句话不夸张，而且它有一个很实际的推论：</p>
+<p>有一句被反复引用的话：&quot;数据质量决定大模型上限，未来企业之争就是数据之争。&quot;这句话不夸张，而且它有一个很实际的推论：</p>
 <blockquote><p><strong>在一个电商公司里，后面所有的 Agent（客服、运营、考核、素材）都要吃数据。数据源不统一、质量不可控，后面每一个项目都会重复踩坑。</strong></p></blockquote>
 <p>所以它在体系里是<strong>地基</strong>：先有它，后面七个项目才能成立。这也是&quot;体系&quot;和&quot;一堆散项目&quot;的根本区别。</p>
 <h3>二、业务痛点（面试开场必须讲这个）</h3>
@@ -2074,7 +2074,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h3>一句话结论</h3>
 <p>实时语音客服是<strong>把&quot;打字聊天&quot;的所有难点，加上&quot;实时&quot;和&quot;语音&quot;两个放大器</strong>。它是目前最有体感、最能体现工程能力的 AI 应用方向之一。</p>
 <div class="viz" data-viz="ch20"></div><h3>一、为什么这个项目值得做</h3>
-<p>发言稿说它的灵感来自&quot;罗永浩和豆包对话&quot;，说这是&quot;非常火和热门的方向&quot;。这个判断是对的。</p>
+<p>把实时语音客服当成一个&quot;热门且新颖&quot;的方向——这个判断是对的。</p>
 <p>原因很简单：<strong>电话客服是每个电商公司都有的、成本极高的环节。</strong> 一个真人客服一天能接 100 通电话左右，而 AI 可以接一千通，而且不用排班、不会情绪化、不会离职。</p>
 <p><strong>面试里这个项目的价值在于：它能自然引出&quot;实时性&quot;这个大多数人不会碰的领域。</strong> 大部分候选人的项目都是&quot;用户打字、系统返回&quot;，而实时语音要处理延时、打断、噪声——这是完全不同的难度等级。</p>
 <h3>二、先搞清&quot;RTC&quot;是什么</h3>
@@ -2266,7 +2266,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <div class="viz v3d" data-v3="ch22b"></div><h3>五、更重要的一个视角：这是培训系统，不是处罚系统</h3>
 <p><strong>这一句话会把你的项目从&quot;能用&quot;提升到&quot;有价值&quot;。</strong></p>
 <p>如果 AI 考核只用来扣钱，员工的反应一定是抵触和作假。但如果它用来<strong>帮员工变强</strong>，效果完全不同：</p>
-<ul><li>每个员工收到一份个性化的改进建议（&quot;你在异议处理这一项平均得分偏低，这是一段优秀录音，对比听一下&quot;）。</li><li>好的话术被自动提取出来，变成组织资产（这就是发言稿里说的&quot;新人不用人带，AI 就能培训&quot;）。</li><li>管理者能看到团队整体在哪个环节薄弱，针对性做培训。</li></ul>
+<ul><li>每个员工收到一份个性化的改进建议（&quot;你在异议处理这一项平均得分偏低，这是一段优秀录音，对比听一下&quot;）。</li><li>好的话术被自动提取出来，变成组织资产（这正是&quot;新人不用老带、AI 就能培训&quot;这句话的落地方式）。</li><li>管理者能看到团队整体在哪个环节薄弱，针对性做培训。</li></ul>
 <p><strong>面试里这样说，会显得你懂组织和人性，而不只是懂技术。</strong></p>
 <h3>六、指标怎么定</h3>
 <table><thead><tr><th>指标</th><th>说明</th></tr></thead><tbody><tr><td>评估覆盖率</td><td>从 5% 到 100%</td></tr><tr><td>与人工打分的一致性</td><td>相关系数或一致率</td></tr><tr><td>评估耗时</td><td>原来一份录音要几分钟，现在几秒</td></tr><tr><td>团队能力变化</td><td>员工平均得分趋势、新人达标时间缩短</td></tr><tr><td>满意度</td><td>员工对评估结果的认可度</td></tr><tr><td>话术资产量</td><td>沉淀下来的优秀话术数量</td></tr></tbody></table>
@@ -2310,7 +2310,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>面试里这样表述</strong>：&quot;素材中心的检索其实就是多模态版的 RAG。同样是编码、入库、召回、重排，只不过对象从文本块变成了图片和视频。&quot;</p>
 <div class="viz v3d" data-v3="ch23"></div><h3>四、三个必须设计好的地方</h3>
 <p><strong>一、责任人与追责链路</strong></p>
-<p>发言稿里那句&quot;是谁上传的，要找到这个人让他背锅&quot;，说法粗糙，但问题是真的：<strong>素材必须有责任人。</strong></p>
+<p>有一句糙话说得很难听——&quot;是谁上传的，要找到这个人让他背锅&quot;——但问题是真的：<strong>素材必须有责任人。</strong></p>
 <p>专业的设计是：</p>
 <ul><li>每条素材记录<strong>上传人、上传时间、来源系统、审核人、使用范围</strong>。</li><li>记录<strong>使用记录</strong>：谁在什么地方用了它。</li><li>出问题时能反向追溯：这张图被哪些内容用过、影响了哪些商品。</li></ul>
 <p><strong>注意措辞</strong>：面试里不要说&quot;追责/背锅&quot;，要说<strong>&quot;可追溯&quot;和&quot;责任到人&quot;</strong>。前者显得你在泄愤，后者显得你在建制度。</p>
@@ -2380,7 +2380,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <table><thead><tr><th>招数</th><th>具体做法</th><th>解决什么</th></tr></thead><tbody><tr><td>裁剪</td><td>工具返回的大段文本只保留关键字段，原始内容存文件，需要时再读</td><td>防止上下文爆炸</td></tr><tr><td>摘要</td><td>超过 N 步之后，把早期步骤摘要成一段</td><td>保留脉络</td></tr><tr><td>外部化</td><td>把中间结论写进任务状态文件，而不是留在对话里</td><td>释放上下文，且可恢复</td></tr><tr><td>隔离</td><td>探索性任务派给子代理，只带回结论</td><td>保护主上下文</td></tr></tbody></table>
 <p><strong>特别要讲&quot;外部化&quot;这一招为什么好</strong>：因为 Agent 中途被打断之后，可以从状态文件恢复，而不用从头再来。<strong>这就是&quot;可恢复&quot;，是生产级 Agent 的标志。</strong></p>
 <h3>六、亮点三：自进化（把玄学变成三环闭环）</h3>
-<p>这是发言稿里最想让你信、但讲得最玄的部分。我们把它做成可以验证的三个环节：</p>
+<p>&quot;自进化&quot;是这类文案里最想让你信、也讲得最玄的部分。我们把它做成可以验证的三个环节：</p>
 <p><strong>第一环：记忆沉淀</strong></p>
 <p>任务完成后，把&quot;这个任务是怎么做成的&quot;提炼成一条经验，存进经验库。</p>
 <p>例子：处理某种异常订单时，需要先查 A 系统再查 B 系统，否则会失败。这条经验下次作为提示的一部分加载。</p>
@@ -2526,7 +2526,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>B 版本</strong>：在一个电商公司的 AI 体系里，负责了数据治理、内容生成、客服优化、内部考核四个模块，并搭了支撑这些模块的公共基础设施。</p>
 <p>面试官的反应：这个人做过体系，知道模块之间怎么配合。</p>
 <p><strong>差别不在技术，在&quot;是不是同一个业务里的东西&quot;。</strong></p>
-<p><strong>这也是这份发言稿里唯一一条我完全认同的判断</strong>：项目要成体系。原因很实际——<strong>只有同一个业务里的项目，才能讲清&quot;依赖关系&quot;和&quot;演进过程&quot;，而依赖关系和演进过程，才是工程能力的证据。</strong></p>
+<p><strong>&quot;项目要成体系&quot;这个判断，是这类文案里少见的、我完全认同的一句</strong>。原因很实际——<strong>只有同一个业务里的项目，才能讲清&quot;依赖关系&quot;和&quot;演进过程&quot;，而依赖关系和演进过程，才是工程能力的证据。</strong></p>
 <h3>二、一张图：电商 AI 体系</h3>
 <pre>┌───────────────────────────────────────────────────────────┐
 │  业务层                                                    │
@@ -2623,7 +2623,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <table><thead><tr><th>弱的写法</th><th>强的写法</th></tr></thead><tbody><tr><td>负责 RAG 系统的搭建</td><td>搭建商品知识问答的 RAG 链路，采用向量 + 关键词混合召回加重排，检索命中率从 68% 提升到 84%</td></tr><tr><td>使用 LangGraph 做编排</td><td>用图编排实现带分支和循环的客服流程，支持工具失败自动重试与中断恢复，任务成功率提升到 91%</td></tr><tr><td>优化了提示词</td><td>重构系统提示并建立 120 条回归测试集，改动可自动验证，格式错误率从 5% 降到 0.3%</td></tr><tr><td>参与数据治理</td><td>统一 3 个系统 40 万条商品数据的命名口径，消除 8% 的跨系统不一致，下游 Agent 检索准确率提升 16 个百分点</td></tr></tbody></table>
 <p><strong>看出差别了吗？</strong> 强的写法里有：具体方法、具体数字、具体范围。<strong>弱写法里只有&quot;我参与过&quot;。</strong></p>
 <h3>五、&quot;17 份参考模板&quot;的正确用法</h3>
-<p>发言稿说准备了 17 份参考模板。这里我要给你一句实话：</p>
+<p>很多简历模板包会说自己有&quot;17 份参考模板&quot;。这里给你一句实话：</p>
 <blockquote><p><strong>模板的价值不在于&quot;抄内容&quot;，而在于&quot;拆结构&quot;。</strong></p></blockquote>
 <p>同一份模板，抄内容的人写出来千篇一律，面试官一眼看出是套的；拆结构的人能写出自己的东西。</p>
 <p><strong>拆结构的做法：拿到任何一份你觉得好的简历，做三件事：</strong></p>
@@ -2660,8 +2660,8 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c36">第 28 章　&quot;项目放大&quot;的正确做法：升维表达，而不是谎报数字<a class="q" href="javascript:void 0" data-q="c36">#</a><button class="mark-read" data-c="c36">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>你要放大的不是数字，是视野。</strong> 面试官真正想听的是&quot;你想过更大的规模会怎样&quot;，而不是&quot;你曾经有过更大的规模&quot;。</p>
-<div class="viz" data-viz="ch28"></div><h3>一、先处理发言稿里那个危险的建议</h3>
-<p>发言稿里说：</p>
+<div class="viz" data-viz="ch28"></div><h3>一、先处理招生文案里那个危险的建议</h3>
+<p>那份文案是这么说的：</p>
 <blockquote><p>&quot;很多 Java 去面试，真实公司可能用户只有 1000，面试官问你搞过高并发吗？你肯定不能说没搞过，得说公司有 10 万用户……所以要学会把自己的项目放大。&quot;</p></blockquote>
 <p><strong>我必须直白地告诉你这段话的问题。</strong></p>
 <p>第一，<strong>它在教你撒谎</strong>，而且是在一个你无法验证对方会不会核实的场合。</p>
@@ -2696,7 +2696,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>在讲完一个项目后，主动说一句&quot;不过这里面有个问题我们后来才解决&quot;。<strong>面试官一定会追问</strong>，而你已经准备好了。<strong>主动引导追问方向，是面试的高级技巧。</strong></p>
 <p><strong>技巧三：用一条主线贯穿。</strong></p>
 <p>如果面试的是电商公司，主线是&quot;降本增效&quot;；如果是 SaaS 公司，主线是&quot;帮助客户更快上门&quot;；如果是金融，主线是&quot;合规和风控&quot;。<strong>同一批项目，换一条主线讲，就能适配不同公司。</strong></p>
-<p>这就是发言稿里那句&quot;电商是最匹配的，但其他行业照样能说，一生二、二生三&quot;的真正含义。<strong>它的技术本质是：项目背后的能力是通用的，你只需要换一个业务语境来讲。</strong></p>
+<p>这就是&quot;电商最匹配，但其他行业照样能说，一生二、二生三&quot;那句话的真正含义。<strong>它的技术本质是：项目背后的能力是通用的，你只需要换一个业务语境来讲。</strong></p>
 <h3>六、被连环追问时怎么不崩</h3>
 <p>面试里最难的时刻是：面试官一路追问，你已经答不上来了。</p>
 <p><strong>用这个四步法：</strong></p>
@@ -2813,7 +2813,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h3>九、动手体验</h3>
 <ol><li><strong>录三版自我介绍</strong>：1 分钟版、3 分钟版、以及一版针对特定公司 JD 定制过的。</li><li><strong>找人做一次压力模拟</strong>：让对方刻意否定你的方案，练习三步法。</li><li><strong>准备 5 个反问问题</strong>，写下来，面试时挑 2 个问。</li><li><strong>做一张复盘表</strong>，打印十份，每次面试后填。</li></ol>
 <h3>现实校准</h3>
-<p><strong>关于&quot;临门一脚&quot;</strong>：发言稿里说&quot;学完这些内容也没用，程序员就一个字叫轴，照样很多问题想不通，需要高手把关&quot;。</p>
+<p><strong>关于&quot;临门一脚&quot;</strong>：有一种说法是&quot;学完这些内容也没用，程序员就一个字叫轴，照样很多问题想不通，需要高手把关&quot;。</p>
 <p>这句话里有一半是卖课的话（暗示只有他能当那个高手），但另一半是真的：<strong>面试失败往往不是知识问题，是表达问题。</strong></p>
 <p>区别在于——<strong>这个问题不需要花钱请&quot;高手&quot;，它需要的是&quot;把面试过程记录下来并复盘&quot;。</strong> 复盘十次的自己，比请一次高手更有效。因为你复盘的是<strong>你自己的具体问题</strong>，而不是别人的通用建议。</p>
 <p><strong>另一条诚实的提醒</strong>：面试失败是常态。<strong>一个正常的求职周期里，投 50 份简历、面 15 家、拿 2 到 3 个 offer，是很正常的比例。</strong> 如果你面了 3 家没中就开始怀疑自己，那是把概率问题当成了能力问题。</p>
@@ -2886,7 +2886,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h3>一句话结论</h3>
 <p><strong>技术方案回答&quot;能不能做&quot;，商业方案回答&quot;值不值得做&quot;。</strong> 能同时回答这两个问题的人，才配谈&quot;负责人&quot;这三个字。</p>
 <div class="viz" data-viz="ch32"></div><h3>一、为什么你需要会算这笔账</h3>
-<p>发言稿说&quot;Agent 工程师本身就是半个产品经理&quot;，这个判断是对的。原因很实际：</p>
+<p>&quot;Agent 工程师本身就是半个产品经理&quot;——这个判断是对的，原因很实际：</p>
 <blockquote><p><strong>你的技术方案最终要有人付钱。</strong> 如果你说不出&quot;这个方案能帮客户省多少钱&quot;或&quot;能帮公司多赚多少钱&quot;，你的方案就只能在技术评审里赢，过不了预算那一关。</p></blockquote>
 <p>而在面试里，尤其是面 Leader 岗、产品岗、或者和业务负责人对话时，<strong>能不能算清一笔账，是判断你是&quot;工程师&quot;还是&quot;负责人&quot;的分水岭。</strong></p>
 <h3>二、一门 AI 生意的五个要素</h3>
@@ -2991,9 +2991,9 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>这本书从头到尾，有一件事我在反复做：<strong>把&quot;名词&quot;翻译成&quot;判断&quot;。</strong></p>
 <p>因为面试考的不是你认识多少个词，而是你能不能在信息不全的时候做出判断，并且说清判断的依据和边界。</p>
 <p>这套东西里没有一句需要你&quot;信&quot;——<strong>所有内容你都可以验证：</strong> 去跑一次 API，去看一眼向量，去搭一个最小的 RAG，去数一下你的测试集。<strong>你验证过的，才是你的。</strong></p>
-<p>最后，回到那份发言稿的结尾：它问&quot;如果你碰到的对手懂这一套体系，你真敢与他为敌吗？&quot;</p>
-<p>我想把这句改成更实用的一句：</p>
-<blockquote><p><strong>如果你真的把这一套跑过一遍、写过笔记、讲过三分钟，那你就是那个&quot;懂这一套体系&quot;的对手。</strong></p></blockquote>
+<p>最后一句，留给还没开始的你。</p>
+<p>招生文案喜欢用一个反问收尾：&quot;如果你碰到的对手懂这一套体系，你真敢与他为敌吗？&quot; 这个反问的用意是让你害怕别人。但<strong>你真正的对手从来不是别人，是那个&quot;明天再开始&quot;的自己。</strong></p>
+<blockquote><p>**如果你真的把这一套跑过一遍、写过笔记、讲过三分钟，</p><p>那你就是那个&quot;懂这一套体系&quot;的人 —— 不用怕任何人。**</p></blockquote>
 <h3>自测题</h3>
 <ol class="qlist"><li class="qitem" data-q="33-0"><div class="qtext"><span class="qno">1</span>三种起点分别需要补什么？周期各是多少？</div><div class="qbar"><button class="qbtn show" type="button">看参考答案</button><button class="qbtn ok" type="button">答对了</button><button class="qbtn no" type="button">没答上</button></div><div class="qans"><b>参考答案</b>A 有技术背景，补原理与 RAG/Agent 概念，6 到 8 周；B 有业务背景，补原理与工程概念，10 到 12 周；C 零基础，先补第 1 到 6 章，12 到 16 周。</div></li><li class="qitem" data-q="33-1"><div class="qtext"><span class="qno">2</span>为什么&quot;有业务背景&quot;可能反而是优势？</div><div class="qbar"><button class="qbtn show" type="button">看参考答案</button><button class="qbtn ok" type="button">答对了</button><button class="qbtn no" type="button">没答上</button></div><div class="qans"><b>参考答案</b>因为这一行最缺的恰恰是能听懂业务、能算清账的人。</div></li><li class="qitem" data-q="33-2"><div class="qtext"><span class="qno">3</span>每天 4 小时应该怎么分配？哪一段最关键？</div><div class="qbar"><button class="qbtn show" type="button">看参考答案</button><button class="qbtn ok" type="button">答对了</button><button class="qbtn no" type="button">没答上</button></div><div class="qans"><b>参考答案</b>60 分钟读、60 分钟动手、60 分钟写笔记加复述、30 分钟复习昨天、30 分钟术语卡。最关键的是复述那一段，因为只有说和写才是记忆。</div></li><li class="qitem" data-q="33-3"><div class="qtext"><span class="qno">4</span>&quot;这一周过关&quot;的四条标准是什么？</div><div class="qbar"><button class="qbtn show" type="button">看参考答案</button><button class="qbtn ok" type="button">答对了</button><button class="qbtn no" type="button">没答上</button></div><div class="qans"><b>参考答案</b>能不看资料讲清本周核心内容、自测题正确率 80% 以上、完成动手任务、能说出本周内容会被怎么问。</div></li><li class="qitem" data-q="33-4"><div class="qtext"><span class="qno">5</span>为什么应该在第 8 周就开始零散投递？</div><div class="qbar"><button class="qbtn show" type="button">看参考答案</button><button class="qbtn ok" type="button">答对了</button><button class="qbtn no" type="button">没答上</button></div><div class="qans"><b>参考答案</b>因为目标不是拿 offer，而是收集真实问题——把面试当免费的模拟题，越早开始越好。</div></li><li class="qitem" data-q="33-5"><div class="qtext"><span class="qno">6</span>正常的求职比例是多少？</div><div class="qbar"><button class="qbtn show" type="button">看参考答案</button><button class="qbtn ok" type="button">答对了</button><button class="qbtn no" type="button">没答上</button></div><div class="qans"><b>参考答案</b>投 50 份、面 15 家、拿 2 到 3 个 offer。</div></li><li class="qitem" data-q="33-6"><div class="qtext"><span class="qno">7</span>学了两三周觉得&quot;什么都没学会&quot;，说明什么？</div><div class="qbar"><button class="qbtn show" type="button">看参考答案</button><button class="qbtn ok" type="button">答对了</button><button class="qbtn no" type="button">没答上</button></div><div class="qans"><b>参考答案</b>说明你从“不知道有这些东西”变成了“知道有很多东西我不懂”。感受到无知本身就是进步的证据。</div></li><li class="qitem" data-q="33-7"><div class="qtext"><span class="qno">8</span>卡在一个概念很久，应该做哪两件事？</div><div class="qbar"><button class="qbtn show" type="button">看参考答案</button><button class="qbtn ok" type="button">答对了</button><button class="qbtn no" type="button">没答上</button></div><div class="qans"><b>参考答案</b>跳过它先往下学（后面回头看会突然懂），以及动手做一次（体感永远比文字有效）。</div></li><li class="qitem" data-q="33-8"><div class="qtext"><span class="qno">9</span>30 天压缩版的优先顺序是什么？</div><div class="qbar"><button class="qbtn show" type="button">看参考答案</button><button class="qbtn ok" type="button">答对了</button><button class="qbtn no" type="button">没答上</button></div><div class="qans"><b>参考答案</b>大模型原理与 Embedding、RAG 全链路与评估、MCP 与 Harness、数据中台与 Harness 项目、体系串联与简历、60 题、模拟面试、投递复盘。</div></li><li class="qitem" data-q="33-9"><div class="qtext"><span class="qno">10</span>为什么说&quot;你验证过的，才是你的&quot;？</div><div class="qbar"><button class="qbtn show" type="button">看参考答案</button><button class="qbtn ok" type="button">答对了</button><button class="qbtn no" type="button">没答上</button></div><div class="qans"><b>参考答案</b>因为书里没有一句需要你“信”：跑一次 API、看一眼向量、搭一个最小 RAG。你验证过的，才真正属于你。</div></li></ol><div class="qstat" data-ch="33">本章自测：已答 <b>0</b>/10，答对 <b>0</b></div>
 <h3>本章术语卡</h3>
