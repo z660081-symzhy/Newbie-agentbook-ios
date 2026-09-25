@@ -375,24 +375,15 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     </div>
     <h1 class="part">第 0 部分　出发之前，先看清战场</h1>
 <h2 id="c1">第 0 章　这本教材是什么，你该怎么用它<a class="q" href="javascript:void 0" data-q="c1">#</a><button class="mark-read" data-c="c1">标记已读</button></h2>
-<h3>0.1 先说一句实话：招生文案里没有知识</h3>
-<p>这本书的起点，是一份招生文案（《Agent 秒杀对手学习路线》）。你可能也见过同类的东西： 标题里带着&quot;秒杀对手&quot;&quot;降维打击&quot;，正文一路催你赶紧报名。</p>
-<p><strong>这类文案不是教材，是招生广告。</strong> 它通常做三件事：</p>
-<p>第一，给了一张<strong>知识地图</strong>（Python、大模型原理、RAG、LangChain、MCP、Agent Loop、部署……）。这部分是<strong>真有用的</strong>，因为它列的这些名词，确实是 2024-2026 年大模型应用岗面试里反复出现的真实考点。</p>
-<p>第二，用<strong>焦虑话术</strong>推着你掏钱。&quot;两三天学不会 Python 那就别干了&quot;&quot;面试官在我面前就是明牌&quot;&quot;用大炮轰蚊子&quot;——这些话的功能不是教你，是让你觉得自己很弱、时间很紧。</p>
-<p>第三，用<strong>极端案例</strong>制造紧迫感。这类文案里常见的说法是&quot;零基础、13K，在别人那儿学了五个月找不到工作，来我这儿 12 天拿到 28K&quot;。这类故事无法证实也无法证伪，但它对你有害：它会让你以为存在一条捷径，于是你在第 20 天还没拿到 offer 时会开始怀疑自己，而不是继续积累。</p>
-<p>所以这本教材的做法是：</p>
-<blockquote><p><strong>目录照单全收，内容由我从公开的工程知识里补齐，夸张的部分我做校准。</strong></p></blockquote>
-<p>他画的是一张藏宝图的轮廓。这本书的活儿，是把每个岛上都长什么样、怎么上岛、岛上有什么坑，全部讲清楚。</p>
-<div class="callout warn"><div class="ct">关于&quot;真实性&quot;的一件事</div><p>我在这本书里不会编造任何技术细节。所有原理层面的内容（注意力机制、向量检索、Agent Loop、微调方法、云原生架构）都是公开可查、业内通用的知识。你可以用任意一个搜索引擎交叉验证我说的每一句。</p>
-<p>区别只在于：<strong>我把它们按&quot;面试 + 上手&quot;的顺序重新组织了一遍</strong>，并且补上了&quot;这块知识在面试里怎么用&quot;这一层。这才是那份招生文案真正在卖的东西——不是知识，是组织方式和表达方式。</p></div>
-<div class="viz" data-viz="ch0"></div><h3>0.2 三个承诺，三个不承诺</h3>
+<h3>0.1 三个承诺，两个不承诺</h3>
+<div class="callout warn"><div class="ct">关于&quot;真实性&quot;的一件事</div><p>这本书里不会编造任何技术细节。所有原理层面的东西（注意力机制、向量检索、Agent Loop、 微调方法、云原生架构）都是公开可查、业内通用的知识，你可以用任意一个搜索引擎交叉验证我说的每一句。</p>
+<p>我做的只是<strong>把公开知识按&quot;面试 + 上手&quot;的顺序重新组织</strong>，再补上&quot;这块知识在面试里怎么用&quot;这一层。</p></div>
 <p>先说<strong>我能承诺</strong>的：</p>
 <ol><li><strong>每一章都让你能&quot;合上书讲出来&quot;。</strong> 这是本书唯一的验收标准。读完不算学会，能对着空气讲三分钟才算。</li><li><strong>全程不讲代码细节。</strong> 你要的是原理和判断力，不是语法。书中出现的所有技术名词，我都会先用生活语言解释一遍，再说它的工程含义。</li><li><strong>每个知识点都带&quot;面试怎么用&quot;。</strong> 每章末尾都有【面试怎么说】和【自测题】，你可以直接拿去用。</li></ol>
-<p>再说<strong>我不能承诺</strong>的，这几条比上面的更重要：</p>
-<ol><li><strong>我不承诺你两周拿到高薪。</strong> 真实的市场情况是：跨行业、零基础转大模型应用方向，通常需要 <strong>3 到 6 个月</strong>的高强度学习和几十次投递。有人更快，有人更慢，取决于你的学历背景、所在城市、以及你原来做什么。任何跟你说&quot;12 天&quot;的人，要么在卖课，要么在拿极端个例当普遍规律。</li><li><strong>我不承诺你可以完全不动手。</strong> 你可以不写代码，但你必须<strong>动手用工具</strong>：调通一次 API、在向量数据库里搜一次、把一个文档喂给 RAG、跑一次微调。区别在于，你是&quot;点按钮 + 看结果 + 想明白为什么&quot;，而不是&quot;从零手写&quot;。</li><li><strong>我不承诺背完就能过面试。</strong> 面试官只要往下追问三层，背诵就会塌。这本书真正教你的，是<strong>让每一层追问都有东西可答</strong>。</li></ol>
-<h3>0.3 &quot;秒杀&quot;这件事，正确的理解是什么</h3>
-<p>这类文案最爱讲&quot;秒杀&quot;：你会的东西比对手多，就能赢。这个理解是错的，至少是不完整的。</p>
+<p>再说<strong>我不能承诺</strong>的，这两条比上面的更重要：</p>
+<ol><li><strong>我不承诺你可以完全不动手。</strong> 你可以不写代码，但你必须<strong>动手用工具</strong>：调通一次 API、在向量数据库里搜一次、把一个文档喂给 RAG、跑一次微调。区别在于，你是&quot;点按钮 + 看结果 + 想明白为什么&quot;，而不是&quot;从零手写&quot;。</li><li><strong>我不承诺背完就能过面试。</strong> 面试官只要往下追问三层，背诵就会塌。这本书真正教你的，是<strong>让每一层追问都有东西可答</strong>。</li></ol>
+<div class="viz" data-viz="ch0"></div><h3>0.2 &quot;秒杀&quot;这件事，正确的理解是什么</h3>
+<p>招生文案最爱讲&quot;秒杀&quot;：你会的东西比对手多，就能赢。这个理解是错的，至少是不完整的。</p>
 <p>真实的面试场景是这样的：面试官一天要看七八份简历、面三四个人，他脑子里其实只有一个问题——</p>
 <blockquote><p><strong>&quot;这个人来了，能不能接住我们手上的活？&quot;</strong></p></blockquote>
 <p>所以真正的&quot;秒杀&quot;，是<strong>叙事完整度</strong>上的秒杀。同一个项目，两个人的说法差这么远：</p>
@@ -401,7 +392,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>注意：B 候选人<strong>没有夸大任何东西</strong>，他只是把同一件事说完整了。这才是可复制、且经得起追问的能力。</p>
 <p>这本书会反复训练你把话说完整的四种能力：</p>
 <ul><li><strong>有数字</strong>：把模糊的&quot;很多&quot;&quot;很快&quot;换成具体量级。</li><li><strong>有取舍</strong>：说出你<strong>为什么没选另一个方案</strong>。这是最能体现水平的一环。</li><li><strong>有失败</strong>：说出你踩过的坑和怎么修的。面试官极度吃这套，因为编不出来。</li><li><strong>有边界</strong>：说清你这套东西在什么情况下会失效。</li></ul>
-<h3>0.4 岗位地图：你真正要投的是哪一类岗</h3>
+<h3>0.3 岗位地图：你真正要投的是哪一类岗</h3>
 <p>&quot;Agent 工程师&quot;不是一个官方岗位名。招聘网站上你会看到下面几种，它们的日常工作差别很大，备考重点也不同。</p>
 <table><thead><tr><th>岗位名称（常见写法）</th><th>每天实际在干什么</th><th>招人时最看重什么</th><th>一句话门槛</th></tr></thead><tbody><tr><td>大模型应用开发工程师</td><td>调用模型 API，做提示词、RAG、业务流程编排，做业务功能</td><td>能不能把不确定的模型输出变成稳定的产品功能</td><td>会调 API + 懂检索 + 能兜底</td></tr><tr><td>Agent 工程师</td><td>设计多轮任务循环，接工具、接协议（MCP）、做多 Agent 协作</td><td>对 Agent Loop、上下文管理、工具设计的理解深度</td><td>能讲清一个 Agent 为什么会失败</td></tr><tr><td>AI Infra / 平台工程师</td><td>维护模型网关、向量库、评测平台、算力调度、成本控制</td><td>工程能力和架构经验，对稳定性的理解</td><td>会做限流、降级、可观测</td></tr><tr><td>AI 产品经理</td><td>定义场景、设计交互、评估效果、算投入产出</td><td>业务理解和数据能力，而不是技术深度</td><td>能算清一笔 AI 投入的账</td></tr></tbody></table>
 <p><strong>这四个岗位的钱差在哪？</strong> 这里不报具体数字（会过时），只说差距的三个来源：</p>
@@ -412,7 +403,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>面试官不会问&quot;请解释注意力机制&quot;。他会问：&quot;你说的这个检索效果不好，为什么调大切块长度以后反而更差了？&quot;</p>
 <p>如果你真的懂原理，你会答&quot;因为切块变长以后，单个块里混进了多个主题，向量被平均了，语义被打散，所以召回的目标反而不准了&quot;。如果你只是背了名词，这一问就露馅了。</p>
 <p><strong>原理的价值不在于被问到，而在于被追问时兜得住。</strong> 这句话请写在你的笔记本第一页。</p></div>
-<h3>0.5 学习总路线（你的 Todolist）</h3>
+<h3>0.4 学习总路线（你的 Todolist）</h3>
 <p>下面是全书配套的学习清单。它同时是一个独立的可勾选文件，你可以打印出来贴在墙上。</p>
 <h1 class="part">Agent 就业学习 Todolist（总路线图）</h1>
 <blockquote><p>用法：每一条任务后面都有【验收】。<strong>通过验收才算完成</strong>，读完不算完成。</p><p>建议节奏：每天 4 小时有效学习（不是看视频的时间，是&quot;能复述 + 能操作&quot;的时间）。</p><p>打印出来，完成一条划掉一条。全部划完，你就具备了投递 Agent / 大模型应用岗的完整知识底盘。</p></blockquote>
@@ -520,7 +511,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <hr>
 <h2 id="c8">每日固定动作（贯穿全程）<a class="q" href="javascript:void 0" data-q="c8">#</a><button class="mark-read" data-c="c8">标记已读</button></h2>
 <ul class="tasks"><li class="task" data-k="cf7f1f84f2ae"><input type="checkbox"><span>每天 30 分钟：读昨天写的笔记，做一次&quot;合上书复述&quot;</span></li><li class="task" data-k="fa3b702bfd20"><input type="checkbox"><span>每天 15 分钟：把当天学到的一个概念，用&quot;给外行讲&quot;的方式写 200 字</span></li><li class="task" data-k="a4514b51e12f"><input type="checkbox"><span>每周 1 次：把本周的 5 个概念串成一段 3 分钟的口述</span></li><li class="task" data-k="5120fae6af8f"><input type="checkbox"><span>每周 1 次：更新简历里的一个项目条目</span></li></ul>
-<h3>0.6 这本书怎么读：三遍阅读法</h3>
+<h3>0.5 这本书怎么读：三遍阅读法</h3>
 <p>这本书有 34 章（第 0 章导论 + 第 1–33 章），加上 5 个附录，正常读一遍需要 20 到 30 小时。但<strong>读一遍是不够的</strong>。请按下面三遍来：</p>
 <p><strong>第一遍：通读，不求甚解（约 15 小时）</strong></p>
 <p>像看小说一样往下看，遇到不懂的术语不要停下查。这一遍的目的是<strong>建立地图</strong>——你要知道这 34 章分别讲什么、彼此什么关系。你会记住大概 20%。</p>
@@ -530,10 +521,10 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>这一遍会写掉你一个笔记本。<strong>这一遍才是真正学习的地方。</strong></p>
 <p><strong>第三遍：只看速查卡和自测题（约 5 小时，面试前一天做）</strong></p>
 <p>附录 C 是速查卡，附录 B 是自测题答案。第三遍只做这两件事：快速扫一遍速查卡，把自测题全部刷一次，错的标记出来。</p>
-<h3>0.7 每章的固定结构（你熟悉它以后，阅读会快很多）</h3>
+<h3>0.6 每章的固定结构（你熟悉它以后，阅读会快很多）</h3>
 <p>每一章都按同一个骨架写，这样你可以带着问题读（个别章会多一两节，骨架是一样的）：</p>
 <table><thead><tr><th>板块</th><th>它回答的问题</th></tr></thead><tbody><tr><td>一句话结论</td><td>这一章，只记一句话的话，记什么？</td></tr><tr><td>这一章解决什么问题</td><td>这个概念在真实业务和面试里出现在哪？</td></tr><tr><td>分节正文</td><td>每章 4 到 9 节：先用生活类比把原理讲通，再把术语拆成表</td></tr><tr><td>动手体验</td><td>不用写代码，但你一定要亲眼看一次结果</td></tr><tr><td>现实校准</td><td>业界的真实情况，以及常见的夸大说法</td></tr><tr><td>面试怎么说</td><td>可以直接改一改用的话术</td></tr><tr><td>自测题</td><td>6 到 12 道，检验你是否真的看懂</td></tr><tr><td>本章术语卡</td><td>这一章需要记住的名词，附一句话解释</td></tr></tbody></table>
-<h3>0.8 五个诚实提醒</h3>
+<h3>0.7 五个诚实提醒</h3>
 <p>最后，在正式开始之前，我想对你说五句真心话。它们会决定你这次能不能真的学成。</p>
 <p><strong>第一，不写代码不等于不动手。</strong> 你可以不去学 Python 的语法，但你必须亲手体验过一次&quot;我改了一个参数，结果变了&quot;。原理如果没有体感支撑，就只是背下来的词。所有的&quot;感觉&quot;都来自动手。</p>
 <p><strong>第二，术语不是知识。</strong> 能说出&quot;我们用了 HNSW 索引&quot;不叫懂。能说出&quot;HNSW 是近似最近邻，它用一半的内存换 20 倍的检索速度，代价是召回率从 99% 掉到 97%，在我们的场景里可以接受&quot;才叫懂。</p>
