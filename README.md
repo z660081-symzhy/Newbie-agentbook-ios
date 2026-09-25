@@ -7,6 +7,15 @@
 34 章正文 · 50 个可拖动旋转的三维演示 · 42 个交互动画<br>
 324 道自测题（含答案与错题本）· 266 张术语闪卡 · 18 处面试话术演练
 
+<img alt="章节" src="https://img.shields.io/badge/章节-34-8c3d2e?style=flat-square">
+<img alt="三维演示" src="https://img.shields.io/badge/三维演示-50-1d5c63?style=flat-square">
+<img alt="交互动画" src="https://img.shields.io/badge/交互动画-42-6a3fa8?style=flat-square">
+<img alt="自测题" src="https://img.shields.io/badge/自测题-324-b06a1e?style=flat-square">
+<img alt="皮肤" src="https://img.shields.io/badge/皮肤-2_套-5079D9?style=flat-square">
+<img alt="完全离线" src="https://img.shields.io/badge/完全离线-是-2f7d52?style=flat-square">
+<img alt="iOS" src="https://img.shields.io/badge/iOS-16%2B-000000?style=flat-square&logo=apple&logoColor=white">
+<img alt="不需要开发者账号" src="https://img.shields.io/badge/开发者账号-不需要-7F7F7F?style=flat-square">
+
 <img src="docs/hero-phones.jpg" width="100%" alt="手机上：目录、三维演示、术语闪卡、随机抽题">
 
 </div>
@@ -86,6 +95,27 @@ Service Worker 会缓存全部内容，之后断网也能读（见 [`安装说�
 
 **每章末尾有三个按钮**：前往下一章、做题（只抽这一章的题）、写笔记。
 读完一章顺手做完题、写下两句话，比连读三章记得牢得多。
+
+## 两套皮肤
+
+顶栏点「皮肤」就能切，选择记在设备上，下次打开还是它。暗色模式两套都各自适配过。
+
+<div align="center">
+<img src="docs/skins.png" width="94%" alt="两套皮肤的配色对照">
+</div>
+
+| 皮肤 | 长什么样 |
+| --- | --- |
+| **经典**（默认） | 暖色纸感，朱红 `#8c3d2e` + 青灰 `#1d5c63`。最初的那一套 |
+| **锤子 · Dieter Rams** | 中性灰阶 + 单一主色 `#5079D9`；触摸热区按手指尺寸做过（40 / 44） |
+
+上面那张图不是截图，是把两套皮肤**实际的 CSS 变量值**画出来的对照表 ——
+每个色块下面都标了真实色值，所以它给的是准确信息，不是示意图。
+
+**加第三套皮肤很便宜**：皮肤就是一块带 `data-skin` 的 `<style>`，切换时只改它的 `disabled`。
+新皮肤 = 一个 css 文件 + 一张卡片，一行已有 CSS 都不用动。
+动画和三维里的颜色也会跟着换 —— 那六个色值在 JS 里是从 CSS 变量读出来的
+（Canvas 的 `fillStyle` 不认 `var()`，所以由一段引导脚本读出来给动画用）。
 
 ## 关于「问问题」，有一件事必须说清楚
 
@@ -235,5 +265,17 @@ jsdom 132 项断言全过，含切皮肤、样式块开关、调色板刷新、�
   也不是它的替代品。
 - 全部内容**不依赖任何外部服务**：没有外部字体、没有 CDN、没有埋点，断网可用。
   （HTML 里的外部引用为 0，可用 `grep` 自行核对。）
-- `docs/` 里的截图拍于 2026-09-24 的那次构建：界面与内容与现在一致，
-  但此后动画的**位置**做过调整（从章首移到对应段落），配图未重拍。
+- `docs/` 里那几张**界面截图**拍于 2026-09-24 的构建：内容和交互与现在一致，
+  但此后顶栏改过（多了「皮肤」）、每章末尾加了导航、动画位置从章首移到了对应段落，
+  **配图没重拍**（生成环境起不来浏览器）。`docs/skins.png` 是后加的，色值取自当前 CSS。
+
+## 常见问题
+
+| 问题 | 回答 |
+| --- | --- |
+| **要花钱吗？** | 不要。侧载用的是你自己的 Apple ID 签名，不用买开发者账号（￥688/年）。 |
+| **真的完全离线？** | 是。整本书在一个 HTML 里，外部引用 0 处（`grep -c 'https://' book.html` 可自行核对）。只有「问问题」需要联网。 |
+| **7 天就过期？** | AltStore 会在你连电脑时自动续签。这就是「每周连一次 Mac」的由来。 |
+| **会被下架吗？** | 不经过 App Store，是本地签名安装，跟商店审核无关。 |
+| **「问问题」要我的 API Key 吗？** | 要一个，但它只存在你自己设备上；书、仓库、编译产物里都不含 Key（见上一节）。 |
+| **手机上热区太小？** | 换「锤子 · Dieter Rams」那套皮肤，它的触摸热区是按手指尺寸（40 / 44）重做的。 |
