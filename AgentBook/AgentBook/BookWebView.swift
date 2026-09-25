@@ -15,11 +15,11 @@ struct BookWebView: UIViewRepresentable {
         config.defaultWebpagePreferences.allowsContentJavaScript = true
         config.allowsInlineMediaPlayback = true
         config.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
-        // 「问问题」要直接从 file:// 页面调用 https://api.deepseek.com —— 这是跨源请求。
-        // WKWebView 对 file:// 源的处理和普通网页不一样：不开这一项，fetch 会被拦下来。
-        // （服务端 CORS 已经允许 Origin: null，所以打开这个开关就能通。）
-        // 这里的页面只有 App 自己打包的 book.html，不存在加载外部网页的风险。
-        config.preferences.setValue(true, forKey: "allowUniversalAccessFromFileURLs")
+        // ⚠️ 千万不要在这里设 allowUniversalAccessFromFileURLs。
+        // 这个键在现在的 WebKit 里已经不存在了，setValue:forKey: 会抛
+        // NSUnknownKeyException → App 启动即崩，用户看到的就是一片白屏。
+        // （上面那行 allowFileAccessFromFileURLs 是存在的，所以它没事 —— 两者长得像，但一个是雷。）
+        // 「问问题」的跨源请求改走下面的原生 URLSession，不碰任何私有 API。
         config.userContentController.addUserScript(
             WKUserScript(source: Self.bridge, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
         )
@@ -238,9 +238,47 @@ struct BookWebView: UIViewRepresentable {
             case "location":
                 if let id = body["id"] as? String { store.setCurrent(id) }
                 store.syncRead(ids)
+            case "ask":
+                // 网页里的「问问题」在 App 内不走 fetch：file:// 页面直接跨源调 API
+                // 需要 allowUniversalAccessFromFileURLs，而那个键会崩（见上面的注释）。
+                // 所以由原生代发：网页只发一段 JSON，原生加 key 发出去，再把原文回传。
+                guard let rid = body["id"] as? Int,
+                      let key = body["key"] as? String,
+                      let payload = body["payload"] as? String else { return }
+                sendAsk(id: rid, key: key, payload: payload)
             default:
                 break
             }
+        }
+
+        // MARK: - 代发「问问题」的请求
+
+        /// 纯搬运：网页给请求体，原生加上 Authorization 发出去，把响应原文回传。
+        /// 之所以不让原生解析，是为了让"改模型/改参数"永远只需要改网页那一侧。
+        private func sendAsk(id: Int, key: String, payload: String) {
+            guard let url = URL(string: "https://api.deepseek.com/chat/completions") else { return }
+            var req = URLRequest(url: url)
+            req.httpMethod = "POST"
+            req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            req.setValue("Bearer \(key)", forHTTPHeaderField: "Authorization")
+            req.httpBody = payload.data(using: .utf8)
+            req.timeoutInterval = 60
+
+            URLSession.shared.dataTask(with: req) { [weak self] data, resp, err in
+                let status = (resp as? HTTPURLResponse)?.statusCode ?? 0
+                let text = data.flatMap { String(data: $0, encoding: .utf8) } ?? ""
+                let detail = err?.localizedDescription ?? ""
+                // 回传给网页：用 JSONSerialization 拼参数，省得自己写 JS 字符串转义
+                //（答案里带引号、换行、甚至 emoji 都很正常，手写转义迟早出错）
+                let arr: [Any] = [text, status, detail]
+                let json = (try? JSONSerialization.data(withJSONObject: arr))
+                    .flatMap { String(data: $0, encoding: .utf8) } ?? "[\"\",0,\"\"]"
+                DispatchQueue.main.async {
+                    guard let wv = self?.webView else { return }
+                    wv.evaluateJavaScript(
+                        "window.__bookAskDone && window.__bookAskDone(\(id), \(json))")
+                }
+            }.resume()
         }
     }
 }

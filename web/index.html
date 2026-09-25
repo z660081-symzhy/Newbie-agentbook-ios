@@ -3419,6 +3419,40 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     d.className='ask-msg '+(role==='user'?'u':role==='sys'?'sys':'a');
     d.textContent=text;logEl.appendChild(d);logEl.scrollTop=logEl.scrollHeight;return d;
   }
+  /* 在 App 里走原生代发，在浏览器 / PWA 里直接 fetch。
+     为什么分两条路：file:// 页面直接跨源调 API，需要 WKWebView 的私有开关
+     allowUniversalAccessFromFileURLs —— 而那个键在现在的 WebKit 里已经不存在，
+     设它会让 App 启动即崩（白屏）。所以 App 内交给原生 URLSession，
+     网页这一侧只准备请求体，改模型/改参数永远只改这一处。 */
+  var ASK_SEQ=0,ASK_PENDING={};
+  window.__bookAskDone=function(id,pair){
+    var cb=ASK_PENDING[id];if(!cb)return;delete ASK_PENDING[id];
+    cb(Array.isArray(pair)?String(pair[0]||''):'',
+       Array.isArray(pair)?(parseInt(pair[1],10)||0):0,
+       Array.isArray(pair)?String(pair[2]||''):'');
+  };
+  function callModel(key,payload){
+    return new Promise(function(resolve){
+      var bridge=window.webkit&&window.webkit.messageHandlers&&window.webkit.messageHandlers.book;
+      if(bridge){
+        var id=++ASK_SEQ,settled=false,finish=function(t,s,d){
+          if(settled)return;settled=true;resolve({text:t,status:s,detail:d});
+        };
+        ASK_PENDING[id]=finish;
+        setTimeout(function(){if(settled)return;delete ASK_PENDING[id];finish('',0,'timeout');},70000);
+        try{bridge.postMessage({type:'ask',id:id,key:key,payload:payload});}
+        catch(e){delete ASK_PENDING[id];finish('',0,String(e));}
+        return;
+      }
+      fetch('https://api.deepseek.com/chat/completions',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+        body:payload
+      }).then(function(r){
+        return r.text().then(function(t){resolve({text:t,status:r.status,detail:''});});
+      }).catch(function(e){resolve({text:'',status:0,detail:String(e)});});
+    });
+  }
   function ask(q,logEl,btn,inp){
     var key=getKey();if(!key){renderAsk();return;}
     var n=askCh,log=chat[n];
@@ -3435,15 +3469,17 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       // 不会出现"问后半章的内容，模型说没讲过"。
       '【本章正文】\n'+chapText(n).slice(0,14000);
     var msgs=[{role:'system',content:sys}].concat(history).concat([{role:'user',content:q}]);
-    fetch('https://api.deepseek.com/chat/completions',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
-      body:JSON.stringify({model:'deepseek-flash',messages:msgs,stream:false,max_tokens:1200})
-    }).then(function(r){
-      return r.text().then(function(t){return{ok:r.ok,status:r.status,body:t};});
-    }).then(function(r){
-      var data=null;try{data=JSON.parse(r.body);}catch(e){}
-      if(!r.ok){
+    var payload=JSON.stringify({model:'deepseek-flash',messages:msgs,stream:false,max_tokens:1200});
+    callModel(key,payload).then(function(r){
+      if(r.status===0){
+        waitEl.className='ask-msg sys';
+        waitEl.textContent='连不上 DeepSeek。检查一下网络；离线时问问题用不了，但书本身照常能看。';
+        log.pop();
+        if(window.console&&console.warn)console.warn('[ask]',r.detail);
+        return;
+      }
+      var data=null;try{data=JSON.parse(r.text);}catch(e){}
+      if(r.status<200||r.status>=300){
         var msg=r.status===401?'Key 不对或已失效，点「换掉 Key」重新填一个。'
           :r.status===402?'DeepSeek 账户余额不足，充值后再试。'
           :r.status===429?'请求太频繁，等几秒再问。'
@@ -3455,11 +3491,6 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       ans=String(ans).trim()||'（模型没返回内容，换个问法试试）';
       waitEl.textContent=ans;
       log.push({role:'assistant',content:ans});
-    }).catch(function(err){
-      waitEl.className='ask-msg sys';
-      waitEl.textContent='连不上 DeepSeek。检查一下网络；离线时问问题用不了，但书本身照常能看。';
-      log.pop();
-      if(window.console&&console.warn)console.warn('[ask]',err);
     }).then(function(){
       btn.disabled=false;
       if(inp){inp.disabled=false;try{inp.focus();}catch(e){}}

@@ -140,6 +140,19 @@ Service Worker 会缓存全部内容，之后断网也能读（见 [`安装说�
 
 ### 2026-09-25 · 章末导航 + 写笔记 + 问问题 + 修掉交互抖动
 
+- **⚠️ 白屏事故与修复（重要）**：上一个版本**打开就白屏**，原因是启动时崩了。
+  `BookWebView` 里我为了「问问题」的跨源请求加了一行
+  `config.preferences.setValue(true, forKey: "allowUniversalAccessFromFileURLs")` ——
+  **这个键在现在的 WebKit 里已经不存在**，`setValue:forKey:` 会抛 `NSUnknownKeyException`，
+  App 启动即死，用户看到的就是一片白屏，而且没有任何日志。
+  （旁边那行 `allowFileAccessFromFileURLs` 是存在的，两者只差一个词，特别容易被顺手加上。）
+
+  修法有两条，都做了：
+  1. 删掉那行。并且加进构建门禁 —— 以后 Swift 里再出现这个键，构建直接失败。
+  2. 「问问题」的请求**改由原生 `URLSession` 代发**：网页只准备请求体，原生加 Key 发出去、
+     把响应原文回传（回传参数用 `JSONSerialization` 拼，省得手写 JS 转义）。
+     这样 App 内完全不碰私有 API、也不依赖 CORS；浏览器 / PWA 仍然走直连 fetch（服务端 CORS 放行）。
+
 - **（同日复查补丁）** 又查出一批边界问题并修掉：
   - 问问题面板的层级低于抽题弹层 —— 抽题开着时点「问问题」会被挡住。`#panel` 提到 z-index 90。
   - 带上模型的本章正文上限从 9000 字提到 14000 字。全书最长的一章（第 14 章）是 10301 字，
