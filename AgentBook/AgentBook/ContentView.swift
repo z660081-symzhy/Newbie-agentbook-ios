@@ -19,6 +19,10 @@ struct ContentView: View {
         } detail: {
             BookWebView(store: store)
                 .ignoresSafeArea(edges: .bottom)
+                // 关掉"从左边缘往右滑 = 返回目录"：那个手势会和三维场景的拖动抢事件，
+                // 读者在动画里从左往右拖，本意是转模型，结果被弹回目录。
+                // 返回改走左上角的返回按钮（见 BookWebView.swift 里的 PopGestureOff）。
+                .background(PopGestureOff())
                 .navigationTitle(store.currentChapter?.shortTitle ?? "Agent 就业教材全集")
                 .navigationBarTitleDisplayMode(.inline)
         }

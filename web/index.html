@@ -46,7 +46,10 @@ border-left:3px solid transparent}
 .kids a.done::after{content:" ✓";color:#6cc08d}
 main{margin-left:310px;padding:0 0 120px}
 .wrap{max-width:830px;margin:0 auto;padding:0 34px}
-#topbar{position:sticky;top:0;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);
+/* 顶栏原来带 backdrop-filter:blur(8px)。它 sticky 在顶部，滚动时每一帧都要重新合成一大片
+   模糊区域，这是移动端最贵的效果之一；而它背后就是纯色页面背景，糊出来肉眼根本看不出差别。
+   换成接近不透明的纯色背景，滚动开销直接省掉一块。 */
+#topbar{position:sticky;top:0;background:color-mix(in srgb,var(--bg) 97%,transparent);
 border-bottom:1px solid var(--line);z-index:30;margin-bottom:34px}
 #topbar .wrap{display:flex;align-items:center;gap:14px;padding:11px 34px;font-size:13px;color:var(--muted)}
 #topbar b{color:var(--fg);font-weight:600}
@@ -265,7 +268,7 @@ html.in-app main{margin-left:0!important}
   background:radial-gradient(circle at 32% 22%,
     color-mix(in srgb,var(--accent2) 9%,transparent),transparent 62%),
     color-mix(in srgb,var(--fg) 5%,transparent);
-  border:1px solid var(--line);touch-action:none}
+  border:1px solid var(--line);touch-action:none;overscroll-behavior:contain}
 .v3d .v3-cv:active{cursor:grabbing}
 .v3-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
 .v3-sl{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);
@@ -350,7 +353,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <nav id="sidebar">
   <h1>AGENT 就业教材全集</h1>
   <div class="search"><input id="q" type="search" placeholder="搜索章节…"></div>
-  <div id="nav"><div class="grp open"><button type="button">第 0 部分　出发之前，先看清战场</button><div class="kids"><a href="#c1" data-c="c1">第 0 章　这本教材是什么，你该怎么用它</a></div></div><div class="grp open"><button type="button">Agent 就业学习 Todolist（总路线图）</button><div class="kids"><a href="#c2" data-c="c2">第 0 阶段：认知与定位（第 0 天，约 4 小时）</a><a href="#c3" data-c="c3">第 1 阶段：基础与框架（第 1-4 周）</a><a href="#c4" data-c="c4">第 2 阶段：两大基础设施 + 九大项目（第 5-12 周）</a><a href="#c5" data-c="c5">第 3 阶段：面试力培养（第 13-15 周）</a><a href="#c6" data-c="c6">第 4 阶段：举一反三（第 16 周）</a><a href="#c7" data-c="c7">第 5 阶段：冲刺与交付（第 17-18 周）</a><a href="#c8" data-c="c8">每日固定动作（贯穿全程）</a></div></div><div class="grp open"><button type="button">第 1 部分　基础与框架：先把地基打对</button><div class="kids"><a href="#c9" data-c="c9">第 1 章　Python：你不写代码，但你必须看得懂</a><a href="#c10" data-c="c10">第 2 章　大模型原理（上）：从&quot;一个字&quot;到&quot;一个能对话的东西&quot;</a><a href="#c11" data-c="c11">第 3 章　大模型原理（下）：上下文、参数、幻觉、成本</a><a href="#c12" data-c="c12">第 4 章　大模型 API（上）：一切产品的地基</a><a href="#c13" data-c="c13">第 5 章　大模型 API（下）：工具调用与工程化</a><a href="#c14" data-c="c14">第 6 章　提示词工程与上下文工程</a><a href="#c15" data-c="c15">第 7 章　Embedding 与语义检索：让机器理解&quot;意思&quot;</a><a href="#c16" data-c="c16">第 8 章　RAG 全链路：让模型&quot;有据可依&quot;</a><a href="#c17" data-c="c17">第 9 章　RAG 的评估与优化：把&quot;感觉还行&quot;变成&quot;数据说话&quot;</a><a href="#c18" data-c="c18">第 10 章　向量数据库：在几亿个坐标里瞬间找到最近的</a><a href="#c19" data-c="c19">第 11 章　Graph RAG 与知识图谱：当&quot;关系&quot;比&quot;相似&quot;更重要</a><a href="#c20" data-c="c20">第 12 章　LangChain 与 LangGraph：把散件组装成流水线</a><a href="#c21" data-c="c21">第 13 章　MCP 与 Skills：给 Agent 装上标准插座</a><a href="#c22" data-c="c22">第 14 章　Harness 与 Agent Loop：模型外面那个壳，才是真功夫</a><a href="#c23" data-c="c23">第 15 章　数据标注与模型微调：把&quot;行为&quot;写进模型里</a><a href="#c24" data-c="c24">第 16 章　云原生部署：让服务在坏掉的时候还活着</a><a href="#c25" data-c="c25">第 17 章　AI 研发效能：当写代码不再是瓶颈</a><a href="#c26" data-c="c26">第 18 章　AI Infra 架构设计：从 1 个 Agent 到 100 个 Agent</a></div></div><div class="grp open"><button type="button">第 2 部分　项目篇：把知识组装成体系</button><div class="kids"><a href="#c27" data-c="c27">第 19 章　项目一：AI 数据中台</a><a href="#c28" data-c="c28">第 20 章　项目二：AI RTC 实时语音客服</a><a href="#c29" data-c="c29">第 21 章　项目三：自媒体运营 Agent</a><a href="#c30" data-c="c30">第 22 章　项目四：销售与员工考核 Agent</a><a href="#c31" data-c="c31">第 23 章　项目五：素材中心</a><a href="#c32" data-c="c32">第 24 章　项目六：Harness 与 Agent Loop（含自进化）</a><a href="#c33" data-c="c33">第 25 章　项目七：MCP 与 Agent 集群</a><a href="#c34" data-c="c34">第 26 章　总装：把七个项目串成一个体系</a></div></div><div class="grp open"><button type="button">第 3 部分　面试力：把会的东西变成 offer</button><div class="kids"><a href="#c35" data-c="c35">第 27 章　简历：不是编出来的，是排出来的</a><a href="#c36" data-c="c36">第 28 章　&quot;项目放大&quot;的正确做法：升维表达，而不是谎报数字</a><a href="#c37" data-c="c37">第 29 章　高频面试题全景：60 题的 30 秒答题骨架</a><a href="#c38" data-c="c38">第 30 章　面试前准备与实战沙盘</a></div></div><div class="grp open"><button type="button">第 4 部分　举一反三：从电商到一个行业</button><div class="kids"><a href="#c39" data-c="c39">第 31 章　B 端 AI 工作台架构解析</a><a href="#c40" data-c="c40">第 32 章　CEO 视角：一笔 AI 生意是怎么算账的</a></div></div><div class="grp open"><button type="button">第 5 部分　落地：从今天到 offer</button><div class="kids"><a href="#c41" data-c="c41">第 33 章　90 天就业冲刺计划</a></div></div><div class="grp open"><button type="button">附录</button><div class="kids"><a href="#c42" data-c="c42">附录 A　全书速查卡</a><a href="#c43" data-c="c43">附录 B　常见坑清单（60 条）</a><a href="#c44" data-c="c44">附录 C　面试前 30 分钟清单</a><a href="#c45" data-c="c45">附录 D　体系图（可单独打印）</a><a href="#c46" data-c="c46">附录 E　自测题使用方法</a></div></div></div>
+  <div id="nav"><div class="grp open"><button type="button">第 0 部分　出发之前，先看清战场</button><div class="kids"><a href="#c1" data-c="c1">第 0 章　这本教材是什么，你该怎么用它</a></div></div><div class="grp open"><button type="button">Agent 就业学习 Todolist（总路线图）</button><div class="kids"><a href="#c2" data-c="c2">第 0 阶段：认知与定位（第 0 天，约 4 小时）</a><a href="#c3" data-c="c3">第 1 阶段：基础与框架（第 1-4 周）</a><a href="#c4" data-c="c4">第 2 阶段：两大基础设施 + 九大项目（第 5-12 周）</a><a href="#c5" data-c="c5">第 3 阶段：面试力培养（第 13-15 周）</a><a href="#c6" data-c="c6">第 4 阶段：举一反三（第 16 周）</a><a href="#c7" data-c="c7">第 5 阶段：冲刺与交付（第 17-18 周）</a><a href="#c8" data-c="c8">每日固定动作（贯穿全程）</a></div></div><div class="grp open"><button type="button">第 1 部分　基础与框架：先把地基打对</button><div class="kids"><a href="#c9" data-c="c9">第 1 章　Python：你不写代码，但你必须看得懂</a><a href="#c10" data-c="c10">第 2 章　大模型原理（上）：从&quot;一个字&quot;到&quot;一个能对话的东西&quot;</a><a href="#c11" data-c="c11">第 3 章　大模型原理（下）：上下文、参数、幻觉、成本</a><a href="#c12" data-c="c12">第 4 章　大模型 API（上）：一切产品的地基</a><a href="#c13" data-c="c13">第 5 章　大模型 API（下）：工具调用与工程化</a><a href="#c14" data-c="c14">第 6 章　提示词工程与上下文工程</a><a href="#c15" data-c="c15">第 7 章　Embedding 与语义检索：让机器理解&quot;意思&quot;</a><a href="#c16" data-c="c16">第 8 章　RAG 全链路：让模型&quot;有据可依&quot;</a><a href="#c17" data-c="c17">第 9 章　RAG 的评估与优化：把&quot;感觉还行&quot;变成&quot;数据说话&quot;</a><a href="#c18" data-c="c18">第 10 章　向量数据库：在几亿个坐标里瞬间找到最近的</a><a href="#c19" data-c="c19">第 11 章　Graph RAG 与知识图谱：当&quot;关系&quot;比&quot;相似&quot;更重要</a><a href="#c20" data-c="c20">第 12 章　LangChain 与 LangGraph：把散件组装成流水线</a><a href="#c21" data-c="c21">第 13 章　MCP 与 Skills：给 Agent 装上标准插座</a><a href="#c22" data-c="c22">第 14 章　Harness 与 Agent Loop：模型外面那个壳，才是真功夫</a><a href="#c23" data-c="c23">第 15 章　数据标注与模型微调：把&quot;行为&quot;写进模型里</a><a href="#c24" data-c="c24">第 16 章　云原生部署：让服务在坏掉的时候还活着</a><a href="#c25" data-c="c25">第 17 章　AI 研发效能：当写代码不再是瓶颈</a><a href="#c26" data-c="c26">第 18 章　AI Infra 架构设计：从 1 个 Agent 到 100 个 Agent</a></div></div><div class="grp open"><button type="button">第 2 部分　项目篇：把知识组装成体系</button><div class="kids"><a href="#c27" data-c="c27">第 19 章　项目一：AI 数据中台</a><a href="#c28" data-c="c28">第 20 章　项目二：AI RTC 实时语音客服</a><a href="#c29" data-c="c29">第 21 章　项目三：自媒体运营 Agent</a><a href="#c30" data-c="c30">第 22 章　项目四：销售与员工考核 Agent</a><a href="#c31" data-c="c31">第 23 章　项目五：素材中心</a><a href="#c32" data-c="c32">第 24 章　项目六：Harness 与 Agent Loop（含自进化）</a><a href="#c33" data-c="c33">第 25 章　项目七：MCP 与 Agent 集群</a><a href="#c34" data-c="c34">第 26 章　总装：把七个项目串成一个体系</a></div></div><div class="grp open"><button type="button">第 3 部分　面试力：把会的东西变成 offer</button><div class="kids"><a href="#c35" data-c="c35">第 27 章　简历：不是编出来的，是排出来的</a><a href="#c36" data-c="c36">第 28 章　&quot;项目放大&quot;的正确做法：升维表达，而不是谎报数字</a><a href="#c37" data-c="c37">第 29 章　高频面试题全景：74 题的 30 秒答题骨架</a><a href="#c38" data-c="c38">第 30 章　面试前准备与实战沙盘</a></div></div><div class="grp open"><button type="button">第 4 部分　举一反三：从电商到一个行业</button><div class="kids"><a href="#c39" data-c="c39">第 31 章　B 端 AI 工作台架构解析</a><a href="#c40" data-c="c40">第 32 章　CEO 视角：一笔 AI 生意是怎么算账的</a></div></div><div class="grp open"><button type="button">第 5 部分　落地：从今天到 offer</button><div class="kids"><a href="#c41" data-c="c41">第 33 章　90 天就业冲刺计划</a></div></div><div class="grp open"><button type="button">附录</button><div class="kids"><a href="#c42" data-c="c42">附录 A　全书速查卡</a><a href="#c43" data-c="c43">附录 B　常见坑清单（60 条）</a><a href="#c44" data-c="c44">附录 C　面试前 30 分钟清单</a><a href="#c45" data-c="c45">附录 D　体系图（可单独打印）</a><a href="#c46" data-c="c46">附录 E　自测题使用方法</a></div></div></div>
 </nav>
 <main>
   <div id="topbar"><div class="wrap">
@@ -382,7 +385,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <ol><li><strong>每一章都让你能&quot;合上书讲出来&quot;。</strong> 这是本书唯一的验收标准。读完不算学会，能对着空气讲三分钟才算。</li><li><strong>全程不讲代码细节。</strong> 你要的是原理和判断力，不是语法。书中出现的所有技术名词，我都会先用生活语言解释一遍，再说它的工程含义。</li><li><strong>每个知识点都带&quot;面试怎么用&quot;。</strong> 每章末尾都有【面试怎么说】和【自测题】，你可以直接拿去用。</li></ol>
 <p>再说<strong>我不能承诺</strong>的，这两条比上面的更重要：</p>
 <ol><li><strong>我不承诺你可以完全不动手。</strong> 你可以不写代码，但你必须<strong>动手用工具</strong>：调通一次 API、在向量数据库里搜一次、把一个文档喂给 RAG、跑一次微调。区别在于，你是&quot;点按钮 + 看结果 + 想明白为什么&quot;，而不是&quot;从零手写&quot;。</li><li><strong>我不承诺背完就能过面试。</strong> 面试官只要往下追问三层，背诵就会塌。这本书真正教你的，是<strong>让每一层追问都有东西可答</strong>。</li></ol>
-<div class="viz" data-viz="ch0"></div><h3>0.2 &quot;秒杀&quot;这件事，正确的理解是什么</h3>
+<h3>0.2 &quot;秒杀&quot;这件事，正确的理解是什么</h3>
 <p>招生文案最爱讲&quot;秒杀&quot;：你会的东西比对手多，就能赢。这个理解是错的，至少是不完整的。</p>
 <p>真实的面试场景是这样的：面试官一天要看七八份简历、面三四个人，他脑子里其实只有一个问题——</p>
 <blockquote><p><strong>&quot;这个人来了，能不能接住我们手上的活？&quot;</strong></p></blockquote>
@@ -408,7 +411,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h1 class="part">Agent 就业学习 Todolist（总路线图）</h1>
 <blockquote><p>用法：每一条任务后面都有【验收】。<strong>通过验收才算完成</strong>，读完不算完成。</p><p>建议节奏：每天 4 小时有效学习（不是看视频的时间，是&quot;能复述 + 能操作&quot;的时间）。</p><p>打印出来，完成一条划掉一条。全部划完，你就具备了投递 Agent / 大模型应用岗的完整知识底盘。</p></blockquote>
 <hr>
-<h2 id="c2">第 0 阶段：认知与定位（第 0 天，约 4 小时）<a class="q" href="javascript:void 0" data-q="c2">#</a><button class="mark-read" data-c="c2">标记已读</button></h2>
+<div class="viz" data-viz="ch0"></div><h2 id="c2">第 0 阶段：认知与定位（第 0 天，约 4 小时）<a class="q" href="javascript:void 0" data-q="c2">#</a><button class="mark-read" data-c="c2">标记已读</button></h2>
 <ul class="tasks"><li class="task" data-k="252ce785b667"><input type="checkbox"><span><strong>0.1 搞清岗位地图</strong>：读懂&quot;大模型应用工程师 / Agent 工程师 / AI Infra / AI 产品&quot;四个岗位的差别</span></li></ul>
 <p>【验收】能不看资料说出这四个岗位各自每天在干什么、招人时看什么、薪资区间差异的原因</p>
 <ul class="tasks"><li class="task" data-k="c02bf244c5af"><input type="checkbox"><span><strong>0.2 读懂能力模型</strong>：明白本教材 5 个部分各自对应面试的哪一环</span></li></ul>
@@ -500,13 +503,13 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c7">第 5 阶段：冲刺与交付（第 17-18 周）<a class="q" href="javascript:void 0" data-q="c7">#</a><button class="mark-read" data-c="c7">标记已读</button></h2>
 <ul class="tasks"><li class="task" data-k="4d7d6ce01552"><input type="checkbox"><span><strong>17.1 90 天冲刺计划落到日程</strong>（第 33 章）</span></li></ul>
 <p>【验收】日历上已有具体到日的安排</p>
-<ul class="tasks"><li class="task" data-k="7b30089d3d34"><input type="checkbox"><span><strong>17.2 术语表过一遍</strong>（附录 A）</span></li></ul>
+<ul class="tasks"><li class="task" data-k="d7b854ed86e6"><input type="checkbox"><span><strong>17.2 术语表过一遍</strong>（每章的「本章术语卡」+ 附录 A 速查卡）</span></li></ul>
 <p>【验收】随机抽 30 个术语，能立刻说人话解释</p>
-<ul class="tasks"><li class="task" data-k="c140b9626f4d"><input type="checkbox"><span><strong>17.3 自测题全刷一遍</strong>（附录 B）</span></li></ul>
+<ul class="tasks"><li class="task" data-k="0694152cd765"><input type="checkbox"><span><strong>17.3 自测题全刷一遍</strong>（每章末的自测题；用顶栏的「随机抽题」和「错题本」来刷）</span></li></ul>
 <p>【验收】正确率 ≥ 85%</p>
-<ul class="tasks"><li class="task" data-k="0f04aef18170"><input type="checkbox"><span><strong>17.4 速查卡打印随身带</strong>（附录 C）</span></li></ul>
+<ul class="tasks"><li class="task" data-k="8d36e1b7855c"><input type="checkbox"><span><strong>17.4 速查卡打印随身带</strong>（附录 A 全书速查卡）</span></li></ul>
 <p>【验收】已打印</p>
-<ul class="tasks"><li class="task" data-k="85ec416038cc"><input type="checkbox"><span><strong>17.5 常见坑清单自查</strong>（附录 D）</span></li></ul>
+<ul class="tasks"><li class="task" data-k="624196ea2e94"><input type="checkbox"><span><strong>17.5 常见坑清单自查</strong>（附录 B 常见坑清单）</span></li></ul>
 <p>【验收】逐条自查完，标出自己最容易犯的 5 条</p>
 <hr>
 <h2 id="c8">每日固定动作（贯穿全程）<a class="q" href="javascript:void 0" data-q="c8">#</a><button class="mark-read" data-c="c8">标记已读</button></h2>
@@ -520,10 +523,10 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <ol><li><strong>合上书，用嘴复述这一章在讲什么</strong>（2 分钟，可以说给自己听，最好录音）。</li><li><strong>在本子上写下三个回答</strong>：这章解决什么问题？核心原理一句话是什么？面试官会怎么问？</li></ol>
 <p>这一遍会写掉你一个笔记本。<strong>这一遍才是真正学习的地方。</strong></p>
 <p><strong>第三遍：只看速查卡和自测题（约 5 小时，面试前一天做）</strong></p>
-<p>附录 C 是速查卡，附录 B 是自测题答案。第三遍只做这两件事：快速扫一遍速查卡，把自测题全部刷一次，错的标记出来。</p>
+<p><strong>附录 A 是速查卡</strong>（表格式，扫一遍就够）。自测题不用另找答案——每道题下面就有， 点「看参考答案」展开。第三遍只做这两件事：快速扫一遍速查卡，把自测题全部刷一次，错的标记出来。</p>
 <h3>0.6 每章的固定结构（你熟悉它以后，阅读会快很多）</h3>
 <p>每一章都按同一个骨架写，这样你可以带着问题读（个别章会多一两节，骨架是一样的）：</p>
-<table><thead><tr><th>板块</th><th>它回答的问题</th></tr></thead><tbody><tr><td>一句话结论</td><td>这一章，只记一句话的话，记什么？</td></tr><tr><td>这一章解决什么问题</td><td>这个概念在真实业务和面试里出现在哪？</td></tr><tr><td>分节正文</td><td>每章 4 到 9 节：先用生活类比把原理讲通，再把术语拆成表</td></tr><tr><td>动手体验</td><td>不用写代码，但你一定要亲眼看一次结果</td></tr><tr><td>现实校准</td><td>业界的真实情况，以及常见的夸大说法</td></tr><tr><td>面试怎么说</td><td>可以直接改一改用的话术</td></tr><tr><td>自测题</td><td>6 到 12 道，检验你是否真的看懂</td></tr><tr><td>本章术语卡</td><td>这一章需要记住的名词，附一句话解释</td></tr></tbody></table>
+<table><thead><tr><th>板块</th><th>它回答的问题</th></tr></thead><tbody><tr><td>一句话结论</td><td>这一章，只记一句话的话，记什么？</td></tr><tr><td>这一章解决什么问题</td><td>这个概念在真实业务和面试里出现在哪？</td></tr><tr><td>分节正文</td><td>每章 4 到 9 节：先用生活类比把原理讲通，再把术语拆成表</td></tr><tr><td>动手体验</td><td>不用写代码，但你一定要亲眼看一次结果</td></tr><tr><td>现实校准</td><td>业界的真实情况，以及常见的夸大说法</td></tr><tr><td>面试怎么说</td><td>可以直接改一改用的话术</td></tr><tr><td>自测题</td><td>6 到 12 道，检验你是否真的看懂（第 0 章是导论、第 29 章本身就是一个题库，这两章没有这道工序）</td></tr><tr><td>本章术语卡</td><td>这一章需要记住的名词，附一句话解释</td></tr></tbody></table>
 <h3>0.7 五个诚实提醒</h3>
 <p>最后，在正式开始之前，我想对你说五句真心话。它们会决定你这次能不能真的学成。</p>
 <p><strong>第一，不写代码不等于不动手。</strong> 你可以不去学 Python 的语法，但你必须亲手体验过一次&quot;我改了一个参数，结果变了&quot;。原理如果没有体感支撑，就只是背下来的词。所有的&quot;感觉&quot;都来自动手。</p>
@@ -536,14 +539,14 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c9">第 1 章　Python：你不写代码，但你必须看得懂<a class="q" href="javascript:void 0" data-q="c9">#</a><button class="mark-read" data-c="c9">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>Python 在大模型行业里的地位，相当于<strong>普通话在中国的地位</strong>——不是因为它最高级，而是因为所有人都在用它交流。你不需要会写诗，但你得听得懂别人在说什么，并且能说几句。</p>
-<div class="viz" data-viz="ch1"></div><h3>这一章解决什么问题</h3>
+<h3>这一章解决什么问题</h3>
 <p>你现在面临的真实处境是：网上所有的教程、GitHub 上的所有项目、公司里所有的代码，都是 Python。如果你完全看不懂，你就只能&quot;点按钮&quot;，一旦出问题就彻底卡死。</p>
 <p>但你也不想花三个月去啃语法。所以这一章的目标很明确：</p>
 <blockquote><p><strong>让你能在 20 小时内，具备&quot;读懂别人写的 Python 在干什么&quot;的能力。</strong> 不是会写，是会读。</p></blockquote>
 <h3>核心原理：Python 就是一份&quot;给电脑的说明书&quot;</h3>
 <p>先建立一个最重要的心智模型。</p>
 <p>一段程序，本质上就是<strong>一份从上往下执行的说明书</strong>。它由四类句子组成：</p>
-<ol><li><strong>记东西</strong>：把某个值存进一个名字里（比如把&quot;用户的问题&quot;存进 <code>question</code>）。</li><li><strong>做判断</strong>：如果……那么……，否则……。</li><li><strong>重复做</strong>：对列表里的每一项，都做一遍同样的操作。</li><li><strong>调工具</strong>：把活儿交给别人写好的函数去干（比如&quot;请把这个文本发给大模型&quot;）。</li></ol>
+<ol><li><strong>记东西</strong>：把某个值存进一个名字里（比如把&quot;用户的问题&quot;存进 <code>question</code>）。</li><li><strong>做判断</strong>：如果……那么……，否则……。</li><li><strong>重复做</strong>：对列表里的每一项，都做一遍同样的操作。</li><li><strong>调工具</strong>：把活儿交给别人写好的函数去干（比如&quot;请把这个文本发给大模型&quot;）。</li></ol><div class="viz" data-viz="ch1"></div>
 <p>所有编程语言，都是这四类句子的不同写法。你看任何一段代码，就是在找这四类句子。</p>
 <h3>概念逐个拆解</h3>
 <p>下面这张表，是你真正需要掌握的全部 Python 概念。<strong>不需要背语法，只需要认识它、知道它是干嘛的。</strong></p>
@@ -598,7 +601,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c10">第 2 章　大模型原理（上）：从&quot;一个字&quot;到&quot;一个能对话的东西&quot;<a class="q" href="javascript:void 0" data-q="c10">#</a><button class="mark-read" data-c="c10">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>大模型做的事，本质上只有一件：<strong>看着前面所有的字，猜下一个字最可能是什么。</strong> 它把这一件事做到极致，就涌现出了对话、写代码、推理这些能力。</p>
-<div class="viz" data-viz="ch2"></div><h3>这一章解决什么问题</h3>
+<h3>这一章解决什么问题</h3>
 <p>面试官问项目的时候，几乎一定会有一句话：&quot;你为什么这么设计？&quot;</p>
 <p>如果你不知道模型内部在干什么，你的回答只能是&quot;因为网上教程这么写的&quot;。这句话一说出口，面试就结束了。</p>
 <p>反过来说，如果你脑子里有一幅&quot;模型内部在干什么&quot;的图，你能回答的问题会突然变多。这一章和下一章，就是给你画这幅图的。</p>
@@ -609,18 +612,18 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>先把最玄的部分讲透。</p>
 <p>假设你在图书馆要找一本关于&quot;如何降低大模型成本&quot;的书。你会怎么做？</p>
 <ol><li>你手上有一个<strong>你想找的东西</strong>（你的需求）——这叫 <strong>Query（查询）</strong>。</li><li>图书馆里每一本书都有一个<strong>标签和简介</strong>——这叫 <strong>Key（键）</strong>。</li><li>你拿需求去比对每一本书的标签，算出一个&quot;相关度&quot;——这叫 <strong>注意力分数</strong>。</li><li>你按相关度把每本书的<strong>真正内容</strong>取一部分出来，相关度高的多取、低的少取，最后混成一份&quot;参考资料&quot;——这里每本书的<strong>内容</strong>叫 <strong>Value（值）</strong>。</li></ol>
-<p>注意力机制就是这个过程：<strong>每个字都拿着自己的&quot;需求&quot;（Query），去和句子里所有字的&quot;标签&quot;（Key）比一遍，然后按相关度把它们的内容（Value）加权拿回来。</strong></p>
-<p>举个具体例子。句子是&quot;<strong>小明把书放在桌子上，因为它太重了</strong>&quot;。当模型处理&quot;它&quot;这个字时，它会问：&quot;我该指代前面哪个东西？&quot;它的 Query 和&quot;书&quot;&quot;桌子&quot;&quot;小明&quot;的 Key 分别算相关度，结果发现&quot;书&quot;和&quot;太重&quot;的关联更强——于是&quot;它&quot;这个词的表示里，就被注入了大量&quot;书&quot;的信息。这就是为什么模型能理解代词指代。</p>
+<p>注意力机制就是这个过程：<strong>每个字都拿着自己的&quot;需求&quot;（Query），去和句子里所有字的&quot;标签&quot;（Key）比一遍，然后按相关度把它们的内容（Value）加权拿回来。</strong></p><div class="viz" data-viz="ch2"></div>
+<p>举个具体例子。句子是&quot;<strong>小明把书放在桌子上，因为它太重了</strong>&quot;。当模型处理&quot;它&quot;这个字时，它会问：&quot;我该指代前面哪个东西？&quot;它的 Query 和&quot;书&quot;&quot;桌子&quot;&quot;小明&quot;的 Key 分别算相关度，结果发现&quot;书&quot;和&quot;太重&quot;的关联更强——于是&quot;它&quot;这个词的表示里，就被注入了大量&quot;书&quot;的信息。这就是为什么模型能理解代词指代。</p><div class="viz v3d" data-v3="ch2d"></div>
 <p>更关键的是：<strong>这个相关度不是人写死的，是训练出来的。</strong> 模型自己学会了&quot;哪些词之间该互相看&quot;。</p>
 <div class="viz v3d" data-v3="ch2"></div><h3>概念逐个拆解：一条完整的流水线</h3>
 <p>下面这张表，从&quot;你输入一句话&quot;开始，一步一步走到&quot;模型吐出一个字&quot;。</p>
-<table><thead><tr><th>步骤</th><th>发生了什么</th><th>用生活语言解释</th></tr></thead><tbody><tr><td>1. 分词（Tokenize）</td><td>把句子切成一小节一小节，叫 Token</td><td>把一整段话切成一节节词块</td></tr><tr><td>2. 查表转 ID</td><td>每个 Token 在词表里有一个编号</td><td>给每个词块发一个工号</td></tr><tr><td>3. 嵌入（Embedding）</td><td>每个 ID 变成一个几百到几千维的向量</td><td>把工号换成一张&quot;含义坐标卡&quot;</td></tr><tr><td>4. 加位置信息</td><td>把&quot;我是第几个字&quot;也变成一串数字，直接加到含义坐标上；不加这一步，模型看&quot;猫追狗&quot;和&quot;狗追猫&quot;是一模一样的</td><td>标注词块的出场顺序（这一节末尾的演示可以亲手开关它）</td></tr><tr><td>5. 注意力层</td><td>每个词块和其他所有词块互相看一遍</td><td>全体成员开一次信息交流会</td></tr><tr><td>6. 前馈层</td><td>对每个词块单独做一次深度加工</td><td>各自回工位继续加工</td></tr><tr><td>7. 重复 5-6 很多层</td><td>一层一层累积，理解越来越深</td><td>反复开会、加工，循环几十次</td></tr><tr><td>8. 输出层</td><td>算出词表里每个词作为&quot;下一个字&quot;的概率</td><td>投票：下一个该是谁</td></tr><tr><td>9. 采样</td><td>按概率选一个词</td><td>抽签抽出一个结果</td></tr><tr><td>10. 自回归循环</td><td>把选出的字接到句子后面，回到第 1 步</td><td>把结果接到末尾，重新来一遍</td></tr></tbody></table>
+<table><thead><tr><th>步骤</th><th>发生了什么</th><th>用生活语言解释</th></tr></thead><tbody><tr><td>1. 分词（Tokenize）</td><td>把句子切成一小节一小节，叫 Token</td><td>把一整段话切成一节节词块</td></tr><tr><td>2. 查表转 ID</td><td>每个 Token 在词表里有一个编号</td><td>给每个词块发一个工号</td></tr><tr><td>3. 嵌入（Embedding）</td><td>每个 ID 变成一个几百到几千维的向量</td><td>把工号换成一张&quot;含义坐标卡&quot;</td></tr><tr><td>4. 加位置信息</td><td>把&quot;我是第几个字&quot;也变成一串数字，直接加到含义坐标上；不加这一步，模型看&quot;猫追狗&quot;和&quot;狗追猫&quot;是一模一样的</td><td>标注词块的出场顺序（这一节末尾的演示可以亲手开关它）</td></tr><tr><td>5. 注意力层</td><td>每个词块和其他所有词块互相看一遍</td><td>全体成员开一次信息交流会</td></tr><tr><td>6. 前馈层</td><td>对每个词块单独做一次深度加工</td><td>各自回工位继续加工</td></tr><tr><td>7. 重复 5-6 很多层</td><td>一层一层累积，理解越来越深</td><td>反复开会、加工，循环几十次</td></tr><tr><td>8. 输出层</td><td>算出词表里每个词作为&quot;下一个字&quot;的概率</td><td>投票：下一个该是谁</td></tr><tr><td>9. 采样</td><td>按概率选一个词</td><td>抽签抽出一个结果</td></tr><tr><td>10. 自回归循环</td><td>把选出的字接到句子后面，回到第 1 步</td><td>把结果接到末尾，重新来一遍</td></tr></tbody></table><div class="viz v3d" data-v3="ch2c"></div>
 <p><strong>关于第 5 步的一个重要细节：多头注意力。</strong></p>
 <p>一层里不是一个&quot;注意力&quot;，而是同时跑很多个（比如 32 个），叫&quot;多头&quot;。为什么要这样？因为一句话里的关系是多种多样的：有的头在管语法（主谓宾对齐），有的头在管指代（&quot;它&quot;指谁），有的头在管语义关联（&quot;退货&quot;和&quot;七天无理由&quot;）。<strong>让多个头各管一种关系，再拼接起来</strong>，比让一个头同时管所有事效果好得多。</p>
-<p>这就好比一个团队审方案：与其让一个人同时看财务、法务、技术，不如开三个组分工看，最后汇总。</p>
+<p>这就好比一个团队审方案：与其让一个人同时看财务、法务、技术，不如开三个组分工看，最后汇总。</p><div class="viz v3d" data-v3="ch2b"></div>
 <p><strong>关于第 7 步：什么叫&quot;很多层&quot;。</strong></p>
 <p>一个 7B（70 亿参数）的模型，通常有 32 层左右。层数越多、每层越宽，参数量越大，模型能装下的&quot;知识&quot;和&quot;推理链条&quot;就越长。<strong>这就是为什么大模型叫&quot;大&quot;模型——主要指这两个数字大。</strong></p>
-<div class="viz v3d" data-v3="ch2b"></div><div class="viz v3d" data-v3="ch2c"></div><div class="viz v3d" data-v3="ch2d"></div><h3>训练的三个阶段（这是面试高频考点）</h3>
+<h3>训练的三个阶段（这是面试高频考点）</h3>
 <p>一个能对话的模型，不是一次训练出来的，而是分三个阶段。</p>
 <table><thead><tr><th>阶段</th><th>它在干什么</th><th>类比</th><th>数据从哪来</th><th>结果是什么</th></tr></thead><tbody><tr><td>一、预训练（Pre-training）</td><td>读海量文本，反复练习&quot;猜下一个字&quot;</td><td>一个孩子读了上万本书</td><td>互联网、书籍、代码，几万亿字</td><td>学会了语言、常识、世界知识，但不会听指令</td></tr><tr><td>二、指令微调（SFT）</td><td>用&quot;提问 + 标准答案&quot;的样本教它&quot;听指令办事&quot;</td><td>上补习班，学会答题格式</td><td>人工标注的问答对，几万到几百万条</td><td>能按指令对话、能写文案、能回答问题</td></tr><tr><td>三、对齐（RLHF / DPO）</td><td>让人类给不同回答打分，教它&quot;哪个回答更好&quot;</td><td>老员工带新人，告诉他什么是好服务</td><td>人类偏好排序数据</td><td>更有帮助、更安全、更少胡说、更符合人类口味</td></tr></tbody></table>
 <p><strong>这三阶段对应到你的工作，有一个非常实际的推论：</strong></p>
@@ -668,7 +671,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c11">第 3 章　大模型原理（下）：上下文、参数、幻觉、成本<a class="q" href="javascript:void 0" data-q="c11">#</a><button class="mark-read" data-c="c11">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>模型的能力上限由&quot;参数&quot;决定，但你能做出什么产品，几乎完全由四个工程变量决定：<strong>上下文怎么给、采样参数怎么调、幻觉怎么兜、钱怎么省</strong>。</p>
-<div class="viz" data-viz="ch3"></div><h3>这一章解决什么问题</h3>
+<h3>这一章解决什么问题</h3>
 <p>上一章讲的是&quot;模型内部怎么运作&quot;，这一章讲的是&quot;你在外面按哪些旋钮&quot;。</p>
 <p>这一章的内容，是面试里<strong>最容易被混在项目追问里考</strong>的部分。面试官不会问&quot;什么是温度&quot;，他会问：&quot;你这个客服机器人有时候答得很发散，你怎么办？&quot;——答案就在这一章。</p>
 <h3>一、上下文窗口：模型的&quot;短期记忆桌面&quot;</h3>
@@ -677,7 +680,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>为什么重要。</strong> 很多人第一次用 RAG 会犯一个错：检索到 50 段文档，全塞给模型。结果模型答得更差了。原因有两个：</p>
 <ul><li><strong>桌子挤爆了</strong>：超出窗口的部分被直接截断，可能正好把你最需要的那段截掉了。</li><li><strong>注意力被稀释</strong>：就算没超，一堆无关内容也会干扰注意力分配。业界有一个广为人知的现象叫&quot;中间迷失&quot;（Lost in the Middle）——模型对<strong>开头和结尾</strong>的内容记得最牢，对塞在<strong>中间</strong>的内容最容易忽略。</li></ul>
 <p><strong>给你一个可以直接用的经验法则</strong>：给模型的上下文，<strong>宁精勿多</strong>。检索 20 段再重排出最相关的 3 到 5 段，效果通常远好于直接塞 20 段。</p>
-<h3>二、KV Cache：为什么长上下文又慢又贵</h3>
+<div class="viz" data-viz="ch3"></div><h3>二、KV Cache：为什么长上下文又慢又贵</h3>
 <p>上一章说过，生成是自回归的，一个一个吐字。这里有个效率问题：生成第 100 个字的时候，难道前面 99 个字都要重新算一遍吗？</p>
 <p>不用。模型会把前面算过的中间结果<strong>缓存</strong>下来，这叫 <strong>KV Cache</strong>（键值缓存）。它缓存的就是注意力机制里的 K 和 V。</p>
 <p><strong>代价是什么？</strong>缓存要占显存。粗略的估算是：</p>
@@ -696,7 +699,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <div class="viz v3d" data-v3="ch3d"></div><h3>四、幻觉：为什么模型会一本正经地胡说</h3>
 <p>幻觉（Hallucination）不是一个 bug，而是这个机制的<strong>必然副产品</strong>。原因有四种，你要能分开讲：</p>
 <table><thead><tr><th>类型</th><th>成因</th><th>表现</th><th>对应的解法</th></tr></thead><tbody><tr><td>知识缺失型</td><td>训练数据里根本没有这个信息</td><td>编造不存在的法条、论文</td><td>用 RAG 把资料喂给它</td></tr><tr><td>知识过时型</td><td>训练数据的截止时间早</td><td>说错最新价格、最新政策</td><td>用 RAG 或工具查实时数据</td></tr><tr><td>目标错配型</td><td>它的训练目标就是&quot;生成最像样的下一个词&quot;，不是&quot;说真话&quot;</td><td>不知道也硬答</td><td>提示词里明确允许&quot;不知道&quot;，并要求引用来源</td></tr><tr><td>上下文冲突型</td><td>你给的资料本身矛盾或太长</td><td>把多份文档混着编</td><td>优化切块、加重排、缩减上下文</td></tr></tbody></table>
-<p><strong>最重要的一个认知</strong>：幻觉不可能被彻底消灭，只能被<strong>管理</strong>。所以专业的产品设计一定包含&quot;兜底机制&quot;：答不出来就说不知道、给出原文引用让用户自己核、关键动作（比如退款、下单）必须走人工确认。</p>
+<p><strong>最重要的一个认知</strong>：幻觉不可能被彻底消灭，只能被<strong>管理</strong>。所以专业的产品设计一定包含&quot;兜底机制&quot;：答不出来就说不知道、给出原文引用让用户自己核、关键动作（比如退款、下单）必须走人工确认。</p><div class="viz" data-viz="v3hallu"></div>
 <h3>五、性能与成本：你的产品能不能活下来</h3>
 <p>这一块是很多从&quot;做 demo&quot;走向&quot;做产品&quot;的人第一次撞墙的地方。</p>
 <p><strong>三个性能指标，你要会说：</strong></p>
@@ -749,14 +752,14 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c12">第 4 章　大模型 API（上）：一切产品的地基<a class="q" href="javascript:void 0" data-q="c12">#</a><button class="mark-read" data-c="c12">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>大模型 API 就是一根<strong>水管</strong>：你把资料从这头灌进去，答案从那头流出来。所有 AI 产品，无论多复杂，本质上都是在这根水管的两端做文章。</p>
-<div class="viz" data-viz="ch4"></div><h3>这一章解决什么问题</h3>
+<h3>这一章解决什么问题</h3>
 <p>即使你以后一行代码都不写，你也必须搞懂 API，因为<strong>所有产品决策都是围绕它做的</strong>：用哪个模型、给多少上下文、怎么控制输出格式、延迟能不能接受、成本能不能扛住。</p>
 <p>更重要的是：面试官问&quot;你们怎么实现的&quot;，你答不出 API 层面的细节，会被判断成&quot;没碰过一线的样子货&quot;。</p>
 <h3>核心原理：一次调用到底发生了什么</h3>
 <p>把一次 API 调用想成<strong>寄一封信 + 收一封回信</strong>：</p>
 <ol><li><strong>你在信封上写地址</strong>：请求发到平台的某个地址（Endpoint）。</li><li><strong>你贴上身份凭证</strong>：一个密钥（API Key），证明你是付费用户。</li><li><strong>你写清楚寄给谁</strong>：请求里有一个 <code>model</code> 字段，说明用哪个模型。</li><li><strong>你写下要说的话</strong>：请求里有一个 <code>messages</code> 字段，是一个对话列表。</li><li><strong>你注明特殊要求</strong>：温度、最大长度等参数。</li><li><strong>你收到回信</strong>：平台返回的是一份带好几个字段的结果，你真正要的回答只是其中 <code>content</code> 那一小段——用了多少 Token、为什么停下来、是哪个模型回的，都在旁边的字段里。</li></ol>
 <p>就这么简单。剩下的所有复杂性，都在第 4 步——<strong>你要在 <code>messages</code> 里说什么</strong>。</p>
-<h3>一、messages 的结构：角色的分工</h3>
+<div class="viz" data-viz="ch4"></div><h3>一、messages 的结构：角色的分工</h3>
 <p><code>messages</code> 是一个列表，每个元素有两个字段：<code>role</code>（谁说的）和 <code>content</code>（说了什么）。角色只有三种：</p>
 <table><thead><tr><th>角色</th><th>它是谁</th><th>用来放什么</th><th>经验上模型更听谁的话</th></tr></thead><tbody><tr><td>system</td><td>系统设定，相当于&quot;岗位说明书&quot;</td><td>身份、规则、输出格式、禁区</td><td>最高，模型最听它的</td></tr><tr><td>user</td><td>用户，相当于&quot;客户需求&quot;</td><td>用户的实际问题</td><td>中</td></tr><tr><td>assistant</td><td>助手，相当于&quot;你之前的回答&quot;</td><td>历史回答，用于保持多轮上下文</td><td>中</td></tr></tbody></table>
 <p>（&quot;更听谁的话&quot;是经验规律，不是保证。所以最重要的硬约束，建议在 system 和最靠近问题的最后一条 user 里<strong>各说一遍</strong>——这就是下面&quot;关键点三&quot;讲的位置效应。）</p>
@@ -767,7 +770,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <div class="viz v3d" data-v3="ch4"></div><h3>二、流式输出：为什么体验差距这么大</h3>
 <p>非流式（一次性返回）：模型把所有字都生成完，才一次性给你。用户要等 5 秒，屏幕空白 5 秒。</p>
 <p>流式（Streaming）：模型每生成一个字就推一个字给你。用户 0.5 秒就看到第一个字，然后字源源不断地出现。</p>
-<p><strong>总耗时其实一样，但体感差距巨大。</strong> 这就是为什么所有对话产品都用流式——它不改变性能，它改变<strong>感知</strong>。</p>
+<p><strong>总耗时其实一样，但体感差距巨大。</strong> 这就是为什么所有对话产品都用流式——它不改变性能，它改变<strong>感知</strong>。</p><div class="viz" data-viz="v4stream"></div>
 <p>产品上的推论：<strong>只要你的场景有人盯着屏幕等，就一定要用流式。</strong></p>
 <h3>三、结构化输出：把&quot;作文&quot;变成&quot;表格&quot;</h3>
 <p>这是应用岗最核心的技能之一。模型的自然输出是自由文本，但你的程序需要的是<strong>能被程序处理的数据</strong>。</p>
@@ -776,7 +779,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>实现结构化输出有三个层次，从弱到强：</p>
 <table><thead><tr><th>层次</th><th>做法</th><th>可靠性</th><th>适用场景</th></tr></thead><tbody><tr><td>弱</td><td>在提示词里写&quot;请用 JSON 格式回答&quot;</td><td>低，经常会多说一句废话</td><td>快速试验</td></tr><tr><td>中</td><td>给出<strong>完整的示例</strong>，告诉它&quot;就照这个格式&quot;</td><td>中</td><td>简单任务</td></tr><tr><td>强</td><td>使用平台的<strong>结构化输出 / JSON Schema 约束</strong>功能</td><td>高，格式基本不会错</td><td>生产环境</td></tr></tbody></table>
 <p><strong>还有一个专业细节：即使格式对了，内容也可能是错的。</strong> 所以专业做法是两件事分开做：<strong>先保证格式合法（技术校验），再校验内容是否合规（业务校验，比如商品 ID 是否真实存在）。</strong> 面试里能说出&quot;格式和对错是两道校验&quot;，是明显的加分项。</p>
-<h3>四、你必须记住的请求参数</h3>
+<div class="viz" data-viz="v4json"></div><h3>四、你必须记住的请求参数</h3>
 <p>第 3 章讲了采样参数，这里补充调用层面的：</p>
 <table><thead><tr><th>参数</th><th>作用</th><th>建议</th></tr></thead><tbody><tr><td>model</td><td>用哪个模型</td><td>永远用固定版本号，不要用&quot;自动指向最新&quot;的别名</td></tr><tr><td>messages</td><td>对话内容</td><td>见上</td></tr><tr><td>temperature</td><td>随机性</td><td>抽取用 0，创作用 0.7 以上</td></tr><tr><td>max_tokens</td><td>输出上限</td><td>必设，防跑飞烧钱</td></tr><tr><td>stream</td><td>是否流式</td><td>有界面就用</td></tr><tr><td>tools</td><td>可用工具列表</td><td>见第 5 章</td></tr><tr><td>response_format</td><td>输出格式约束</td><td>生产必用</td></tr><tr><td>timeout</td><td>超时</td><td>必设</td></tr></tbody></table>
 <div class="callout warn"><div class="ct">三个真实项目里的血泪教训</div><p><strong>第一，永远不要用&quot;浮动版本号&quot;。</strong> 平台的模型名经常有两种：一种是 <code>xxx-latest</code>（跟着最新走），一种是 <code>xxx-20250901</code>（固定某一天的版本）。生产环境一定要用固定版本，否则某天平台更新了模型，你的效果指标会莫名其妙变化，而你查半天查不出原因。</p>
@@ -822,7 +825,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c13">第 5 章　大模型 API（下）：工具调用与工程化<a class="q" href="javascript:void 0" data-q="c13">#</a><button class="mark-read" data-c="c13">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>工具调用（Tool Calling）是&quot;聊天机器人&quot;变成&quot;Agent&quot;的那道门槛。</strong> 在这之前，模型只能说话；在这之后，模型能办事。</p>
-<div class="viz" data-viz="ch5"></div><h3>这一章解决什么问题</h3>
+<h3>这一章解决什么问题</h3>
 <p>面试官判断你是不是真的做过 Agent，有一个很直接的信号：<strong>你怎么描述工具调用。</strong></p>
 <p>只说&quot;我们用了 Function Calling&quot;，是初级。能说清&quot;工具描述怎么写才不容易被误调用、工具失败怎么让它自己纠正、哪些工具绝对不能给模型碰&quot;，才是做过项目的人。</p>
 <h3>一、核心原理：三步舞</h3>
@@ -837,7 +840,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <div class="callout key"><div class="ct">一个必须记牢的推论</div><p>既然模型只是&quot;提要求&quot;，那么：</p>
 <ul><li><strong>危险动作必须由程序二次确认。</strong> 比如&quot;给用户退款&quot;&quot;删除数据&quot;&quot;发送邮件&quot;，不能让模型自己说要退就退。</li><li><strong>参数必须校验。</strong> 模型可能给出不存在的用户 ID，或者把金额搞错一个数量级。程序必须校验合法性。</li><li><strong>权限要按工具粒度给。</strong> 检索类工具可以放开，写操作类工具必须严控。</li></ul>
 <p>这三条是面试里被问到&quot;你的 Agent 安全性怎么保证&quot;时的标准答案骨架。</p></div>
-<h3>二、工具设计的艺术（这一节最值钱）</h3>
+<div class="viz" data-viz="ch5"></div><h3>二、工具设计的艺术（这一节最值钱）</h3>
 <p>同一个能力，工具描述写得不同，成功率能差一倍。下面是实战经验。</p>
 <table><thead><tr><th>原则</th><th>具体做法</th><th>为什么</th></tr></thead><tbody><tr><td>描述要像给新员工的说明</td><td>说清&quot;什么情况下用它&quot;和&quot;什么情况下不要用&quot;</td><td>模型只会照你写的理解</td></tr><tr><td>工具粒度要合适</td><td>一个工具干一件事，不要做&quot;万能工具&quot;</td><td>万能工具参数多，模型容易填错</td></tr><tr><td>参数越少越好</td><td>能推导出来的参数不要让它填</td><td>每个参数都是一次出错机会</td></tr><tr><td>名字要能自解释</td><td>用明确的动词短语</td><td>名字影响模型的联想</td></tr><tr><td>返回值要精简</td><td>万行查询结果先筛选再返回</td><td>长返回值会挤爆上下文、干扰判断</td></tr><tr><td>错误信息要写给人看</td><td>返回明确的失败原因和下一步建议</td><td>模型能根据错误自我纠正</td></tr><tr><td>写操作要幂等</td><td>同一个请求重复执行不产生副作用</td><td>网络重试可能重复调用</td></tr></tbody></table>
 <p><strong>一个真实例子，说明&quot;描述即接口文档&quot;：</strong></p>
@@ -846,7 +849,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>改完之后，工具被正确调用的比例大幅提升。</p>
 <p><strong>结论</strong>：<strong>写工具描述，就是在给模型写说明书。这件事的投入产出比，比换模型高得多。</strong></p>
 <h3>三、并行调用与多工具编排</h3>
-<p>现代模型支持<strong>一次返回多个工具请求</strong>。比如用户问&quot;帮我比较一下 A 商品和 B 商品的价格&quot;，模型可以同时发出两个查询请求，你的程序并行执行，比串行快一倍。</p>
+<p>现代模型支持<strong>一次返回多个工具请求</strong>。比如用户问&quot;帮我比较一下 A 商品和 B 商品的价格&quot;，模型可以同时发出两个查询请求，你的程序并行执行，比串行快一倍。</p><div class="viz" data-viz="v5parallel"></div>
 <p><strong>并行调用和多步编排不是一回事</strong>：并行是&quot;一次问好几件互不依赖的事&quot;（同时查 A 商品和 B 商品的价格），多步是&quot;后一步要靠前一步的结果才能决定&quot;（先查订单号，再凭订单号查物流）。前者省的是时间，后者才有资格叫 Agent。</p>
 <p>再往上，就是<strong>多步编排</strong>：模型拿到第一次结果后，判断&quot;信息还不够，我要再查一次&quot;。这就形成了 Agent Loop 的雏形（第 14 章会展开）。</p>
 <h3>四、工程化：让它在真实世界活下来</h3>
@@ -903,7 +906,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c14">第 6 章　提示词工程与上下文工程<a class="q" href="javascript:void 0" data-q="c14">#</a><button class="mark-read" data-c="c14">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>提示词工程是&quot;怎么说&quot;，上下文工程是&quot;给它看什么&quot;。</strong> 前者是技巧，后者是架构。真正拉开差距的是后者。</p>
-<div class="viz" data-viz="ch6"></div><h3>这一章解决什么问题</h3>
+<h3>这一章解决什么问题</h3>
 <p>很多人的理解停留在&quot;写提示词就是哄模型说话&quot;。这个认知层次，面试官三个问题就能问穿：你怎么保证输出稳定？上下文太长怎么办？业务规则经常变，你每次都要重写提示词吗？</p>
 <p>这一章把这两个概念讲清楚，并且给你一套可以直接用的方法论。</p>
 <h3>一、先分清两个概念</h3>
@@ -925,7 +928,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>把上下文窗口当成一个<strong>预算</strong>来分配。一个可以参考的分配方式：</p>
 <ul><li>系统提示与规则：占 10% 到 15%</li><li>相关知识（检索结果）：占 50% 到 60%</li><li>对话历史：占 20% 到 30%</li><li>留给输出：至少 10% 到 20%</li></ul>
 <p>这几个比例<strong>不用凑成 100%</strong>（四条都取上限会到 125%，那没有意义）。它们的作用是提醒你一件事：<strong>先给输出留出至少 10%，剩下的按&quot;资料优先、历史够用就行&quot;来分。</strong> 谁把历史和资料塞满，谁的回答就会被截断。</p>
-<p><strong>给不出预算的团队，一定会出现&quot;上下文挤爆导致回答被截断&quot;的事故。</strong></p>
+<p><strong>给不出预算的团队，一定会出现&quot;上下文挤爆导致回答被截断&quot;的事故。</strong></p><div class="viz" data-viz="ch6"></div>
 <p><strong>决策三：按什么顺序给（位置策略）</strong></p>
 <p>回忆第 3 章的&quot;中间迷失&quot;：模型对开头和结尾最敏感。所以：</p>
 <ul><li>最重要的指令放<strong>开头</strong>和<strong>结尾</strong>。</li><li>检索到的文档，<strong>最相关的放最前面或最后面</strong>，不要埋在中间。</li><li>用户的原始问题，尽量靠近结尾（紧挨着模型要回答的位置）。</li></ul>
@@ -975,7 +978,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c15">第 7 章　Embedding 与语义检索：让机器理解&quot;意思&quot;<a class="q" href="javascript:void 0" data-q="c15">#</a><button class="mark-read" data-c="c15">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>Embedding 就是给每一段文字<strong>打一个&quot;含义坐标&quot;</strong>，坐标相近的东西意思相近。整条 RAG 流水线能成立，全靠这一件事。</p>
-<div class="viz" data-viz="ch7"></div><h3>这一章解决什么问题</h3>
+<h3>这一章解决什么问题</h3>
 <p>很多人对 RAG 的理解是&quot;把资料丢进向量数据库，然后就能搜到&quot;。这个理解会导致你在面试里说不出<strong>为什么搜不到</strong>、<strong>为什么搜错了</strong>。</p>
 <p>要能诊断检索问题，你必须理解 Embedding 的三件事：它怎么来的、它擅长什么、它天生不擅长什么。</p>
 <h3>一、从&quot;关键词匹配&quot;到&quot;意思匹配&quot;</h3>
@@ -985,7 +988,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h3>二、向量到底是什么：一个&quot;含义坐标&quot;</h3>
 <p>想象一个坐标系。如果只有两个维度，我们可能这样摆：</p>
 <ul><li>横轴 = 情感倾向（负面到正面）</li><li>纵轴 = 话题类别（物流到商品）</li></ul>
-<p>那么&quot;快递太慢了&quot;和&quot;物流不行&quot;两个句子，坐标会非常接近。而&quot;这个颜色真好看&quot;坐标会很远。</p>
+<p>那么&quot;快递太慢了&quot;和&quot;物流不行&quot;两个句子，坐标会非常接近。而&quot;这个颜色真好看&quot;坐标会很远。</p><div class="viz" data-viz="ch7"></div>
 <p>真实的模型不用 2 维，而是用 <strong>768、1024、1536 甚至 3072 个维度</strong>。维度多，能表达的细微差别就多。<strong>但注意：维度不是越高越好。</strong> 高维更准，但存储和计算成本成比例上升。1024 维在大多数中文业务场景里已经足够。</p>
 <p><strong>一段文字 → 一个固定长度的数字列表</strong>，这就是 embedding 向量。</p>
 <div class="viz v3d" data-v3="ch7"></div><h3>三、Embedding 模型是怎么练出来的</h3>
@@ -1000,7 +1003,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>余弦相似度为什么最常用？</strong> 因为文本越长，向量的&quot;长度&quot;往往越大（叠加了更多信息）。只看方向，可以公平地比较一段短问题和一个长段落。这就是为什么短查询能匹配长文档。</p>
 <p>（本节的演示可以拖着转一圈，看&quot;意思近&quot;的句子是怎么抱团的——点任意一句，就能看到它和谁最近。）</p>
 <p><strong>归一化（Normalization）</strong>：把向量长度统一缩放到 1。做完之后，余弦相似度和点积的排序结果一致。很多向量库默认就帮你做了这一步。</p>
-<h3>五、五个必须知道的工程细节</h3>
+<div class="viz" data-viz="v7cos"></div><h3>五、五个必须知道的工程细节</h3>
 <p>这五点每一条都能在面试里加分。</p>
 <p><strong>1. 查询和文档必须用同一个模型。</strong></p>
 <p>不同模型生成的向量在<strong>不同的坐标空间</strong>里。用一个模型建的库，用另一个模型去查，结果是随机的。<strong>这是新手最常犯的错误，也是面试官最爱设的陷阱题。</strong></p>
@@ -1052,7 +1055,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c16">第 8 章　RAG 全链路：让模型&quot;有据可依&quot;<a class="q" href="javascript:void 0" data-q="c16">#</a><button class="mark-read" data-c="c16">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>RAG 就是<strong>开卷考试</strong>：模型不再凭记忆答题，而是先去资料库里查，再带着查到的资料回答。</p>
-<div class="viz" data-viz="ch8"></div><h3>这一章解决什么问题</h3>
+<h3>这一章解决什么问题</h3>
 <p>RAG 是大模型应用岗<strong>面试出现频率最高的题目</strong>，没有之一。因为它同时考察了你的检索理解、工程能力和业务判断。</p>
 <p>而绝大多数候选人的回答只停留在&quot;把文档切块、向量化、存进向量库、检索后拼进提示词&quot;。这句话没错，但太浅。这一章要让你能说出<strong>每个环节的取舍和坑</strong>。</p>
 <h3>一、为什么需要 RAG</h3>
@@ -1067,7 +1070,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h3>三、RAG 的六个环节</h3>
 <p>这是本章的骨架。整条链路是这样的：</p>
 <p><strong>离线部分（数据准备，跑一次或定期跑）</strong></p>
-<ol><li><strong>数据接入与解析</strong>：把 PDF、Word、网页、数据库里的内容抽成纯文本。</li><li><strong>切块（Chunking）</strong>：把长文档切成一小块一小块。</li><li><strong>向量化与索引</strong>：每块算一个向量，存进向量数据库，并建立索引结构。</li></ol>
+<ol><li><strong>数据接入与解析</strong>：把 PDF、Word、网页、数据库里的内容抽成纯文本。</li><li><strong>切块（Chunking）</strong>：把长文档切成一小块一小块。</li><li><strong>向量化与索引</strong>：每块算一个向量，存进向量数据库，并建立索引结构。</li></ol><div class="viz" data-viz="ch8"></div>
 <p><strong>在线部分（用户每次提问都跑）</strong></p>
 <ol><li><strong>召回（Retrieval）</strong>：用户问题转成向量，去库里找最像的若干块。</li><li><strong>重排（Rerank）</strong>：把召回的候选按&quot;真的有多相关&quot;重新排一遍，取最相关的几条。</li><li><strong>生成（Generation）</strong>：把这几条资料和用户问题一起交给模型，让它带着资料回答。</li></ol>
 <p>下面逐个讲坑。</p>
@@ -1137,7 +1140,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c17">第 9 章　RAG 的评估与优化：把&quot;感觉还行&quot;变成&quot;数据说话&quot;<a class="q" href="javascript:void 0" data-q="c17">#</a><button class="mark-read" data-c="c17">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>RAG 项目的分水岭不在技术选型，在有没有评估集。</strong> 没有评估集，你所有的优化都是靠感觉；有评估集，你才知道下一步该动哪里。</p>
-<div class="viz" data-viz="ch9"></div><h3>这一章解决什么问题</h3>
+<h3>这一章解决什么问题</h3>
 <p>面试官区分&quot;做过 demo&quot;和&quot;做过项目&quot;，最有效的两个问题就是：</p>
 <p>&quot;你们怎么衡量效果？&quot; &quot;上线之后效果变差了，你怎么定位？&quot;</p>
 <p>这两个问题，答不上来就露底了。这一章给你一套完整的答案。</p>
@@ -1166,7 +1169,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <table><thead><tr><th>症状</th><th>最可能的原因</th><th>优先修哪里</th></tr></thead><tbody><tr><td>库里明明有，就是搜不到</td><td>切块不合理 / 用了错误模型 / 缺少关键词检索</td><td>切块策略、混合检索</td></tr><tr><td>搜到了，但排在很后面没进上下文</td><td>召回数量太少 / 没有重排</td><td>加重排、扩大召回</td></tr><tr><td>找到了资料，模型还是答错</td><td>提示词约束不够 / 上下文里混了干扰资料</td><td>提示词、精简上下文</td></tr><tr><td>模型答得很好，但编了资料里没有的细节</td><td>没写&quot;不得外推&quot; / 没强制引用</td><td>提示词</td></tr><tr><td>资料互相矛盾，模型挑了一个</td><td>没有冲突处理规则</td><td>提示词 + 数据源治理</td></tr><tr><td>简单问题答对，复杂问题答不对</td><td>需要多段综合，但只召回了单段</td><td>多跳检索 / 查询改写</td></tr><tr><td>该说不知道的时候硬答</td><td>缺少拒答规则和对应测试</td><td>提示词 + 拒答准确率测试</td></tr><tr><td>检索结果不稳定，同一问题两次不同</td><td>温度过高 / 索引有随机性 / 数据重复</td><td>温度归零、数据去重</td></tr></tbody></table>
 <p><strong>特别说明一个高级问题：多跳问题。</strong></p>
 <p>用户问：&quot;A 商品的保修期比 B 商品长吗？&quot; 这需要分别查 A 和 B 的保修期，再比较。单次检索很可能只查到其中一个。解法是<strong>查询改写</strong>（把一个问题拆成两个子问题分别检索）或者<strong>多轮检索</strong>（模型先查一轮，发现不够再查一轮）。这就是从&quot;简单 RAG&quot;走向&quot;Agentic RAG&quot;的地方，也是面试里非常亮眼的话题。</p>
-<h3>五、用大模型当裁判（LLM-as-a-Judge）</h3>
+<div class="viz" data-viz="ch9"></div><h3>五、用大模型当裁判（LLM-as-a-Judge）</h3>
 <p>人工评估准确但慢。所以业内普遍用&quot;让另一个模型来打分&quot;的方式做批量评估。</p>
 <p><strong>做法</strong>：写一个评分提示词，把&quot;问题 + 检索到的资料 + 模型的回答&quot;一起给裁判模型，让它按固定标准打分（比如忠实度 1 到 5 分），并给出理由。</p>
 <p><strong>三个必须注意的坑：</strong></p>
@@ -1208,7 +1211,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c18">第 10 章　向量数据库：在几亿个坐标里瞬间找到最近的<a class="q" href="javascript:void 0" data-q="c18">#</a><button class="mark-read" data-c="c18">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>向量数据库就是一个<strong>专门回答&quot;哪些东西跟这个最像&quot;的仓库</strong>。它的全部技术难点，集中在一件事上：<strong>在准确率、速度、内存之间做交换。</strong></p>
-<div class="viz" data-viz="ch10"></div><h3>这一章解决什么问题</h3>
+<h3>这一章解决什么问题</h3>
 <p>很多人把向量数据库当成&quot;黑盒，装进去就行&quot;。但面试官会问：&quot;几百万和几亿数据量，方案有什么不同？&quot;&quot;为什么我们的检索偶尔漏掉正确答案？&quot;</p>
 <p>答案都在&quot;近似检索&quot;这四个字里。</p>
 <h3>一、核心矛盾：精确 vs 快速</h3>
@@ -1219,7 +1222,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>这就是所有向量数据库的核心取舍：</p>
 <blockquote><p><strong>用一点点召回率，换几十倍的检索速度。</strong></p></blockquote>
 <p>面试里能说出这句话，你就已经越过了大部分人。</p>
-<h3>二、三种主流索引算法（说人话版）</h3>
+<div class="viz" data-viz="ch10"></div><h3>二、三种主流索引算法（说人话版）</h3>
 <p><strong>IVF（倒排文件索引）：先分堆</strong></p>
 <p>把所有向量先用聚类分成很多&quot;堆&quot;（聚类就是让程序把本来就长得像的向量自动归成一堆，你不需要指定每堆是什么）。查询时，只去最接近的几个堆里找，其他的不看。</p>
 <ul><li>类比：图书馆先按大类分书架，你只在相关的那几个书架上找。</li><li>参数：分多少堆、每次看几堆。看的堆越多越准、越慢。</li><li>适合：数据量大、内存相对紧张。</li></ul>
@@ -1270,7 +1273,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c19">第 11 章　Graph RAG 与知识图谱：当&quot;关系&quot;比&quot;相似&quot;更重要<a class="q" href="javascript:void 0" data-q="c19">#</a><button class="mark-read" data-c="c19">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>普通 RAG 找的是&quot;跟这个问题<strong>像</strong>的资料&quot;，Graph RAG 找的是&quot;跟这个问题<strong>有关联</strong>的资料&quot;。<strong>相似</strong>和<strong>关联</strong>是两件事，这就是它的全部价值。</p>
-<div class="viz" data-viz="ch11"></div><h3>这一章解决什么问题</h3>
+<h3>这一章解决什么问题</h3>
 <p>有一句话是&quot;你不一定项目能用上，但是你得知道&quot;——这句话是对的。因为面试里 Graph RAG 是一道<strong>分水岭题</strong>：知道的人一眼就能看出你在关注行业前沿，不知道的人会把它和普通 RAG 混为一谈。</p>
 <p>你不需要会搭它，但你必须能说清：<strong>它解决什么普通 RAG 解决不了的问题。</strong></p>
 <h3>一、普通 RAG 的三个盲区</h3>
@@ -1282,7 +1285,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <blockquote><p><strong>（实体 A，关系，实体 B）</strong></p></blockquote>
 <p>比如：</p>
 <ul><li>（张三，担任 CEO，甲公司）</li><li>（甲公司，供应商，乙公司）</li><li>（乙公司，位于，深圳）</li></ul>
-<p>把大量这样的三元组连起来，就形成一张网。网上的每个点叫<strong>实体</strong>（人、公司、产品、事件、概念），每条连线叫<strong>关系</strong>。</p>
+<p>把大量这样的三元组连起来，就形成一张网。网上的每个点叫<strong>实体</strong>（人、公司、产品、事件、概念），每条连线叫<strong>关系</strong>。</p><div class="viz" data-viz="ch11"></div>
 <p><strong>为什么这张网有用？</strong> 因为你可以&quot;沿着线走&quot;。问&quot;和张三有关的公司有哪些&quot;，你只要从&quot;张三&quot;这个点出发，看连出去的所有线，答案立刻就有了——<strong>不需要算相似度，只需要走图。</strong></p>
 <div class="viz v3d" data-v3="ch11"></div><h3>三、Graph RAG 的两种典型用法</h3>
 <p><strong>用法一：图谱作为一条检索通道。</strong></p>
@@ -1293,7 +1296,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>让它自己看哪些点连得最密，连得密的一堆就算一个社区；相当于把图谱切成一簇一簇的主题）。</p>
 <ol><li><strong>为每个社区生成一段摘要</strong>（这个社区在讲什么）。</li><li>用户问全局性的问题时（&quot;整体有哪些风险&quot;），系统在这些<strong>社区摘要</strong>上做检索和汇总。</li></ol>
 <p>这样一来，&quot;总结几百份文档&quot;就变成了&quot;总结几十段社区摘要&quot;，变得可行了。</p>
-<h3>四、怎么建一个知识图谱（流程）</h3>
+<div class="viz" data-viz="v11multihop"></div><h3>四、怎么建一个知识图谱（流程）</h3>
 <ol><li><strong>实体抽取</strong>：从文本里识别出&quot;有哪些实体&quot;（人名、公司、产品、金额、日期）。</li><li><strong>关系抽取</strong>：识别出实体之间的连线（&quot;A 是 B 的供应商&quot;）。</li><li><strong>归一与消歧</strong>：把&quot;华为&quot;&quot;华为技术有限公司&quot;&quot;HUAWEI&quot;合并成同一个实体。<strong>这一步是最难也最要命的</strong>——消歧做不好，图谱就是一盘散沙。</li><li><strong>融合与校验</strong>：把多个来源的信息合并，处理冲突（同一件事两个说法）。</li><li><strong>存储与索引</strong>：存进图数据库，建立查询能力。</li></ol>
 <p>现代做法里，第 1、2 步通常直接用大模型来完成（给它一段文字，让它输出结构化的三元组）。</p>
 <h3>五、什么时候该用，什么时候不该用</h3>
@@ -1353,7 +1356,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c20">第 12 章　LangChain 与 LangGraph：把散件组装成流水线<a class="q" href="javascript:void 0" data-q="c20">#</a><button class="mark-read" data-c="c20">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>LangChain 提供的是<strong>标准零件</strong>，LangGraph 提供的是<strong>装配图纸</strong>。前者让你不用从零造轮子，后者让你能画出带分支和回路的复杂流程。</p>
-<div class="viz" data-viz="ch12"></div><h3>这一章解决什么问题</h3>
+<h3>这一章解决什么问题</h3>
 <p>有一句话是&quot;几乎每家公司都会问 LangChain / LangGraph&quot;——这句话是准的：只要岗位描述里写了&quot;熟悉 LangChain / LangGraph&quot;，面试大概率会问。</p>
 <p>但面试官不会问&quot;LangChain 有哪些组件&quot;（这是背的）。他会问：<strong>你为什么用 LangChain？有没有觉得它不好用的地方？</strong> 这个问题在考你的判断力。</p>
 <p>所以这一章除了讲清它们是什么，还会诚实地讲它们的缺点。</p>
@@ -1376,7 +1379,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>Graph（图）</strong>可以有分支和回路：</p>
 <ul><li><strong>分支</strong>：如果意图是&quot;退货&quot;，走退货流程；如果是&quot;查物流&quot;，走物流流程。</li><li><strong>回路</strong>：工具调用后发现信息不足，回到上一步再查一次。</li><li><strong>状态</strong>：整个流程有一个共享的状态（相当于一个公共记事本），每个节点可以读写它。</li></ul>
 <p><strong>为什么 Agent 必须是图？</strong> 因为 Agent 的本质就是&quot;循环&quot;：思考、行动、观察结果、再思考。直线流程做不到这一点。</p>
-<h3>五、LangGraph 的四个关键概念</h3>
+<div class="viz" data-viz="ch12"></div><h3>五、LangGraph 的四个关键概念</h3>
 <table><thead><tr><th>概念</th><th>是什么</th><th>类比</th></tr></thead><tbody><tr><td>State（状态）</td><td>贯穿整个流程的共享数据</td><td>一张随流程传递的工单</td></tr><tr><td>Node（节点）</td><td>一个处理步骤</td><td>一个工位</td></tr><tr><td>Edge（边）</td><td>步骤之间的连接</td><td>传送带</td></tr><tr><td>Conditional Edge（条件边）</td><td>根据状态决定下一步去哪</td><td>分拣口</td></tr></tbody></table>
 <p><strong>另外三个工程特性，是面试里非常亮眼的部分：</strong></p>
 <ol><li><strong>检查点（Checkpoint）</strong>：每一步的状态都被存下来。这意味着流程可以<strong>暂停、恢复</strong>，也可以从中间某一步重跑。生产环境必备。</li><li><strong>人类介入（Human-in-the-loop）</strong>：可以在某个节点停下来，等人工确认后再继续。<strong>这是高风险动作的标准解法</strong>——比如 Agent 准备发一封对外邮件，先暂停等人点确认。</li><li><strong>流式与可视化</strong>：流程是图，所以可以画出流程图；执行过程可以逐节点流式输出，方便调试和展示。</li></ol>
@@ -1398,7 +1401,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>正文里说过&quot;一个循环没有退出条件的 Agent，是一个会烧钱的定时炸弹&quot;。拆炸弹的办法就是这三道刹车， <strong>三道都要有，少一道都可能翻车</strong>：</p>
 <ol><li><strong>最大步数</strong>：硬上限，比如 8 步，到点强制收口。</li><li><strong>预算上限</strong>：token 或耗时超限就停。</li><li><strong>无进展检测</strong>：连续两轮拿到的信息一样、或者工具反复报同一个错，判定为卡住，主动换策略或者跳出。</li></ol>
 <p><strong>触发刹车之后不要给用户一个报错</strong>，要落到&quot;降级答案 + 转人工&quot;（第 14 章会讲失败怎么分类）。 面试里说&quot;我设了三道刹车，而且触发之后有兜底动作&quot;，比说&quot;我设了最大步数&quot;高一个段位。</p>
-<h3>动手体验</h3>
+<div class="viz" data-viz="v12brake"></div><h3>动手体验</h3>
 <ol><li><strong>在平台的&quot;应用编排&quot;界面里拖一个最简单的流程</strong>（国内平台大多有可视化编排）。你会在 15 分钟内理解&quot;节点 + 连线 + 状态&quot;是什么意思。</li><li><strong>找一个 LangGraph 的官方流程图</strong>（搜&quot;LangGraph ReAct&quot;），试着读懂它：哪里是循环？循环的退出条件是什么？</li></ol>
 <p>（ReAct 是最基础的 Agent 套路：<strong>想一步 → 做一步 → 看结果 → 再想</strong>，循环到有答案为止。）</p>
 <ol><li><strong>画一张你自己业务的图</strong>。哪怕只是&quot;用户提问、判断意图（意图识别 = 先判断用户这句话想干什么：退货？查物流？催发货？）、分别走三条路、汇总回答&quot;。<strong>画图这个动作本身，就是面试前最有价值的准备。</strong></li></ol>
@@ -1426,13 +1429,13 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c21">第 13 章　MCP 与 Skills：给 Agent 装上标准插座<a class="q" href="javascript:void 0" data-q="c21">#</a><button class="mark-read" data-c="c21">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>MCP 解决&quot;Agent 怎么连上外部能力&quot;，Skills 解决&quot;Agent 怎么学会一套做法&quot;。</strong> 前者是接口标准，后者是知识封装。</p>
-<div class="viz" data-viz="ch13"></div><h3>这一章解决什么问题</h3>
+<h3>这一章解决什么问题</h3>
 <p>这份路线把 MCP 列成&quot;重中之重&quot;。这个判断是对的，因为 MCP 是 2024 年底之后行业最大的一个结构性变化——它把&quot;每个模型各自接工具&quot;变成了&quot;所有模型共用一套工具协议&quot;。</p>
 <p>面试里如果你能讲清 MCP 为什么会出现、它和 Function Calling 什么关系，会被认为<strong>跟得上行业</strong>。</p>
 <h3>一、MCP 出现之前的问题：M 乘 N 的泥潭</h3>
 <p>假设你有 5 个模型（不同厂商）、10 个数据源（数据库、文件系统、工单系统、CRM……）。在 MCP 之前，你要为<strong>每一对组合</strong>写一次对接代码：</p>
 <blockquote><p>5 个模型 × 10 个系统 = 50 套对接逻辑</p></blockquote>
-<p>每加一个模型，要重新对接 10 个系统；每加一个系统，要重新适配 5 个模型。这就是&quot;M 乘 N 问题&quot;。</p>
+<p>每加一个模型，要重新对接 10 个系统；每加一个系统，要重新适配 5 个模型。这就是&quot;M 乘 N 问题&quot;。</p><div class="viz" data-viz="ch13"></div>
 <p><strong>MCP（Model Context Protocol）的做法是：定义一个标准协议。</strong> 系统按标准做成&quot;服务端&quot;，模型侧按标准做成&quot;客户端&quot;。之后：</p>
 <blockquote><p>5 个模型 + 10 个系统 = 15 套对接，而不是 50 套</p></blockquote>
 <p><strong>这就是&quot;USB-C 插座&quot;的类比</strong>：以前每个设备一个充电口，现在统一成一个口。</p>
@@ -1500,7 +1503,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c22">第 14 章　Harness 与 Agent Loop：模型外面那个壳，才是真功夫<a class="q" href="javascript:void 0" data-q="c22">#</a><button class="mark-read" data-c="c22">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>Harness 就是套在模型外面的那层&quot;工作台&quot;</strong>——它决定模型能看到什么、能做什么、做到什么程度算完、以及做错了怎么办。模型决定上限，Harness 决定下限。</p>
-<div class="viz" data-viz="ch14"></div><h3>这一章解决什么问题</h3>
+<h3>这一章解决什么问题</h3>
 <p>&quot;Harness&quot;是那份路线里最实在的一个词。因为 2025 年之后，行业里越来越多的人意识到一件事：</p>
 <blockquote><p><strong>同一个模型，换一个 Harness，效果能差出一个数量级。</strong></p></blockquote>
 <p>所以面试官问 Harness，问的不是一个名词，而是<strong>&quot;你知不知道 Agent 是一个系统工程，而不是一个提示词&quot;</strong>。这一章就把这套系统性讲清楚。</p>
@@ -1511,7 +1514,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>所以&quot;做一个 Agent&quot;，90% 的工作量在这个身体上，不在大脑上。</strong> 大脑是买来的，身体是你造的。</p>
 <h3>二、Agent Loop：Agent 的心跳</h3>
 <p>Agent 的本质是一个循环。这个循环有五个环节，请务必背下来：</p>
-<ol><li><strong>组装上下文（Assemble）</strong>：把当前任务目标、历史动作、工具返回结果、相关文件内容，整理成这次要发给模型的内容。</li><li><strong>调用模型（Think）</strong>：模型基于这些信息，决定下一步做什么——可能是调用一个工具，也可能是给出最终答案。</li><li><strong>解析动作（Parse）</strong>：你的程序解析模型输出，判断它想干什么、参数是什么、是否合法。</li><li><strong>执行动作（Act）</strong>：真正执行工具，拿到结果（或错误）。</li><li><strong>更新状态（Observe）</strong>：把结果加进历史，更新任务状态，判断是否继续循环。</li></ol>
+<ol><li><strong>组装上下文（Assemble）</strong>：把当前任务目标、历史动作、工具返回结果、相关文件内容，整理成这次要发给模型的内容。</li><li><strong>调用模型（Think）</strong>：模型基于这些信息，决定下一步做什么——可能是调用一个工具，也可能是给出最终答案。</li><li><strong>解析动作（Parse）</strong>：你的程序解析模型输出，判断它想干什么、参数是什么、是否合法。</li><li><strong>执行动作（Act）</strong>：真正执行工具，拿到结果（或错误）。</li><li><strong>更新状态（Observe）</strong>：把结果加进历史，更新任务状态，判断是否继续循环。</li></ol><div class="viz" data-viz="ch14"></div>
 <p>然后回到第 1 步，直到满足退出条件。</p>
 <p><strong>这五步就是 Agent Loop。</strong> 面试官问&quot;你怎么理解 Agent&quot;，你按这五步讲，比说&quot;它能自主思考&quot;专业一百倍。</p>
 <div class="viz v3d" data-v3="ch14"></div><h3>三、退出条件：Agent 最容易爆炸的地方</h3>
@@ -1530,12 +1533,12 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <div class="viz v3d" data-v3="ch14c"></div><h3>四、上下文管理：Agent 的生死线</h3>
 <p>Agent 跑起来以后，上下文会飞速膨胀：</p>
 <ul><li>每次工具调用都产生输出（可能几千字）。</li><li>每一步都要把历史带上。</li><li>很快就超出窗口了。</li></ul>
-<p><strong>这就是为什么&quot;上下文压缩&quot;是 Agent 的刚需，而不是优化项。</strong></p>
+<p><strong>这就是为什么&quot;上下文压缩&quot;是 Agent 的刚需，而不是优化项。</strong></p><div class="viz v3d" data-v3="ch14b"></div>
 <p>四种主流手段：</p>
 <table><thead><tr><th>手段</th><th>做法</th><th>优点</th><th>缺点</th></tr></thead><tbody><tr><td>裁剪工具输出</td><td>只保留工具返回结果的关键部分，丢掉原始大文本</td><td>立竿见影</td><td>可能丢关键细节</td></tr><tr><td>摘要历史</td><td>把较早的步骤总结成一段话</td><td>保留脉络</td><td>摘要会失真</td></tr><tr><td>外部化记忆</td><td>把重要结论写进文件或数据库，需要时再读回来</td><td>无限容量</td><td>需要设计&quot;什么时候写、什么时候读&quot;</td></tr><tr><td>子任务隔离</td><td>把探索性的子任务交给一个独立的 Agent，只把结论带回来</td><td>主上下文保持干净</td><td>需要设计接口和汇报格式</td></tr></tbody></table>
 <p><strong>最后一条（子任务隔离）是高级技巧</strong>，也是 Claude Code 这类工具的核心设计之一。想象一下：主 Agent 需要搞清一个代码库的结构，如果它自己一个个文件读过去，上下文立刻爆掉；但如果它派一个&quot;侦察兵&quot;去探索，只带回一页结论，主上下文就完全不受污染。</p>
 <p>这个模式在行业里叫&quot;子代理&quot;或&quot;上下文隔离&quot;。<strong>面试里提到这一条，非常加分。</strong></p>
-<div class="viz v3d" data-v3="ch14b"></div><div class="viz v3d" data-v3="ch14d"></div><h3>五、工具设计：Agent 的手好不好用</h3>
+<div class="viz v3d" data-v3="ch14d"></div><h3>五、工具设计：Agent 的手好不好用</h3>
 <p>第 5 章讲过工具描述的写法，这里补充<strong>Agent 场景下额外要考虑的四点</strong>：</p>
 <ol><li><strong>搜索优于遍历</strong>：不要把&quot;列出所有文件&quot;当主要手段，要提供&quot;按关键词搜索&quot;的能力。遍历会把上下文撑爆。</li><li><strong>读取要精准</strong>：不要&quot;读整个文件&quot;，要能&quot;读某一段&quot;。上下文很贵。</li><li><strong>写入要最小化</strong>：编辑文件用&quot;精确替换某几行&quot;，不要&quot;重写整个文件&quot;。这样出错可回退，也省 Token。</li><li><strong>危险动作要拦截</strong>：删除、覆盖、对外发送、涉及钱的，都必须经过确认。<strong>这不是为了合规，是因为模型确实会做错。</strong></li></ol>
 <h3>六、Claude Code 原理拆解（值得单独研究的成熟实现）</h3>
@@ -1624,7 +1627,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c23">第 15 章　数据标注与模型微调：把&quot;行为&quot;写进模型里<a class="q" href="javascript:void 0" data-q="c23">#</a><button class="mark-read" data-c="c23">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>微调是用<strong>你自己的数据</strong>去改造模型的行为。但真正决定成败的不是训练技术，是<strong>数据</strong>——而数据是整条链路上最贵、最慢、最没有捷径的环节。</p>
-<div class="viz" data-viz="ch15"></div><h3>这一章解决什么问题</h3>
+<h3>这一章解决什么问题</h3>
 <p>面试里问微调，往往不是想听你讲训练参数（那是算法岗的事），而是想确认三件事：</p>
 <ol><li>你知不知道<strong>什么时候该微调、什么时候不该</strong>。</li><li>你知不知道<strong>数据是怎么来的、怎么保证质量</strong>。</li><li>你知不知道微调之后<strong>怎么验证没有变坏</strong>。</li></ol>
 <p>这一章就围绕这三件事讲。</p>
@@ -1637,7 +1640,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <blockquote><p><strong>如果你的问题是&quot;模型不知道某件事&quot;，用 RAG。如果是&quot;模型知道该怎么做，但做得不合你意&quot;，才考虑微调。</strong></p></blockquote>
 <h3>二、三种微调方式（认识名字级别就够）</h3>
 <p>最常见的做法叫 <strong>SFT（监督微调）</strong>：给它几千条&quot;问题 + 标准答案&quot;，让它照着学 —— 下面表格里的&quot;全量微调&quot;和&quot;LoRA&quot;，指的都是&quot;用什么方式做 SFT&quot;。</p>
-<table><thead><tr><th>方式</th><th>做法</th><th>成本</th><th>适用</th></tr></thead><tbody><tr><td>全量微调</td><td>把模型所有参数都重新训练</td><td>极高，需要大量算力，还要为每套数据存一份完整模型</td><td>大公司、需要深度改造模型</td></tr><tr><td>LoRA（参数高效微调）</td><td>只训练一小部分&quot;附加参数&quot;，不动原模型</td><td>低，单卡可做，产物只有几十 MB</td><td>绝大多数业务场景</td></tr><tr><td>对齐微调（DPO 等）</td><td>用&quot;人类更喜欢哪个回答&quot;的数据做训练</td><td>中</td><td>优化风格、减少胡说</td></tr></tbody></table>
+<table><thead><tr><th>方式</th><th>做法</th><th>成本</th><th>适用</th></tr></thead><tbody><tr><td>全量微调</td><td>把模型所有参数都重新训练</td><td>极高，需要大量算力，还要为每套数据存一份完整模型</td><td>大公司、需要深度改造模型</td></tr><tr><td>LoRA（参数高效微调）</td><td>只训练一小部分&quot;附加参数&quot;，不动原模型</td><td>低，单卡可做，产物只有几十 MB</td><td>绝大多数业务场景</td></tr><tr><td>对齐微调（DPO 等）</td><td>用&quot;人类更喜欢哪个回答&quot;的数据做训练</td><td>中</td><td>优化风格、减少胡说</td></tr></tbody></table><div class="viz v3d" data-v3="ch15"></div>
 <p><strong>LoRA 的直觉解释</strong>（这一段你一定能在面试里用上）：</p>
 <p>把模型当成一本很厚的专业书。全量微调是&quot;把整本书重写一遍&quot;；LoRA 是&quot;<strong>在书里贴一批便签，写清楚遇到什么情况要怎么做</strong>&quot;。原书不动，便签很薄，需要的时候把便签叠加使用。</p>
 <p>所以 LoRA 的好处是：便宜（单张显卡就能跑）、快（几小时）、产物小（方便多套并存、随时切换）、风险低（原模型没被破坏，出问题可以卸载）。</p>
@@ -1647,7 +1650,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <table><thead><tr><th>来源</th><th>说明</th><th>质量</th></tr></thead><tbody><tr><td>真实业务数据</td><td>从线上日志里捞出的真实问题和被确认过的答案</td><td>最高，分布最真实</td></tr><tr><td>人工标注</td><td>请业务专家按规范标注</td><td>高，但贵、慢</td></tr><tr><td>合成数据</td><td>用强模型批量生成，再人工筛选</td><td>快，但容易&quot;味道不对&quot;</td></tr></tbody></table>
 <p><strong>数据的格式</strong>通常就是&quot;指令 + 输入 + 期望输出&quot;三种信息。做 RAG 和微调的人都要能看懂这个格式。</p>
 <p><strong>数据质量的三条铁律：</strong></p>
-<ol><li><strong>质量远重于数量。</strong> 一千条精准的样本，胜过十万条含噪声的样本。业界的共识是：<strong>把标注质量提上去，比把数据量翻十倍有效得多。</strong></li><li><strong>分布要贴近真实。</strong> 如果训练数据里都是&quot;标准提问&quot;，线上用户用方言和错别字提问，模型就崩了。<strong>要把真实的长尾问题放进去。</strong></li><li><strong>要有负例。</strong> 只教它&quot;该怎么做&quot;不够，还要教它&quot;什么时候该说不知道&quot;&quot;什么话不能说&quot;。</li></ol>
+<ol><li><strong>质量远重于数量。</strong> 一千条精准的样本，胜过十万条含噪声的样本。业界的共识是：<strong>把标注质量提上去，比把数据量翻十倍有效得多。</strong></li><li><strong>分布要贴近真实。</strong> 如果训练数据里都是&quot;标准提问&quot;，线上用户用方言和错别字提问，模型就崩了。<strong>要把真实的长尾问题放进去。</strong></li><li><strong>要有负例。</strong> 只教它&quot;该怎么做&quot;不够，还要教它&quot;什么时候该说不知道&quot;&quot;什么话不能说&quot;。</li></ol><div class="viz" data-viz="ch15"></div>
 <p><strong>关于合成数据的一个现实提醒</strong>：用强模型生成训练数据已经是主流做法，但有两个坑。一是&quot;模型味&quot;：生成的数据风格过于一致，训出来的小模型也带着这种腔调。二是&quot;错误传播&quot;：生成的答案本身有错，训进去就成了系统性偏差。<strong>结论：合成数据必须过人工筛选这道关。</strong></p>
 <div class="viz v3d" data-v3="ch15c"></div><h3>四、数据标注平台要有什么</h3>
 <p>如果要在一个公司里做数据标注，你需要一个平台。它至少要解决五件事：</p>
@@ -1660,7 +1663,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>所以微调之后<strong>必须</strong>：</p>
 <ol><li><strong>跑通用能力测试</strong>（保证没变傻）。</li><li><strong>跑安全测试</strong>（保证没有因为训练数据而放松了拒绝能力）。</li><li><strong>跑原有的业务回归测试集</strong>（保证没把别的地方弄坏）。</li><li><strong>小流量灰度</strong>，和原版本对比。</li></ol>
 <p><strong>&quot;微调之后要跑通用能力和安全回归&quot;这个点，说出来就能证明你做过真项目。</strong></p>
-<div class="viz v3d" data-v3="ch15"></div><div class="viz v3d" data-v3="ch15d"></div><h3>六、什么时候该微调：一张判断清单</h3>
+<h3>六、什么时候该微调：一张判断清单</h3>
 <p>只有当下面这些都成立时，才考虑微调：</p>
 <ul class="tasks"><li class="task" data-k="4888b94f94c1"><input type="checkbox"><span>已经试过提示词优化，效果到顶了。</span></li><li class="task" data-k="244394fc0ee7"><input type="checkbox"><span>已经用过 RAG，但问题是&quot;格式/风格/判断标准&quot;，不是&quot;知识&quot;。</span></li><li class="task" data-k="959f36c71bf1"><input type="checkbox"><span>有或能造出至少几百到上千条高质量样本。</span></li><li class="task" data-k="9fe71d5bfedb"><input type="checkbox"><span>有明确的评估集来验证效果。</span></li><li class="task" data-k="91a094969987"><input type="checkbox"><span>算过账：微调的收益（省下的 Token 成本 + 提升的效果）大于投入。</span></li><li class="task" data-k="8dd44f312a9d"><input type="checkbox"><span>有回滚方案。</span></li></ul>
 <p><strong>六条里缺三条以上，就不该微调。</strong> 这个清单本身就是面试答案。</p>
@@ -1673,7 +1676,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>（<strong>checkpoint = 训练过程中每隔一段自动存下的&quot;存档点&quot;</strong>，回滚就是从存档点重来，而不是从头训一遍）。 不要&quot;再练一会儿看看会不会自己回来&quot;—— 遗忘一般是不会自己回来的。</p>
 <p>想降低风险，有三个具体做法：<strong>用 LoRA 而不是全参微调</strong>（改动小、可撤销）、 <strong>把学习率调小</strong>、<strong>把通用数据按一定比例混进训练集</strong>（常见是 1:5，也就是 <strong>每 5 条专业样本掺 1 条通用样本</strong>，让模型一边学新任务、一边不忘老本行）。</p>
 <blockquote><p>面试话术：**&quot;微调不是只看新任务涨没涨，还要盯通用能力掉没掉 —— 两条线一起看。</p><p>我们会跑一个通用能力回归集，掉超过 5 分就回滚。&quot;**</p><p>这句话说明你真跑过微调，不是只背过概念。</p></blockquote>
-<h3>八、把真实数据拿去训练之前，先过三道关</h3>
+<div class="viz v3d" data-v3="ch15d"></div><h3>八、把真实数据拿去训练之前，先过三道关</h3>
 <p>这一节在面试里问得比想象中多，因为它能立刻分出&quot;在实验室练过&quot;和&quot;在企业里干过&quot;。</p>
 <ul><li><strong>授权</strong>：用户数据用于模型训练，通常要在协议里写明。不能因为&quot;反正日志里有&quot;就直接拿去训。</li><li><strong>脱敏</strong>：姓名、手机号、身份证、订单号要做替换或掩码，而且<strong>脱敏要在标注之前做</strong> ——</li></ul>
 <p>否则标注员先看到了原始信息，脱敏就白做了。</p>
@@ -1712,7 +1715,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c24">第 16 章　云原生部署：让服务在坏掉的时候还活着<a class="q" href="javascript:void 0" data-q="c24">#</a><button class="mark-read" data-c="c24">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>云原生解决的核心问题只有一个：<strong>当某个零件坏掉、流量暴涨、或者要更新版本时，用户还能正常使用。</strong></p>
-<div class="viz" data-viz="ch16"></div><h3>这一章解决什么问题</h3>
+<h3>这一章解决什么问题</h3>
 <p>面试官问部署，不是要考你会不会敲命令行。他问的是：<strong>你有没有&quot;系统会出故障&quot;这个意识。</strong></p>
 <p>一个只做过 demo 的人，脑子里没有&quot;故障&quot;这个词。而一个做过线上系统的人，开口就会说&quot;要限流、要降级、要能回滚&quot;。这一章就是把这种意识装进你脑子里。</p>
 <h3>一、先看最朴素的问题：换电脑就跑不起来</h3>
@@ -1743,10 +1746,10 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <ul><li><strong>怎么选</strong>：需要按内容分流就用七层，只要求快和稳就用四层。</li><li><strong>健康检查</strong>：定期探测后端，发现坏掉的自动摘除。</li></ul>
 <p>云上的产品名字你会经常看到：<strong>CLB / ELB</strong>（负载均衡）、<strong>NAT 网关</strong>（让内网机器访问外网而不暴露自己）、<strong>VPC</strong>（虚拟私有网络，把资源圈在一个隔离的网络里）。</p>
 <p>这些都是同一句话的不同实现：<strong>把流量管起来，把网络隔离好。</strong></p>
-<h3>六、高可用与容灾：区分两个词</h3>
+<div class="viz" data-viz="v16lb"></div><h3>六、高可用与容灾：区分两个词</h3>
 <p>这两个词经常被混用，你要能分清：</p>
 <table><thead><tr><th>概念</th><th>说的是什么</th><th>典型做法</th></tr></thead><tbody><tr><td>高可用（HA）</td><td>局部故障时<strong>不中断服务</strong></td><td>多副本、多可用区、自动故障转移</td></tr><tr><td>容灾（DR）</td><td>大范围灾难时<strong>能恢复服务</strong></td><td>跨地域备份、异地机房、定期演练</td></tr></tbody></table>
-<p><strong>高可用是&quot;不断&quot;，容灾是&quot;能活过来&quot;。</strong></p>
+<p><strong>高可用是&quot;不断&quot;，容灾是&quot;能活过来&quot;。</strong></p><div class="viz" data-viz="ch16"></div>
 <p><strong>还有一个必须说的机制：降级（Degradation）。</strong> 系统压力大或者依赖挂了的时候，主动关掉非核心功能，保住核心功能。比如：</p>
 <ul><li>推荐系统挂了，就退回返回热门榜单。</li><li>大模型超时了，就返回缓存的答案或者引导用户自助。</li><li>图片生成排队太长，就先只给文字结果。</li></ul>
 <p><strong>降级是&quot;承认自己会坏，并且提前准备好了坏的方案&quot;。这是非常成熟的意识。</strong></p>
@@ -1826,12 +1829,12 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c25">第 17 章　AI 研发效能：当写代码不再是瓶颈<a class="q" href="javascript:void 0" data-q="c25">#</a><button class="mark-read" data-c="c25">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>AI 让&quot;写代码&quot;变便宜了十倍，于是<strong>瓶颈自动转移到了&quot;审查、验证、对齐&quot;这三个环节</strong>。谁解决这三个环节，谁就能带团队。</p>
-<div class="viz" data-viz="ch17"></div><h3>这一章解决什么问题</h3>
+<h3>这一章解决什么问题</h3>
 <p>这一章是<strong>冲 Leader 岗、或者想在面试里显得&quot;有管理视角&quot;的关键内容</strong>。因为绝大多数候选人只会讲技术，讲不了组织。</p>
 <p>有一句被反复提起的话：&quot;AI 一天可以写一万行代码，那代码怎么审核？团队怎么配合？&quot;——这个问题问得很准。这一章给你完整的答案。</p>
 <h3>一、瓶颈是怎么转移的</h3>
 <p>先看一张对比：</p>
-<table><thead><tr><th>环节</th><th>传统研发</th><th>AI 辅助研发</th></tr></thead><tbody><tr><td>写代码</td><td>慢，是主要瓶颈</td><td>快，几乎不再是瓶颈</td></tr><tr><td>提需求 / 写规格</td><td>一句话口头交代</td><td><strong>变成瓶颈</strong>：规格不清楚，AI 就会写出错的东西</td></tr><tr><td>审查代码</td><td>人手看，但量小</td><td><strong>变成瓶颈</strong>：量大了几十倍，看不过来</td></tr><tr><td>验证正确性</td><td>靠测试和人工</td><td><strong>变成瓶颈</strong>：AI 写的代码&quot;看起来对&quot;的概率很高，实际上可能有隐蔽错误</td></tr><tr><td>部署运维</td><td>相对固定</td><td>变化不大</td></tr><tr><td>知识沉淀</td><td>靠口口相传</td><td><strong>变成瓶颈</strong>：新人（包括 AI）需要上下文才能干活</td></tr></tbody></table>
+<table><thead><tr><th>环节</th><th>传统研发</th><th>AI 辅助研发</th></tr></thead><tbody><tr><td>写代码</td><td>慢，是主要瓶颈</td><td>快，几乎不再是瓶颈</td></tr><tr><td>提需求 / 写规格</td><td>一句话口头交代</td><td><strong>变成瓶颈</strong>：规格不清楚，AI 就会写出错的东西</td></tr><tr><td>审查代码</td><td>人手看，但量小</td><td><strong>变成瓶颈</strong>：量大了几十倍，看不过来</td></tr><tr><td>验证正确性</td><td>靠测试和人工</td><td><strong>变成瓶颈</strong>：AI 写的代码&quot;看起来对&quot;的概率很高，实际上可能有隐蔽错误</td></tr><tr><td>部署运维</td><td>相对固定</td><td>变化不大</td></tr><tr><td>知识沉淀</td><td>靠口口相传</td><td><strong>变成瓶颈</strong>：新人（包括 AI）需要上下文才能干活</td></tr></tbody></table><div class="viz" data-viz="ch17"></div>
 <p><strong>所以 AI 研发效能的全部内容，就是一句话：把瓶颈从&quot;写&quot;转移到&quot;验证&quot;，并且让验证变得自动化。</strong></p>
 <div class="viz v3d" data-v3="ch17"></div><h3>二、五个真实的变化，以及对应的对策</h3>
 <p><strong>变化一：需求必须写清楚，否则返工无穷</strong></p>
@@ -1898,7 +1901,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c26">第 18 章　AI Infra 架构设计：从 1 个 Agent 到 100 个 Agent<a class="q" href="javascript:void 0" data-q="c26">#</a><button class="mark-read" data-c="c26">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>做一个 Agent 是手工作坊，做一百个 Agent 是工厂。<strong>AI Infra 就是那套工厂流水线：把每个 Agent 都要重复做一遍的事，抽出来做成公共设施。</strong></p>
-<div class="viz" data-viz="ch18"></div><h3>这一章解决什么问题</h3>
+<h3>这一章解决什么问题</h3>
 <p>把这一块说成&quot;对够到 Leader 岗很有帮助&quot;&quot;想薪资突破 30K 就靠它&quot;——这个判断是对的，因为：</p>
 <blockquote><p><strong>能搭一个 Agent 的人很多，能设计一套支撑一百个 Agent 的基础设施的人很少。</strong></p></blockquote>
 <p>这一章给你一套完整的分层框架。学完它，你在面试里聊架构时不会只能说&quot;我们用 LangChain 做了一个 RAG&quot;。</p>
@@ -1944,7 +1947,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>具体来说，一个新业务 Agent 的搭建应该是这样的：</p>
 <table><thead><tr><th>步骤</th><th>传统做法</th><th>有基础设施之后</th></tr></thead><tbody><tr><td>接模型</td><td>自己申请密钥、写对接代码</td><td>在模型网关上申请一个额度</td></tr><tr><td>做检索</td><td>自己搭向量库、调切块</td><td>接入知识中台，配数据源</td></tr><tr><td>接工具</td><td>自己写每个系统的对接</td><td>在 MCP 网关注册或复用已有工具</td></tr><tr><td>做评估</td><td>自己临时测</td><td>在评测平台建测试集</td></tr><tr><td>上线</td><td>自己搞部署</td><td>走发布的标准化流程</td></tr></tbody></table>
 <p><strong>结果是：原来要一个月的活，现在一周能出来。这就是基础设施的价值，也是你面试时最该强调的东西。</strong></p>
-<h3>六、一个可以直接讲的例子</h3>
+<div class="viz" data-viz="ch18"></div><h3>六、一个可以直接讲的例子</h3>
 <p>这段可以整段改成你自己的话：</p>
 <blockquote><p>&quot;我们当时有七个业务都要做 AI 能力，如果每个业务自己搭一套，会出现三个问题：成本算不清、效果没法统一评估、重复劳动特别多。所以我们先把模型网关建起来，所有调用统一走它，这样第一次有了按业务维度的成本统计和统一的降级策略。然后建了知识中台，把解析、切块、索引、检索、评测统一起来，业务方只需要配数据源和权限。最后是评测平台，每个业务有自己的测试集，每次改动自动跑回归。</p><p></p><p>效果是，后面新业务上线的时间从一个月左右压缩到一周多。而且因为所有调用都在网关里，我们能持续优化路由策略，整体模型成本下降了大概三成。&quot;</p></blockquote>
 <h3>七、共享设施的版本治理（上一节的反面）</h3>
@@ -1987,7 +1990,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c27">第 19 章　项目一：AI 数据中台<a class="q" href="javascript:void 0" data-q="c27">#</a><button class="mark-read" data-c="c27">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>数据中台解决的是<strong>&quot;AI 吃的粮从哪来、干不干净、谁来负责&quot;</strong>。所有上层 Agent 的效果上限，都由这一层决定。</p>
-<div class="viz" data-viz="ch19"></div><h3>一、为什么这个项目排第一个</h3>
+<h3>一、为什么这个项目排第一个</h3>
 <p>有一句被反复引用的话：&quot;数据质量决定大模型上限，未来企业之争就是数据之争。&quot;这句话不夸张，而且它有一个很实际的推论：</p>
 <blockquote><p><strong>在一个电商公司里，后面所有的 Agent（客服、运营、考核、素材）都要吃数据。数据源不统一、质量不可控，后面每一个项目都会重复踩坑。</strong></p></blockquote>
 <p>所以它在体系里是<strong>地基</strong>：先有它，后面七个项目才能成立。这也是&quot;体系&quot;和&quot;一堆散项目&quot;的根本区别。</p>
@@ -2029,7 +2032,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <table><thead><tr><th>维度</th><th>怎么算</th><th>常见阈值</th></tr></thead><tbody><tr><td>完整性</td><td>非空字段数 ÷ 应有字段数</td><td>关键字段 100%，非关键 ≥ 98%</td></tr><tr><td>准确性</td><td>抽样人工核对，一致的条数 ÷ 抽样条数</td><td>≥ 95%</td></tr><tr><td>一致性</td><td>同一实体在不同表里的属性相同的比例</td><td>≥ 99%</td></tr><tr><td>时效性</td><td>从数据产生到可用的延迟</td><td>按业务定，比如商品价格 ≤ 5 分钟</td></tr><tr><td>唯一性</td><td>去重后条数 ÷ 原始条数</td><td>≥ 99.9%（重复入库是很常见的事故）</td></tr></tbody></table>
 <p><strong>为什么要拆成五个维度</strong>：因为它们之间会互相打架。把延迟压到 1 分钟，准确性往往会掉 （来不及清洗）；为了唯一性做严格去重，时效性又会变差。所以<strong>不能只报一个笼统的分数</strong>， 而要每个维度单独设阈值，<strong>任一项低于阈值就拦在入库之前</strong>。</p>
 <blockquote><p>面试话术：**&quot;我们不报一个笼统的&#x27;数据质量分&#x27;，而是按完整性、准确性、一致性、时效性、</p><p>唯一性分别设阈值，任一项不达标就拦在入库前。因为这几个指标会互相挤 ——</p><p>压延迟就会掉准确性，所以必须分开管。&quot;**</p></blockquote>
-<h3>九、源头数据改了，检索层怎么跟上</h3>
+<div class="viz" data-viz="ch19"></div><h3>九、源头数据改了，检索层怎么跟上</h3>
 <p>面试官问数据中台，一定会追一句：&quot;那你这边数据更新之后，多久能被 Agent 检索到？&quot; 三种做法，代价依次递增，按字段的重要程度选：</p>
 <ul><li><strong>定时全量重建</strong>：每天或每周重跑一次索引。最简单，代价是有一段&quot;刚改的内容检索不到&quot;的窗口。</li><li><strong>增量更新</strong>：只对变化的数据重新切块、重新向量化，然后把旧向量删掉换新的。</li></ul>
 <p><strong>最容易踩的坑是要先删后加</strong> —— 只加不删，同一份内容会留下两份，检索时互相抢位置。</p>
@@ -2064,7 +2067,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c28">第 20 章　项目二：AI RTC 实时语音客服<a class="q" href="javascript:void 0" data-q="c28">#</a><button class="mark-read" data-c="c28">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>实时语音客服是<strong>把&quot;打字聊天&quot;的所有难点，加上&quot;实时&quot;和&quot;语音&quot;两个放大器</strong>。它是目前最有体感、最能体现工程能力的 AI 应用方向之一。</p>
-<div class="viz" data-viz="ch20"></div><h3>一、为什么这个项目值得做</h3>
+<h3>一、为什么这个项目值得做</h3>
 <p>把实时语音客服当成一个&quot;热门且新颖&quot;的方向——这个判断是对的。</p>
 <p>原因很简单：<strong>电话客服是每个电商公司都有的、成本极高的环节。</strong> 一个真人客服一天能接 100 通电话左右，而 AI 可以接一千通，而且不用排班、不会情绪化、不会离职。</p>
 <p><strong>面试里这个项目的价值在于：它能自然引出&quot;实时性&quot;这个大多数人不会碰的领域。</strong> 大部分候选人的项目都是&quot;用户打字、系统返回&quot;，而实时语音要处理延时、打断、噪声——这是完全不同的难度等级。</p>
@@ -2084,7 +2087,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>人和人打电话，从对方说完到你开始回应，正常间隔是 <strong>200 到 500 毫秒</strong>。超过 1 秒，人会觉得&quot;卡&quot;；超过 2 秒，人会觉得&quot;对方在敷衍&quot;或&quot;掉线了&quot;。</p>
 <p>所以你要做一个<strong>延迟预算</strong>，把这几百毫秒分给每一个环节：</p>
 <table><thead><tr><th>环节</th><th>典型耗时</th><th>说明</th></tr></thead><tbody><tr><td>网络传输</td><td>20-80 ms</td><td>用户到你服务器</td></tr><tr><td>语音识别（ASR）</td><td>100-300 ms</td><td>流式识别可以边听边出字</td></tr><tr><td>意图识别 + 检索</td><td>50-200 ms</td><td>可以做并行和缓存</td></tr><tr><td>大模型生成</td><td>首字 300-800 ms</td><td>这是最大的变量</td></tr><tr><td>语音合成（TTS）</td><td>首段 100-300 ms</td><td>流式合成可以边生成边播</td></tr></tbody></table>
-<p>先解释表里反复出现的&quot;首字&quot;：<strong>首字延迟 = 从发出请求到吐出第一个字的这段时间</strong> （语音合成同理，是&quot;第一个音节开始出声&quot;）。<strong>用户感受到的等待，是各环节首字延迟加起来的和</strong>， 不是各环节总耗时相加 —— 这就是&quot;流式&quot;能救命的原因。</p>
+<p>先解释表里反复出现的&quot;首字&quot;：<strong>首字延迟 = 从发出请求到吐出第一个字的这段时间</strong> （语音合成同理，是&quot;第一个音节开始出声&quot;）。<strong>用户感受到的等待，是各环节首字延迟加起来的和</strong>， 不是各环节总耗时相加 —— 这就是&quot;流式&quot;能救命的原因。</p><div class="viz" data-viz="ch20"></div>
 <p><strong>注意两个&quot;流式&quot;</strong>：ASR 要流式（用户还没说完就开始识别），TTS 也要流式（模型刚吐出几个字就开始合成语音）。<strong>只有全链路流式，才能把用户感受到的延迟压到可接受范围。</strong></p>
 <p><strong>这是本章最重要的一句话，也是面试里最能体现你做过这个项目的一句话：</strong></p>
 <blockquote><p><strong>&quot;实时语音的关键不是把每一步做快，而是把每一步做成流式，让它们重叠起来。用户感受到的延迟是各环节的&#x27;首字延迟&#x27;之和，不是&#x27;总耗时&#x27;之和。&quot;</strong></p></blockquote>
@@ -2146,7 +2149,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c29">第 21 章　项目三：自媒体运营 Agent<a class="q" href="javascript:void 0" data-q="c29">#</a><button class="mark-read" data-c="c29">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>内容运营 Agent 的本质是一条<strong>流水线</strong>：把&quot;想选题、写文案、配图、审核、发布、看数据&quot;这六步，从依赖灵感的手工活，变成可批量、可复现、可度量的产线。</p>
-<div class="viz" data-viz="ch21"></div><h3>一、业务痛点</h3>
+<h3>一、业务痛点</h3>
 <p>一个做服装的电商公司，日常要产出的内容大概有这些：</p>
 <table><thead><tr><th>内容类型</th><th>数量级</th><th>现状</th></tr></thead><tbody><tr><td>商品标题与卖点</td><td>每天几十到几百条</td><td>运营手动写，慢且风格不一</td></tr><tr><td>详情页文案</td><td>每个新品一套</td><td>同质化，抄来抄去</td></tr><tr><td>小红书 / 抖音笔记</td><td>每天几到几十条</td><td>依赖少数会写的人</td></tr><tr><td>直播话术</td><td>每场一套</td><td>靠经验，新人上手慢</td></tr><tr><td>主图与配图</td><td>每条内容配几张</td><td>找图、修图耗时</td></tr></tbody></table>
 <p>痛点集中在三处：<strong>产量不够、风格不统一、新人难上手</strong>。</p>
@@ -2162,7 +2165,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 5. 合规审核     广告法违禁词、平台规则、事实核对
       ↓
 6. 发布与回收   排期发布，回收数据，反哺下一轮选题</pre>
-<p><strong>这条流水线最重要的不是&quot;能生成&quot;，而是&quot;最后一步的回收&quot;。</strong></p>
+<p><strong>这条流水线最重要的不是&quot;能生成&quot;，而是&quot;最后一步的回收&quot;。</strong></p><div class="viz" data-viz="ch21"></div>
 <p>因为内容好不好，没有客观标准答案。<strong>唯一的判据是数据</strong>：点击率、完播率（把视频完整看完的人占多少， 短视频平台最看重这个）、点赞、收藏、转化。所以第 6 步必须存在，它才是让这套系统&quot;越用越好&quot;的原因。</p>
 <div class="viz v3d" data-v3="ch21"></div><h3>三、四个关键设计（面试重点）</h3>
 <p><strong>设计一：品牌调性（Brand Voice）要固化</strong></p>
@@ -2227,7 +2230,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c30">第 22 章　项目四：销售与员工考核 Agent<a class="q" href="javascript:void 0" data-q="c30">#</a><button class="mark-read" data-c="c30">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>这个项目的技术难度不算最高，但<strong>组织难度最高</strong>。因为你要解决的不是&quot;能不能打分&quot;，而是<strong>&quot;打出来的分，别人服不服&quot;</strong>。</p>
-<div class="viz" data-viz="ch22"></div><h3>一、业务痛点</h3>
+<h3>一、业务痛点</h3>
 <p>一个电商公司的销售和客服团队，考核现状通常是这样：</p>
 <table><thead><tr><th>现象</th><th>后果</th></tr></thead><tbody><tr><td>质检只抽 3% 到 5% 的通话或聊天记录</td><td>漏掉的问题远多于发现的</td></tr><tr><td>主管凭印象打分</td><td>员工觉得不公平</td></tr><tr><td>新人培训靠老带新</td><td>慢、不标准、成本高</td></tr><tr><td>复盘靠事后回忆</td><td>说不清具体哪里做得不好</td></tr><tr><td>好的话术散落在个人手里</td><td>无法沉淀成组织资产</td></tr></tbody></table>
 <p><strong>核心矛盾是：想管得更细，但人工成本不允许。</strong></p>
@@ -2239,7 +2242,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>评分卡是&quot;把模糊的评价变成可执行的标准&quot;。做法是把每一项拆成三件事：<strong>观察点、判断标准、分值</strong>。</p>
 <p>举个销售通话的例子（简化版）：</p>
 <table><thead><tr><th>维度</th><th>观察点</th><th>判断标准</th><th>分值</th></tr></thead><tbody><tr><td>开场</td><td>有没有自我介绍和来意说明</td><td>前 30 秒内完成</td><td>10</td></tr><tr><td>需求挖掘</td><td>有没有问客户的场景和预算</td><td>至少提出 2 个开放式问题</td><td>20</td></tr><tr><td>产品介绍</td><td>有没有结合客户需求讲卖点</td><td>卖点与客户提到的场景对应</td><td>20</td></tr><tr><td>异议处理</td><td>客户提出疑虑后的回应</td><td>不否定客户，给出替代方案</td><td>20</td></tr><tr><td>收尾</td><td>有没有明确下一步</td><td>约定具体时间或动作</td><td>20</td></tr><tr><td>合规</td><td>有没有违规承诺</td><td>出现一次违规承诺，这一通直接判不合格（不再逐项算分）</td><td>一票否决</td></tr></tbody></table>
-<p><strong>这张表的价值在于：它把一个模糊的&quot;这个人服务态度好不好&quot;，变成了五个可观察的行为。</strong></p>
+<p><strong>这张表的价值在于：它把一个模糊的&quot;这个人服务态度好不好&quot;，变成了五个可观察的行为。</strong></p><div class="viz" data-viz="ch22"></div>
 <p><strong>重要提醒：标准必须由业务专家定，不能由技术定。</strong> 技术负责让它可执行、可复现、可衡量。<strong>面试里说&quot;评分卡是业务专家和技术一起磨出来的&quot;，是专业表述。</strong></p>
 <div class="viz v3d" data-v3="ch22"></div><h3>四、三个必须解决的问题（面试重点）</h3>
 <p><strong>问题一：AI 打的分凭什么让人服</strong></p>
@@ -2286,7 +2289,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c31">第 23 章　项目五：素材中心<a class="q" href="javascript:void 0" data-q="c31">#</a><button class="mark-read" data-c="c31">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>素材中心是<strong>给&quot;图片、视频、文案&quot;这类非结构化资产建的图书馆</strong>：能存、能找、能管权限、能追责任、能自动打标。</p>
-<div class="viz" data-viz="ch23"></div><h3>一、业务痛点</h3>
+<h3>一、业务痛点</h3>
 <p>一个电商公司的素材现状，几乎必然是这样的：</p>
 <table><thead><tr><th>现象</th><th>后果</th></tr></thead><tbody><tr><td>素材散在个人电脑、群聊、网盘里</td><td>找不到，重复做</td></tr><tr><td>同一个模特图有十几个版本</td><td>分不清哪个是最终版</td></tr><tr><td>不知道某张图有没有授权</td><td>法务风险</td></tr><tr><td>过季的素材还在被使用</td><td>用户看到的和实际不符</td></tr><tr><td>素材错了不知道谁传的</td><td>无人担责</td></tr></tbody></table>
 <p><strong>核心矛盾是：素材越攒越多，但&quot;可用率&quot;越来越低。</strong></p>
@@ -2311,7 +2314,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <ul><li>每条素材有<strong>有效期</strong>，到期自动标记。</li><li>素材和商品/活动<strong>关联</strong>，商品下架时，相关素材自动标记为不可用。</li><li>使用过期素材时给出<strong>明确的警示</strong>，而不是静默允许。</li></ul>
 <p><strong>三、去重的两种</strong></p>
 <table><thead><tr><th>类型</th><th>说明</th><th>处理</th></tr></thead><tbody><tr><td>完全相同</td><td>同一个文件重复上传</td><td>内容指纹比对，直接拦截</td></tr><tr><td>近似相同</td><td>同一张图的不同裁剪、不同压缩</td><td>相似度检测，提示&quot;已有相似素材&quot;</td></tr></tbody></table>
-<p><strong>近似去重比精确去重难得多，但也重要得多</strong>——因为大部分冗余是&quot;同一张图的不同版本&quot;。</p>
+<p><strong>近似去重比精确去重难得多，但也重要得多</strong>——因为大部分冗余是&quot;同一张图的不同版本&quot;。</p><div class="viz" data-viz="ch23"></div>
 <p>（<strong>内容指纹 = 给文件内容算出来的一串特征值。</strong> 只要文件有一个字节不同，指纹就不同， 所以它能一秒判断&quot;这两个是不是同一个文件&quot; —— 精确去重靠的就是它。）</p>
 <div class="viz v3d" data-v3="ch23b"></div><h3>五、指标</h3>
 <table><thead><tr><th>指标</th><th>说明</th></tr></thead><tbody><tr><td>素材入库量 / 覆盖率</td><td>有多少素材进了中心</td></tr><tr><td>自动打标准确率</td><td>抽样人工校验</td></tr><tr><td>检索命中率</td><td>用户想找的能不能找到</td></tr><tr><td>素材复用率</td><td>一个素材被用于多少内容（复用率越高越省钱）</td></tr><tr><td>找素材耗时</td><td>从&quot;翻半小时&quot;到&quot;搜十秒&quot;</td></tr><tr><td>重复率 / 过期占用率</td><td>冗余和失效素材的比例</td></tr><tr><td>素材相关事故数</td><td>用错素材导致的问题次数</td></tr></tbody></table>
@@ -2348,7 +2351,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c32">第 24 章　项目六：Harness 与 Agent Loop（含自进化）<a class="q" href="javascript:void 0" data-q="c32">#</a><button class="mark-read" data-c="c32">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>这是七个项目里<strong>最值钱的一个</strong>。因为它不解决某一个业务问题，它解决的是&quot;<strong>怎么让 Agent 真的能把活干完，而且越干越好</strong>&quot;。</p>
-<div class="viz" data-viz="ch24"></div><h3>一、为什么它最值钱</h3>
+<h3>一、为什么它最值钱</h3>
 <p>面试官判断一个候选人是&quot;会用 AI 工具&quot;还是&quot;能造 AI 系统&quot;，看的往往就是这一块。</p>
 <p>因为其他项目（客服、内容、考核）本质上是&quot;把模型接进业务流程&quot;，而 Harness 项目是<strong>在造一个能自己干活的系统</strong>。后者需要你理解：</p>
 <ul><li>循环怎么控制</li><li>上下文怎么管理</li><li>失败怎么恢复</li><li>经验怎么沉淀</li></ul>
@@ -2370,7 +2373,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>在这个项目里，你要具体地说出你用了哪几招：</p>
 <table><thead><tr><th>招数</th><th>具体做法</th><th>解决什么</th></tr></thead><tbody><tr><td>裁剪</td><td>工具返回的大段文本只保留关键字段，原始内容存文件，需要时再读</td><td>防止上下文爆炸</td></tr><tr><td>摘要</td><td>超过 N 步之后，把早期步骤摘要成一段</td><td>保留脉络</td></tr><tr><td>外部化</td><td>把中间结论写进任务状态文件，而不是留在对话里</td><td>释放上下文，且可恢复</td></tr><tr><td>隔离</td><td>探索性任务派给子代理，只带回结论</td><td>保护主上下文</td></tr></tbody></table>
 <p><strong>特别要讲&quot;外部化&quot;这一招为什么好</strong>：因为 Agent 中途被打断之后，可以从状态文件恢复，而不用从头再来。<strong>这就是&quot;可恢复&quot;，是生产级 Agent 的标志。</strong></p>
-<h3>六、亮点三：自进化（把玄学变成三环闭环）</h3>
+<div class="viz" data-viz="ch24"></div><h3>六、亮点三：自进化（把玄学变成三环闭环）</h3>
 <p>&quot;自进化&quot;是这类文案里最想让你信、也讲得最玄的部分。我们把它做成可以验证的三个环节：</p>
 <p><strong>第一环：记忆沉淀</strong></p>
 <p>任务完成后，把&quot;这个任务是怎么做成的&quot;提炼成一条经验，存进经验库。</p>
@@ -2436,7 +2439,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c33">第 25 章　项目七：MCP 与 Agent 集群<a class="q" href="javascript:void 0" data-q="c33">#</a><button class="mark-read" data-c="c33">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>一个 Agent 靠能力，一百个 Agent 靠组织。</strong> Agent 集群要解决的是&quot;谁负责接待、谁负责干活、怎么分工、怎么不打架&quot;。</p>
-<div class="viz" data-viz="ch25"></div><h3>一、为什么需要集群</h3>
+<h3>一、为什么需要集群</h3>
 <p>先看一个真实的问题：当你有 20 个业务 Agent，用户和系统调用它们时会发生什么？</p>
 <table><thead><tr><th>问题</th><th>后果</th></tr></thead><tbody><tr><td>不知道有哪些 Agent、各自能干什么</td><td>重复建设，A 团队和 B 团队做了两个几乎一样的</td></tr><tr><td>没有统一入口</td><td>每个调用方都要知道所有 Agent 的地址</td></tr><tr><td>权限没统一</td><td>谁都能调所有 Agent，出问题查不到</td></tr><tr><td>Agent 之间互相调用没有规范</td><td>出现 A 调 B、B 调 C、C 调回 A 的死循环</td></tr><tr><td>成本没法归口</td><td>花了多少钱不知道算谁的</td></tr><tr><td>一个 Agent 挂了影响全局</td><td>没有隔离和降级</td></tr></tbody></table>
 <p><strong>这六个问题，就是&quot;Agent 集群&quot;要解决的全部内容。</strong></p>
@@ -2474,7 +2477,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 需要返回：状态、预计送达时间</pre>
 <p><strong>这个原则可以总结成一句话，面试里非常好用：</strong></p>
 <blockquote><p><strong>&quot;Agent 之间传递的是任务而不是对话。传任务、传结论、传必要字段，不传历史。历史是上下文负担，不是信息资产。&quot;</strong></p></blockquote>
-<h3>六、统一治理：MCP 网关在这里的角色</h3>
+<div class="viz" data-viz="ch25"></div><h3>六、统一治理：MCP 网关在这里的角色</h3>
 <p>第 13 章讲的 MCP 网关，在集群里是必需的基础设施。它在这里承担：</p>
 <ul><li><strong>统一注册</strong>：所有 Agent 可用的工具都在这里登记，有版本、有责任人。</li><li><strong>最小权限</strong>：每个 Agent 只能拿到它需要的工具。</li><li><strong>配额</strong>：每个 Agent、每个业务线有调用额度。</li><li><strong>审计</strong>：谁在什么时候调用了什么工具、传了什么参数。</li><li><strong>限流与熔断</strong>：防止一个 Agent 把下游系统打挂。</li></ul>
 <p><strong>&quot;工具一次登记，所有 Agent 都能用&quot;这件事的价值</strong>：新 Agent 上线时，不用重新对接一遍所有系统。这就是第 18 章讲的&quot;从 0.5 开始&quot;。</p>
@@ -2510,7 +2513,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c34">第 26 章　总装：把七个项目串成一个体系<a class="q" href="javascript:void 0" data-q="c34">#</a><button class="mark-read" data-c="c34">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>面试官真正想看的不是七个项目，而是&quot;这七个东西是怎么长在一起的&quot;。</strong> 这一章就是教你把它们串成一个故事。</p>
-<div class="viz" data-viz="ch26"></div><h3>一、为什么&quot;体系&quot;比&quot;数量&quot;重要</h3>
+<h3>一、为什么&quot;体系&quot;比&quot;数量&quot;重要</h3>
 <p>先看两种简历：</p>
 <p><strong>A 版本</strong>：做过金融问答机器人、做过医疗知识库、做过教育答疑系统。</p>
 <p>面试官的反应：这是三个练习项目，而且是三个不同行业的，说明他没有在真实业务里深耕过。</p>
@@ -2541,7 +2544,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 │  容器 / 引擎 │ 负载均衡 │ 网关 │ 监控告警 │ 密钥管理        │
 └───────────────────────────────────────────────────────────┘</pre>
 <p><strong>这就是你面试时可以画出来的那张图。</strong> 画的时候，一边画一边说每一层&quot;解决什么问题&quot;，五分钟讲完。</p>
-<h3>三、七个项目的依赖关系（这是&quot;体系&quot;的证据）</h3>
+<div class="viz" data-viz="ch26"></div><h3>三、七个项目的依赖关系（这是&quot;体系&quot;的证据）</h3>
 <table><thead><tr><th>项目</th><th>依赖谁</th><th>被谁依赖</th></tr></thead><tbody><tr><td>数据中台</td><td>无（地基）</td><td>所有上层</td></tr><tr><td>素材中心</td><td>数据中台</td><td>内容运营 Agent</td></tr><tr><td>客服 Agent（含语音）</td><td>数据中台、知识检索</td><td>——</td></tr><tr><td>内容运营 Agent</td><td>素材中心、数据中台</td><td>素材中心（回流优质内容）</td></tr><tr><td>考核 Agent</td><td>数据中台、客服数据</td><td>——</td></tr><tr><td>Harness</td><td>模型网关、工具网关</td><td>所有业务 Agent</td></tr><tr><td>Agent 集群</td><td>Harness、MCP 网关</td><td>所有业务 Agent</td></tr><tr><td>AI Infra</td><td>全部</td><td>全部</td></tr></tbody></table>
 <p><strong>注意&quot;内容 Agent 到素材中心&quot;这条反向箭头。</strong> 这种<strong>双向依赖</strong>是体系成熟的标志：上层产出的东西会回流到底层，让底层也更丰富。</p>
 <p><strong>面试里指出这条回路，会让面试官印象深刻</strong>——因为大部分人只会说&quot;上层依赖下层&quot;，想不到反向回流。</p>
@@ -2584,7 +2587,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c35">第 27 章　简历：不是编出来的，是排出来的<a class="q" href="javascript:void 0" data-q="c35">#</a><button class="mark-read" data-c="c35">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>简历的作用只有一个：<strong>让面试官在 20 秒内产生&quot;这个人可能行，值得聊一聊&quot;的判断。</strong> 它不是自传，是广告。</p>
-<div class="viz" data-viz="ch27"></div><h3>一、先说三条铁律</h3>
+<h3>一、先说三条铁律</h3>
 <p><strong>铁律一：简历是&quot;被扫&quot;的，不是&quot;被读&quot;的。</strong></p>
 <p>招聘方一天看几十上百份简历，第一遍通常十几秒。所以：<strong>每一行的开头几个字最重要，因为那是他唯一可能看到的内容。</strong></p>
 <p><strong>铁律二：面试官只对&quot;你能干什么&quot;感兴趣，不对&quot;你学过什么&quot;感兴趣。</strong></p>
@@ -2613,7 +2616,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>对比一下：</p>
 <table><thead><tr><th>弱的写法</th><th>强的写法</th></tr></thead><tbody><tr><td>负责 RAG 系统的搭建</td><td>搭建商品知识问答的 RAG 链路，采用向量 + 关键词混合召回加重排，检索命中率从 68% 提升到 84%</td></tr><tr><td>使用 LangGraph 做编排</td><td>用图编排实现带分支和循环的客服流程，支持工具失败自动重试与中断恢复，任务成功率提升到 91%</td></tr><tr><td>优化了提示词</td><td>重构系统提示并建立 120 条回归测试集，改动可自动验证，格式错误率从 5% 降到 0.3%</td></tr><tr><td>参与数据治理</td><td>统一 3 个系统 40 万条商品数据的命名口径，消除 8% 的跨系统不一致，下游 Agent 检索准确率提升 16 个百分点</td></tr></tbody></table>
 <p><strong>看出差别了吗？</strong> 强的写法里有：具体方法、具体数字、具体范围。<strong>弱写法里只有&quot;我参与过&quot;。</strong></p>
-<h3>五、&quot;17 份参考模板&quot;的正确用法</h3>
+<div class="viz" data-viz="ch27"></div><h3>五、&quot;17 份参考模板&quot;的正确用法</h3>
 <p>很多简历模板包会说自己有&quot;17 份参考模板&quot;。这里给你一句实话：</p>
 <blockquote><p><strong>模板的价值不在于&quot;抄内容&quot;，而在于&quot;拆结构&quot;。</strong></p></blockquote>
 <p>同一份模板，抄内容的人写出来千篇一律，面试官一眼看出是套的；拆结构的人能写出自己的东西。</p>
@@ -2651,7 +2654,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c36">第 28 章　&quot;项目放大&quot;的正确做法：升维表达，而不是谎报数字<a class="q" href="javascript:void 0" data-q="c36">#</a><button class="mark-read" data-c="c36">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>你要放大的不是数字，是视野。</strong> 面试官真正想听的是&quot;你想过更大的规模会怎样&quot;，而不是&quot;你曾经有过更大的规模&quot;。</p>
-<div class="viz" data-viz="ch28"></div><h3>一、先处理招生文案里那个危险的建议</h3>
+<h3>一、先处理招生文案里那个危险的建议</h3>
 <p>那份文案是这么说的：</p>
 <blockquote><p>&quot;很多 Java 去面试，真实公司可能用户只有 1000，面试官问你搞过高并发吗？你肯定不能说没搞过，得说公司有 10 万用户……所以要学会把自己的项目放大。&quot;</p></blockquote>
 <p><strong>我必须直白地告诉你这段话的问题。</strong></p>
@@ -2677,7 +2680,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>这一招最高级：</p>
 <blockquote><p>&quot;我们没有做高并发那套东西。因为我们的用户量级下，加机器就够了，上分布式和复杂的缓存一致性方案会让维护成本远超收益。我当时的判断是：把工程复杂度留到真正需要的时候再还。&quot;</p></blockquote>
 <p><strong>&quot;我们故意没做&quot;这五个字，是资深工程师的语言。</strong> 因为它体现了&quot;按需设计&quot;的判断——这恰恰是面试官最想看到的成熟度。</p>
-<h3>四、四类常见&quot;放大&quot;问题的升维答法</h3>
+<div class="viz" data-viz="ch28"></div><h3>四、四类常见&quot;放大&quot;问题的升维答法</h3>
 <table><thead><tr><th>面试官的问题</th><th>危险答法</th><th>升维答法</th></tr></thead><tbody><tr><td>&quot;你们系统多大？&quot;</td><td>编大数字</td><td>说真实量级 + 说扩展路径</td></tr><tr><td>&quot;搞过高并发吗？&quot;</td><td>说有，然后编</td><td>说没做过，但说清十倍流量你会怎么处理</td></tr><tr><td>&quot;怎么保证可用性？&quot;</td><td>罗列名词</td><td>说你们真实做了哪几件，以及为什么只做这几件</td></tr><tr><td>&quot;用过什么大数据量？&quot;</td><td>夸大</td><td>说真实规模 + 说规模上去后瓶颈在哪</td></tr></tbody></table>
 <h3>五、串联：把七个项目讲成一个故事</h3>
 <p>第 26 章已经讲过三阶段叙事。这里补充<strong>串联的三个技巧</strong>：</p>
@@ -2714,14 +2717,14 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>问题驱动叙事</strong>｜按业务问题的发展顺序讲述项目。</p>
 <p><strong>留钩子</strong>｜主动抛出一个可被追问的点，引导面试方向。</p>
 <div class="viz" data-fc="28"></div>
-<h2 id="c37">第 29 章　高频面试题全景：60 题的 30 秒答题骨架<a class="q" href="javascript:void 0" data-q="c37">#</a><button class="mark-read" data-c="c37">标记已读</button></h2>
+<h2 id="c37">第 29 章　高频面试题全景：74 题的 30 秒答题骨架<a class="q" href="javascript:void 0" data-q="c37">#</a><button class="mark-read" data-c="c37">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>面试不是知识竞赛，是<strong>&quot;在有限时间里让对方相信你能干活&quot;</strong>。所以每一题你需要的不是完整答案，是一个<strong>能在 30 秒内站住脚的骨架</strong>，剩下的靠追问展开。</p>
-<div class="viz" data-viz="ch29"></div><h3>一、先记住答题的通用骨架</h3>
+<h3>一、先记住答题的通用骨架</h3>
 <p>任何一道题，都按这个顺序说：</p>
 <blockquote><p><strong>结论（一句话）→ 原因（为什么）→ 做法（怎么做）→ 边界（什么情况下不适用）</strong></p></blockquote>
 <p>最后那个&quot;边界&quot;是很多人缺的一环，也是最能显水平的一环。</p>
-<h3>二、A 组：定位与自我介绍</h3>
+<div class="viz" data-viz="ch29"></div><h3>二、A 组：定位与自我介绍</h3>
 <table><thead><tr><th>题</th><th>30 秒答题骨架</th></tr></thead><tbody><tr><td>自我介绍</td><td>一句话定位 + 三个阶段的项目演进 + 一块最擅长的能力。不要背履历</td></tr><tr><td>你为什么转做 AI</td><td>说清&quot;我原来做什么 → 我看到了什么变化 → 我已经做了什么准备&quot;。重点在&quot;已经做了什么&quot;</td></tr><tr><td>你觉得自己最大的优势</td><td>说一个<strong>可验证</strong>的优势，比如&quot;我擅长把模糊需求拆成可验收的标准&quot;，并给一个例子</td></tr></tbody></table>
 <h3>三、B 组：大模型原理</h3>
 <table><thead><tr><th>题</th><th>30 秒答题骨架</th></tr></thead><tbody><tr><td>大模型到底在做什么</td><td>根据上文预测下一个 Token，规模足够大后涌现出理解和推理能力</td></tr><tr><td>讲一下注意力机制</td><td>每个词拿着自己的查询去和所有词的标签算相关度，按相关度融合内容。多头是分工看不同关系</td></tr><tr><td>训练分几个阶段</td><td>预训练学语言知识、SFT 学听指令、对齐学符合偏好。这三个阶段决定了工程上的取舍</td></tr><tr><td>为什么会有幻觉</td><td>知识缺失、知识过时、训练目标是&quot;像样&quot;而不是&quot;真实&quot;、上下文冲突。不可能消除，只能管理</td></tr><tr><td>什么是上下文窗口</td><td>模型一次能看见的 Token 上限。长上下文有三个代价：KV Cache 贵、注意力慢、注意力稀释</td></tr><tr><td>为什么长上下文贵</td><td>主要是 KV Cache 随长度线性增长，挤压并发；不只是计算量</td></tr><tr><td>温度是干什么的</td><td>控制采样随机性。抽取类任务用 0，创意类调高</td></tr><tr><td>参数量和激活参数量</td><td>总参数决定知识容量，激活参数决定每次计算量。MoE 就是总参数大、激活小</td></tr></tbody></table>
@@ -2746,7 +2749,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h3>十二、K 组：行为与协作</h3>
 <table><thead><tr><th>题</th><th>答题抓手</th></tr></thead><tbody><tr><td>讲一次你和别人意见不一致</td><td>说清分歧点、你的判断依据、最后怎么收敛。<strong>不要讲成你赢了</strong></td></tr><tr><td>讲一次你踩过的坑</td><td>选一个技术债或设计失误，重点讲你怎么发现、怎么补救、学到了什么</td></tr><tr><td>项目时间不够怎么办</td><td>说清你怎么排优先级：先保住核心链路可用，砍掉锦上添花的部分</td></tr><tr><td>怎么和不懂技术的业务方对接</td><td>把技术指标翻译成业务语言（&quot;检索命中率&quot;翻译成&quot;用户问的问题能不能找到答案&quot;）</td></tr><tr><td>你怎么学新技术</td><td>说你的方法：先搭最小可用、再验证边界、再读原理。<strong>别只说&quot;我经常看文章&quot;</strong></td></tr></tbody></table>
 <h3>十三、动手体验</h3>
-<ol><li><strong>把上面 60 题抄成一张表格</strong>，右边留出空白，凭记忆写出你的 30 秒答案。写不出来的标记出来。</li><li><strong>把标记出来的题按章节回去复习</strong>，这是最高效的复习方式。</li><li><strong>每道题对着手机录音说 30 秒</strong>，回听检查有没有超时、有没有含糊的词。</li><li><strong>找一个人随机抽查</strong>，模拟真实压力。</li></ol>
+<ol><li><strong>把上面 74 题抄成一张表格</strong>，右边留出空白，凭记忆写出你的 30 秒答案。写不出来的标记出来。</li><li><strong>把标记出来的题按章节回去复习</strong>，这是最高效的复习方式。</li><li><strong>每道题对着手机录音说 30 秒</strong>，回听检查有没有超时、有没有含糊的词。</li><li><strong>找一个人随机抽查</strong>，模拟真实压力。</li></ol>
 <h3>自测题</h3>
 <p>这里的&quot;自测题&quot;就是你刚才那张表。<strong>如果你能不看资料说出 50 题以上的骨架，你的技术面基本就稳了。</strong></p>
 <h3>本章术语卡</h3>
@@ -2758,10 +2761,10 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c38">第 30 章　面试前准备与实战沙盘<a class="q" href="javascript:void 0" data-q="c38">#</a><button class="mark-read" data-c="c38">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>面试是一场可以排练的表演。</strong> 内容你已经有了，这一章解决的是&quot;怎么在 45 分钟里稳定地拿出来&quot;。</p>
-<div class="viz" data-viz="ch30"></div><h3>一、面试前 7 天清单</h3>
-<table><thead><tr><th>天</th><th>做什么</th><th>完成标准</th></tr></thead><tbody><tr><td>D-7</td><td>背 60 题骨架，标记不会的</td><td>标记出不超过 15 题</td></tr><tr><td>D-6</td><td>不会的题回章节复习</td><td>再标记后不超过 5 题</td></tr><tr><td>D-5</td><td>自我介绍 1 分钟版、3 分钟版各录音 3 遍</td><td>不卡壳、不看稿</td></tr><tr><td>D-4</td><td>三个&quot;推演答案&quot;写出来（流量涨十倍、数据涨百倍、跨地域）</td><td>每条能说 40 秒</td></tr><tr><td>D-3</td><td>手绘体系图 3 遍</td><td>不用看图能画出来</td></tr><tr><td>D-2</td><td>全流程模拟面试 1 次（找人扮演面试官）</td><td>全程录下来</td></tr><tr><td>D-1</td><td>只看速查卡和负面清单，早睡</td><td>不学新东西</td></tr></tbody></table>
+<h3>一、面试前 7 天清单</h3>
+<table><thead><tr><th>天</th><th>做什么</th><th>完成标准</th></tr></thead><tbody><tr><td>D-7</td><td>背 74 题骨架，标记不会的</td><td>标记出不超过 15 题</td></tr><tr><td>D-6</td><td>不会的题回章节复习</td><td>再标记后不超过 5 题</td></tr><tr><td>D-5</td><td>自我介绍 1 分钟版、3 分钟版各录音 3 遍</td><td>不卡壳、不看稿</td></tr><tr><td>D-4</td><td>三个&quot;推演答案&quot;写出来（流量涨十倍、数据涨百倍、跨地域）</td><td>每条能说 40 秒</td></tr><tr><td>D-3</td><td>手绘体系图 3 遍</td><td>不用看图能画出来</td></tr><tr><td>D-2</td><td>全流程模拟面试 1 次（找人扮演面试官）</td><td>全程录下来</td></tr><tr><td>D-1</td><td>只看速查卡和负面清单，早睡</td><td>不学新东西</td></tr></tbody></table>
 <p><strong>注意 D-1：不要学新东西。</strong> 面试前一天学的东西，第二天几乎用不上，但会让你原本会的变得不熟。<strong>D-1 只做两件事：过速查卡、睡好。</strong></p>
-<h3>二、自我介绍的两种版本</h3>
+<div class="viz" data-viz="ch30"></div><h3>二、自我介绍的两种版本</h3>
 <p><strong>1 分钟版（用于 HR 面、开场）</strong></p>
 <blockquote><p>&quot;我是做 AI 应用方向的，主要做两件事：一是把大模型能力落地到业务里，比如知识问答、内容生成、流程自动化；二是搭支撑这些应用的公共能力，比如检索服务和模型网关。我原来做的是运营数据相关的工作，转过来的过程是从一个具体的客服问答场景切入，然后逐步把数据治理、内容生成、内部考核这些模块都做起来，最后沉淀成一套能复用的体系。我最擅长的部分是把一个模糊的业务需求，拆成能验收的 AI 方案，并且能用数据说明它到底有没有变好。&quot;</p></blockquote>
 <p><strong>3 分钟版（用于业务面试）</strong></p>
@@ -2821,14 +2824,14 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c39">第 31 章　B 端 AI 工作台架构解析<a class="q" href="javascript:void 0" data-q="c39">#</a><button class="mark-read" data-c="c39">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>C 端 AI 产品拼&quot;体验&quot;，B 端 AI 工作台拼&quot;能不能接进企业、能不能被管住、能不能被算清账&quot;。</strong> 这就是两者架构上所有差异的源头。</p>
-<div class="viz" data-viz="ch31"></div><h3>一、什么是&quot;AI 工作台&quot;</h3>
+<h3>一、什么是&quot;AI 工作台&quot;</h3>
 <p>它不是聊天窗口，而是<strong>企业里所有人用 AI 干活的统一入口</strong>：查资料、写文档、跑流程、做分析、调系统，都在一个地方。</p>
 <p>为什么它比&quot;给员工开个 ChatGPT 账号&quot;复杂得多？因为企业有三件聊天产品没有的诉求：</p>
 <ol><li><strong>不能把公司数据随便发出去。</strong></li><li><strong>要知道谁用了什么、能看什么。</strong></li><li><strong>要能算清这笔投入值不值。</strong></li></ol>
 <h3>二、五个架构差异（面试重点）</h3>
 <table><thead><tr><th>维度</th><th>C 端聊天产品</th><th>B 端 AI 工作台</th></tr></thead><tbody><tr><td>数据</td><td>单一用户，私密即可</td><td>多租户、多部门、多角色，权限必须分层</td></tr><tr><td>接入</td><td>不需要接外部系统</td><td>必须接进企业已有的系统（OA、CRM、ERP、工单）</td></tr><tr><td>流程</td><td>一问一答</td><td>要能编排多步流程，并且有审批和人工节点</td></tr><tr><td>合规</td><td>内容审核</td><td>全量审计、数据不出域、可导出报表</td></tr><tr><td>交付</td><td>一个云服务</td><td>支持私有化部署、专有云、SaaS 多种形态</td></tr></tbody></table>
 <p><strong>这五条里，真正的技术门槛是第一条和第二条。</strong></p>
-<h3>三、门槛一：多租户与权限</h3>
+<div class="viz" data-viz="ch31"></div><h3>三、门槛一：多租户与权限</h3>
 <p>这是 B 端产品最容易做砸的地方。要回答的问题是：</p>
 <blockquote><p><strong>同一个问题，不同的人问，答案应该不同。</strong></p></blockquote>
 <p>比如&quot;我们今年的销售目标是多少&quot;，销售总监能看到，普通销售不行。</p>
@@ -2876,7 +2879,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h2 id="c40">第 32 章　CEO 视角：一笔 AI 生意是怎么算账的<a class="q" href="javascript:void 0" data-q="c40">#</a><button class="mark-read" data-c="c40">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>技术方案回答&quot;能不能做&quot;，商业方案回答&quot;值不值得做&quot;。</strong> 能同时回答这两个问题的人，才配谈&quot;负责人&quot;这三个字。</p>
-<div class="viz" data-viz="ch32"></div><h3>一、为什么你需要会算这笔账</h3>
+<h3>一、为什么你需要会算这笔账</h3>
 <p>&quot;Agent 工程师本身就是半个产品经理&quot;——这个判断是对的，原因很实际：</p>
 <blockquote><p><strong>你的技术方案最终要有人付钱。</strong> 如果你说不出&quot;这个方案能帮客户省多少钱&quot;或&quot;能帮公司多赚多少钱&quot;，你的方案就只能在技术评审里赢，过不了预算那一关。</p></blockquote>
 <p>而在面试里，尤其是面 Leader 岗、产品岗、或者和业务负责人对话时，<strong>能不能算清一笔账，是判断你是&quot;工程师&quot;还是&quot;负责人&quot;的分水岭。</strong></p>
@@ -2904,7 +2907,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>注意最后一栏</strong>。客户买的不是&quot;一个 RAG 系统&quot;，是&quot;一年省下 59 万&quot;。</p>
 <p><strong>面试里的杀手句子</strong>：</p>
 <blockquote><p>&quot;我在提方案的时候，习惯先算这笔账。因为如果算不出这笔账，说明这个方案要么价值不够，要么我还没想清楚它对业务意味着什么。&quot;</p></blockquote>
-<h3>七、第五件事：交付为什么这么难</h3>
+<div class="viz" data-viz="ch32"></div><h3>七、第五件事：交付为什么这么难</h3>
 <p>这是 B 端 AI 项目最大的坑，也是最能体现你懂业务的地方：</p>
 <table><thead><tr><th>难在哪里</th><th>具体表现</th><th>对策</th></tr></thead><tbody><tr><td>数据准备比想象中重</td><td>客户的文档乱七八糟、系统没有接口</td><td>把数据准备单独立项、明确工作量</td></tr><tr><td>期望管理</td><td>客户以为 AI 能解决一切</td><td>签合同前明确能力边界和效果指标</td></tr><tr><td>流程改造</td><td>AI 能用，但流程不改，没人用</td><td>把流程改造纳入项目范围</td></tr><tr><td>效果验收标准不清</td><td>客户说&quot;不够准&quot;，但你不知道标准</td><td>项目开始就约定测试集和验收指标</td></tr><tr><td>组织阻力</td><td>有人担心被替代</td><td>定位成辅助工具，先做增量价值</td></tr></tbody></table>
 <p><strong>第三条&quot;流程不改就没人用&quot;是最核心的一条。</strong> AI 项目失败最典型的原因不是技术不行，而是<strong>上线了但没人用</strong>——因为老流程还在，用 AI 反而多了一步。</p>
@@ -2942,23 +2945,23 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h3>一句话结论</h3>
 <p><strong>90 天，每天 4 小时有效学习，足够一个非科班的人走到&quot;能聊、能讲、能过技术面&quot;的水平。</strong> 前提是：按顺序、有验收、不追求学完才投。</p>
 <p>（<strong>先说清一个口径</strong>：这里的&quot;90 天&quot;是<strong>底线</strong>，指最短需要多少天；按一、里的三种起点不同， 实际周期是 6 到 16 周。本章的周计划表按较稳的 B 类起点写到第 16 周，里程碑写到第 18 周 —— 多出来的两周是<strong>投递和面试本身</strong>要占用的时间，不是让你再学两周。）</p>
-<div class="viz" data-viz="ch33"></div><h3>一、先说三种不同的起点</h3>
+<h3>一、先说三种不同的起点</h3>
 <p>不要照搬别人的计划，先判断你属于哪一类：</p>
 <table><thead><tr><th>起点</th><th>特征</th><th>需要补的重点</th><th>预估周期</th></tr></thead><tbody><tr><td>A：有技术背景</td><td>会编程、做过系统</td><td>补大模型原理、RAG、Agent 概念</td><td>6 到 8 周</td></tr><tr><td>B：有业务背景</td><td>做过运营、产品、客服、销售</td><td>补原理与工程概念，业务经验是优势</td><td>10 到 12 周</td></tr><tr><td>C：完全零基础</td><td>既不懂技术也没做过相关业务</td><td>先补第 1 到 6 章，其余按需</td><td>12 到 16 周</td></tr></tbody></table>
 <p><strong>关键提醒</strong>：<strong>B 类起点的人往往是最容易被低估的一类。</strong> 因为你有业务理解力，而这一行最缺的恰恰是&quot;能听懂业务、能算清账&quot;的人。<strong>不要因为不会写代码就觉得自己不行。</strong></p>
 <h3>二、90 天周计划（以 B 类起点为例）</h3>
-<table><thead><tr><th>周</th><th>主题</th><th>本周产出（验收）</th></tr></thead><tbody><tr><td>第 1 周</td><td>Python 够用 + 大模型原理（上）</td><td>跑通一次 API 调用；能向外行讲清注意力机制</td></tr><tr><td>第 2 周</td><td>大模型原理（下）+ API（上、下）</td><td>能解释幻觉四类成因；能说清工具调用三步舞</td></tr><tr><td>第 3 周</td><td>提示词与上下文工程 + Embedding</td><td>写出一个稳定输出 JSON 的提示词；能解释余弦相似度</td></tr><tr><td>第 4 周</td><td>RAG 全链路 + 评估</td><td>搭一个最小 RAG，建 20 条测试集</td></tr><tr><td>第 5 周</td><td>向量数据库 + Graph RAG</td><td>能说清 HNSW 与 IVF 的取舍；能举出 Graph RAG 的适用问题</td></tr><tr><td>第 6 周</td><td>LangChain / LangGraph + MCP + Skills</td><td>画出一个带分支和循环的流程图</td></tr><tr><td>第 7 周</td><td>Harness 与 Agent Loop + Claude Code 原理</td><td>手写一个五步循环 + 四道退出闸门</td></tr><tr><td>第 8 周</td><td>数据标注与微调 + 云原生部署</td><td>做 20 条训练样本；画一张六层架构图</td></tr><tr><td>第 9 周</td><td>AI 研发效能 + AI Infra</td><td>写一份项目说明文件；画出六层基建图</td></tr><tr><td>第 10 周</td><td>项目篇（第一轮，通读 + 画图）</td><td>七个项目各一张图</td></tr><tr><td>第 11 周</td><td>项目篇（第二轮，写成自己的版本）</td><td>每个项目 300 字讲法 + 3 个技术点 + 1 个数字</td></tr><tr><td>第 12 周</td><td>面试力：简历</td><td>简历初稿完成，每个条目能撑三层追问</td></tr><tr><td>第 13 周</td><td>面试力：60 题 + 自我介绍</td><td>60 题中能答 45 题以上</td></tr><tr><td>第 14 周</td><td>模拟面试 + 复盘</td><td>完成 3 次模拟，写下改进项</td></tr><tr><td>第 15 周</td><td>投递（开始）</td><td>投出 30 份，进入面试流程</td></tr><tr><td>第 16 周</td><td>面试 + 每场复盘修正</td><td>每场面试后填复盘表</td></tr></tbody></table>
+<table><thead><tr><th>周</th><th>主题</th><th>本周产出（验收）</th></tr></thead><tbody><tr><td>第 1 周</td><td>Python 够用 + 大模型原理（上）</td><td>跑通一次 API 调用；能向外行讲清注意力机制</td></tr><tr><td>第 2 周</td><td>大模型原理（下）+ API（上、下）</td><td>能解释幻觉四类成因；能说清工具调用三步舞</td></tr><tr><td>第 3 周</td><td>提示词与上下文工程 + Embedding</td><td>写出一个稳定输出 JSON 的提示词；能解释余弦相似度</td></tr><tr><td>第 4 周</td><td>RAG 全链路 + 评估</td><td>搭一个最小 RAG，建 20 条测试集</td></tr><tr><td>第 5 周</td><td>向量数据库 + Graph RAG</td><td>能说清 HNSW 与 IVF 的取舍；能举出 Graph RAG 的适用问题</td></tr><tr><td>第 6 周</td><td>LangChain / LangGraph + MCP + Skills</td><td>画出一个带分支和循环的流程图</td></tr><tr><td>第 7 周</td><td>Harness 与 Agent Loop + Claude Code 原理</td><td>手写一个五步循环 + 四道退出闸门</td></tr><tr><td>第 8 周</td><td>数据标注与微调 + 云原生部署</td><td>做 20 条训练样本；画一张六层架构图</td></tr><tr><td>第 9 周</td><td>AI 研发效能 + AI Infra</td><td>写一份项目说明文件；画出六层基建图</td></tr><tr><td>第 10 周</td><td>项目篇（第一轮，通读 + 画图）</td><td>七个项目各一张图</td></tr><tr><td>第 11 周</td><td>项目篇（第二轮，写成自己的版本）</td><td>每个项目 300 字讲法 + 3 个技术点 + 1 个数字</td></tr><tr><td>第 12 周</td><td>面试力：简历</td><td>简历初稿完成，每个条目能撑三层追问</td></tr><tr><td>第 13 周</td><td>面试力：74 题 + 自我介绍</td><td>74 题中能答 55 题以上</td></tr><tr><td>第 14 周</td><td>模拟面试 + 复盘</td><td>完成 3 次模拟，写下改进项</td></tr><tr><td>第 15 周</td><td>投递（开始）</td><td>投出 30 份，进入面试流程</td></tr><tr><td>第 16 周</td><td>面试 + 每场复盘修正</td><td>每场面试后填复盘表</td></tr></tbody></table>
 <p><strong>注意第 15 周才开始集中投递。</strong> 但<strong>第 12 周就可以开始零星投递</strong>，目的是拿真实面试当作练习——<strong>前几场面试必然是练手，越早开始越好。</strong></p>
 <h3>三、每天的时间怎么分</h3>
 <p>每天 4 小时（这是可持续的强度，不要一上来就 12 小时）：</p>
 <table><thead><tr><th>时长</th><th>做什么</th><th>说明</th></tr></thead><tbody><tr><td>60 分钟</td><td>读新内容</td><td>一章的一节</td></tr><tr><td>60 分钟</td><td>动手</td><td>跟着&quot;动手体验&quot;做</td></tr><tr><td>60 分钟</td><td>写笔记 + 复述</td><td>合上书，写 200 字，录音讲 2 分钟</td></tr><tr><td>30 分钟</td><td>复习昨天</td><td>只看笔记，做一次复述</td></tr><tr><td>30 分钟</td><td>术语卡</td><td>随机抽 10 个，口述解释</td></tr></tbody></table>
 <p><strong>最重要的是&quot;复述&quot;那 60 分钟。</strong> 如果你只读不写不说，三个月后你会发现什么都记不住——<strong>因为读是输入，只有说和写才是记忆。</strong></p>
-<h3>四、怎么判断&quot;这一周过关了&quot;</h3>
+<div class="viz" data-viz="ch33"></div><h3>四、怎么判断&quot;这一周过关了&quot;</h3>
 <p>每一周结束，做这个检查（<strong>任何一项不通过，就不要急着进下一周</strong>）：</p>
 <ul class="tasks"><li class="task" data-k="750d9196712f"><input type="checkbox"><span>我能不看资料，用 3 分钟讲清本周的核心内容。</span></li><li class="task" data-k="9193faffa5cb"><input type="checkbox"><span>我能回答本周所有自测题，正确率 80% 以上。</span></li><li class="task" data-k="8be422ebab74"><input type="checkbox"><span>我完成了本周的动手任务。</span></li><li class="task" data-k="cf1c6d2c041f"><input type="checkbox"><span>我能说出本周内容在面试里可能被怎么问。</span></li></ul>
 <p><strong>这四条是&quot;过关&quot;的标准。</strong> 缺了任何一条，说明这一周只是&quot;读过&quot;，没有&quot;学会&quot;。</p>
 <h3>五、几个里程碑的验收标准</h3>
-<table><thead><tr><th>里程碑</th><th>验收标准</th></tr></thead><tbody><tr><td>第 4 周末</td><td>有一个能跑的最小 RAG，并且能说出它的一个缺点</td></tr><tr><td>第 8 周末</td><td>能在一张 A4 上画出六层架构图</td></tr><tr><td>第 12 周末</td><td>简历定稿，每个项目条目能撑三层追问</td></tr><tr><td>第 14 周末</td><td>60 题答出 45 题以上，模拟面试能控制在时间内</td></tr><tr><td>第 18 周末</td><td>完成 15 场以上面试，有 2 个以上 offer</td></tr></tbody></table>
+<table><thead><tr><th>里程碑</th><th>验收标准</th></tr></thead><tbody><tr><td>第 4 周末</td><td>有一个能跑的最小 RAG，并且能说出它的一个缺点</td></tr><tr><td>第 8 周末</td><td>能在一张 A4 上画出六层架构图</td></tr><tr><td>第 12 周末</td><td>简历定稿，每个项目条目能撑三层追问</td></tr><tr><td>第 14 周末</td><td>74 题答出 55 题以上，模拟面试能控制在时间内</td></tr><tr><td>第 18 周末</td><td>完成 15 场以上面试，有 2 个以上 offer</td></tr></tbody></table>
 <h3>六、求职节奏：什么时候开始投</h3>
 <p>这是一个很重要的判断。<strong>两个极端都不对：</strong></p>
 <ul><li><strong>学完再投（错）</strong>：你会一直觉得&quot;还差点&quot;，永远不开始。</li><li><strong>什么都不学就投（也错）</strong>：浪费机会，而且失败会打击信心。</li></ul>
@@ -2974,7 +2977,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p>被拒绝的原因可能和你无关（岗位关闭、内部有人选、预算砍了）。<strong>面试失败绝大多数时候不是&quot;你不行&quot;，而是匹配问题。</strong></p>
 <h3>八、如果你只有 30 天</h3>
 <p>假设时间非常紧，把计划压缩成这样（只能覆盖最核心的）：</p>
-<table><thead><tr><th>天</th><th>做什么</th></tr></thead><tbody><tr><td>1-3</td><td>第 2、3 章（大模型原理）+ 第 7 章（Embedding）</td></tr><tr><td>4-6</td><td>第 8、9 章（RAG 全链路与评估）——<strong>这是最高频考点</strong></td></tr><tr><td>7-9</td><td>第 13、14 章（MCP、Harness、Agent Loop）</td></tr><tr><td>10-12</td><td>第 19、24 章（数据中台、Harness 项目）</td></tr><tr><td>13-16</td><td>第 26、27、28 章（体系串联、简历、升维表达）</td></tr><tr><td>17-20</td><td>第 29 章 60 题全部过一遍</td></tr><tr><td>21-23</td><td>自我介绍 + 模拟面试</td></tr><tr><td>24-30</td><td>投递 + 面试 + 复盘</td></tr></tbody></table>
+<table><thead><tr><th>天</th><th>做什么</th></tr></thead><tbody><tr><td>1-3</td><td>第 2、3 章（大模型原理）+ 第 7 章（Embedding）</td></tr><tr><td>4-6</td><td>第 8、9 章（RAG 全链路与评估）——<strong>这是最高频考点</strong></td></tr><tr><td>7-9</td><td>第 13、14 章（MCP、Harness、Agent Loop）</td></tr><tr><td>10-12</td><td>第 19、24 章（数据中台、Harness 项目）</td></tr><tr><td>13-16</td><td>第 26、27、28 章（体系串联、简历、升维表达）</td></tr><tr><td>17-20</td><td>第 29 章 74 题全部过一遍</td></tr><tr><td>21-23</td><td>自我介绍 + 模拟面试</td></tr><tr><td>24-30</td><td>投递 + 面试 + 复盘</td></tr></tbody></table>
 <p><strong>这个压缩版只保证你能&quot;聊&quot;，不保证深度。</strong> 如果时间允许，还是走 90 天。</p>
 <h3>九、动手体验</h3>
 <ol><li><strong>把 90 天计划落到你的日历上</strong>，具体到每一天。<strong>不落到日历的计划等于没有计划。</strong></li><li><strong>建一个学习笔记文档</strong>，按章节编号。每天写完打勾。</li><li><strong>建一个&quot;卡点清单&quot;</strong>，遇到不懂的先记下来，每周集中处理一次。</li><li><strong>找一个人当你的&quot;验收官&quot;</strong>，每周听你复述一次。<strong>有人验收，完成率会翻倍。</strong></li><li><strong>在日历上标出第 8 周、第 12 周、第 15 周</strong>，提醒自己这三个节点要做什么。</li></ol>
@@ -3041,7 +3044,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 横切关注点：权限与审计 · 成本与配额 · 评测与回归 · 可观测性</pre>
 <hr>
 <h2 id="c46">附录 E　自测题使用方法<a class="q" href="javascript:void 0" data-q="c46">#</a><button class="mark-read" data-c="c46">标记已读</button></h2>
-<p>本书共 34 章，每章 6 到 12 道自测题，合计 324 题。使用方法：</p>
+<p>本书共 34 章。除第 0 章（导论）和第 29 章（这一章本身就是 74 题的题库，题目在正文表格里）之外， 每章 6 到 12 道自测题，合计 324 题。使用方法：</p>
 <ol><li><strong>第一遍（学完一章）</strong>：读完当章内容后立刻做，检验是否真的看懂。</li><li><strong>第二遍（每周末）</strong>：把本周所有章节的题重做一次，只做错过的。</li><li><strong>第三遍（面试前）</strong>：随机抽 60 题，口述回答，全程不看资料。</li></ol>
 <p><strong>关于答案</strong>：本书没有单独列出答案页，因为<strong>答案就在每一章的正文里，而且都是可以自己推导的</strong>。如果你能说出这道题在问什么概念，就已经答对了一半；如果你想不起这个概念，回去看那一章的正文比看答案更有用。</p>
 <p><strong>唯一需要留意的三类题</strong>：</p>
@@ -3101,16 +3104,33 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       a.textContent='已复制';setTimeout(function(){a.textContent='#';},1200);
     });
   });
-  // 进度
+  // 进度条。原来这个函数直接挂在 scroll 上，每次滚动都读一次 scrollHeight——
+  // 读 scrollHeight 会逼浏览器立刻重算整页布局，而它紧接着又写三个 DOM，
+  // 正好是最经典的"读-写-读-写"抖动。改成：文档高度缓存起来，滚动里每帧最多更新一次，
+  // 百分比没变就完全不碰 DOM。
+  var barEl=document.getElementById('bar'),pctEl=document.getElementById('pct'),
+      upEl=document.getElementById('up'),docH=0,progTick=false,lastPct=-1;
+  function measure(){docH=Math.max(0,document.documentElement.scrollHeight-window.innerHeight);}
   function prog(){
-    var h=document.documentElement.scrollHeight-window.innerHeight;
-    var p=h>0?Math.min(100,Math.round(scrollY/h*100)):0;
-    document.getElementById('bar').style.width=p+'%';
-    document.getElementById('pct').textContent=p+'%';
-    document.getElementById('up').classList.toggle('show',scrollY>800);
+    var p=docH>0?Math.min(100,Math.round(scrollY/docH*100)):0;
+    if(p!==lastPct){lastPct=p;barEl.style.width=p+'%';pctEl.textContent=p+'%';}
+    upEl.classList.toggle('show',scrollY>800);
   }
-  addEventListener('scroll',prog);prog();
-  document.getElementById('up').onclick=function(){scrollTo({top:0,behavior:'smooth'});};
+  function onScroll(){
+    if(progTick)return;progTick=true;
+    requestAnimationFrame(function(){progTick=false;prog();});
+  }
+  addEventListener('scroll',onScroll,{passive:true});
+  addEventListener('resize',function(){measure();prog();});
+  // 展开答案、勾选任务都会改文档高度：用 ResizeObserver 跟着重算，
+  // 而不是每次滚动都去读一次 scrollHeight
+  if(window.ResizeObserver)new ResizeObserver(measure).observe(document.body);
+  // 兜底：这段脚本排在三维/动画脚本之前，第一次 measure() 时画布还没被撑开，
+  // 量到的高度会偏小。load 后再量一次，另外再补一次延时量，覆盖慢设备。
+  addEventListener('load',function(){measure();prog();});
+  setTimeout(function(){measure();prog();},300);
+  measure();prog();
+  upEl.onclick=function(){scrollTo({top:0,behavior:'smooth'});};
   // 主题
   var tb=document.getElementById('theme');
   function sync(){tb.textContent=document.documentElement.dataset.theme==='dark'?'日间模式':'夜间模式';}
@@ -3154,13 +3174,23 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   // 原来用 IntersectionObserver 遍历回调条目、取"数组里最后一个"来高亮：一次回调可能
   // 带多个条目，顺序又不保证，于是会高亮到错的那一节（实测会跳到很靠后的一章）。
   // 改成按滚动位置直接算：取"最后一个已经滚过视口顶部"的小节。
+  // 又：原来每帧都重新 querySelectorAll 一遍全部 h2，再从上往下逐个 getBoundingClientRect ——
+  // 读到后面章节就是每帧四十几次强制布局。h2 列表加载后不会再变，缓存它；
+  // 它们的 top 本来就有序，改成二分，每帧最多读 6 次；章节没变就整段跳过。
   var navLinks=document.querySelectorAll('.kids a'), navTick=false;
+  var h2s=null, lastNavId=null;
   function markCurrent(){
-    var hs=document.querySelectorAll('h2[id]'), id=null;
-    for(var i=0;i<hs.length;i++){
-      if(hs[i].getBoundingClientRect().top<=120) id=hs[i].id; else break;
+    if(!h2s)h2s=document.querySelectorAll('h2[id]');
+    var n=h2s.length;
+    if(!n)return;
+    var lo=0,hi=n-1,id=h2s[0].id;
+    while(lo<=hi){
+      var mid=(lo+hi)>>1;
+      if(h2s[mid].getBoundingClientRect().top<=120){id=h2s[mid].id;lo=mid+1;}
+      else hi=mid-1;
     }
-    if(!id&&hs.length) id=hs[0].id;
+    if(id===lastNavId)return;
+    lastNavId=id;
     navLinks.forEach(function(a){a.classList.toggle('on',a.dataset.c===id);});
   }
   window.addEventListener('scroll',function(){
@@ -4064,6 +4094,281 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     }, "每天 4 小时是可持续的强度。一上来就 12 小时，通常撑不过两周。");
   };
 
+  /* ================= 第 3 章补充：幻觉是怎么长出来的 ================= */
+  V.v3hallu = function (box) {
+    var b = head(box, "幻觉：模型根本没有“我不知道”这个选项",
+      "点“下一步”，看一段语气自信的错话是怎么一个字一个字长出来的。");
+    stepper(b, [
+      { t: "① 你问了一件它训练里没有的事",
+        lines: ["比如：“我们公司差旅报销的上限是多少？”",
+                "这个数字只写在你们公司的制度文档里，公开语料里没有。"] },
+      { t: "② 它内部只有一个动作：算下一个词的概率",
+        lines: ["它不会先判断“我知不知道”——这个步骤根本不存在。",
+                "对每个候选词算一个分数，挑一个，接上去，再算下一个。"] },
+      { t: "③ 有些候选词天生“看起来像答案”",
+        lines: ["下面是它心里这几条路的相对分数：",
+                "注意看：“我不确定”这条路是存在的，只是分数不够高。"],
+        bars: [{ label: "“3000 元”", value: 34, text: "0.34", max: 100, color: "#8c3d2e" },
+               { label: "“按公司规定执行”", value: 26, text: "0.26", max: 100 },
+               { label: "“请咨询财务”", value: 18, text: "0.18", max: 100 },
+               { label: "“我不确定”", value: 9, text: "0.09", max: 100, color: "#2f7d52" }] },
+      { t: "④ 它挑走了分数最高的那条",
+        lines: ["选择发生在第一步；后面每一步都会顺着这个方向继续走。",
+                "开了“3000 元”这个头，后面就会自己补上“每人每天”“超过部分自理”等细节。",
+                "所以错话不是突然出现的，是一步一步被“写得越来越像真的”。"] },
+      { t: "⑤ 于是你拿到一段语法完美、语气自信、数字错误的话",
+        lines: ["它没有撒谎的意思，它只是把最像答案的词连了起来。",
+                "这就是为什么幻觉不可能被彻底消灭——它是这个生成方式的固有性质，只能被管理。"] },
+      { t: "⑥ 工程上压住它的四件事",
+        lines: ["一、给它资料（RAG），并要求“只依据资料回答”；",
+                "二、要求带出处，回答里写清是哪份文档的哪一段；",
+                "三、在提示词里明确允许它说“资料里没有”，给它一条退路；",
+                "四、关键数字用程序校验，不信模型自己算的。"] }
+    ], "面试里被问到幻觉，标准答法是：它是“预测下一个词”的固有结果，工程上靠 RAG + 引用 + 拒答机制 + 关键字段校验四件事一起压，而不是指望模型自己变诚实。");
+  };
+
+  /* ================= 第 4 章补充：流式 vs 非流式 ================= */
+  V.v4stream = function (box) {
+    var b = head(box, "流式不改变速度，它改变“感觉上的速度”",
+      "点两下切换，看同一个模型、同样的总耗时，用户感受差多少。");
+    compare(b, {
+      label: "非流式",
+      title: "等全部生成完，一次性返回",
+      lines: ["用户按下回车之后，界面是静止的。",
+              "总耗时 5 秒，这 5 秒里屏幕上一个字都没有。",
+              "人对“没有任何反馈的等待”非常敏感：超过 1 秒就开始怀疑是不是没点上。"],
+      bars: [{ label: "用户看到第一个字", value: 100, text: "5.0 秒", max: 100, color: "#8c3d2e" },
+             { label: "总耗时", value: 100, text: "5.0 秒", max: 100 }]
+    }, {
+      label: "流式",
+      title: "边生成边吐字",
+      lines: ["总耗时几乎一样，但第一个字 0.5 秒就出现了。",
+              "用户从“等结果”变成“看着它写”，主观速度快了不止一倍。",
+              "代价也要说清楚：错误会中途暴露、不好回滚、连接与日志都要重新设计。"],
+      bars: [{ label: "用户看到第一个字", value: 10, text: "0.5 秒", max: 100, color: "#2f7d52" },
+             { label: "总耗时", value: 100, text: "5.0 秒", max: 100 }]
+    }, "关键指标叫“首字延迟”。面试里说清这一条，比说一句“我们用了流式”值钱得多：流式优化的是感知速度，不是真实速度。");
+  };
+
+  /* ================= 第 5 章补充：串行 vs 并行工具调用 ================= */
+  V.v5parallel = function (box) {
+    var b = head(box, "一次能同时调几个工具？差别全在用户等多久",
+      "拖动工具数量和单个耗时，看总时间差多少。");
+    sliders(b, [
+      { k: "n", label: "这一步要调几个工具", min: 1, max: 8, val: 4, unit: " 个" },
+      { k: "t", label: "每个工具平均耗时", min: 200, max: 3000, step: 100, val: 800, unit: " ms" },
+      { k: "p", label: "允许并行调用", val: 1, check: true }
+    ], function (v, o) {
+      var serial = v.n * v.t;
+      var par = v.t + 150;
+      var use = v.p ? par : serial;
+      out(o, (use / 1000).toFixed(1) + " 秒",
+        [["串行", (serial / 1000).toFixed(1) + " 秒"],
+         ["并行", (par / 1000).toFixed(1) + " 秒"],
+         ["省下", v.p ? Math.round((1 - par / serial) * 100) + "%" : "0%"]]);
+      var h = mk("div", "vz-bars"); o.appendChild(h);
+      bars(h, [
+        { label: "串行：一个一个来", value: serial, max: serial, text: (serial / 1000).toFixed(1) + " 秒", color: "#8c3d2e" },
+        { label: "并行：一起发出去", value: par, max: serial, text: (par / 1000).toFixed(1) + " 秒", color: "#2f7d52" }
+      ]);
+      o.appendChild(mk("div", "vz-note", v.p
+        ? "并行的前提是这几个工具之间没有依赖：不需要先拿 A 的结果才能去调 B。而且要能承受“一个成功、一个失败”——失败的那个得能单独重试，不能整批重来。"
+        : "串行一次只调一个：实现简单、日志清楚、出错好定位，但用户要等 N 倍的时间。工具一多，串行就是体验杀手。"));
+    }, "记住这句区分：并行是“一次问好几件互不依赖的事”，多步是“后一步要用前一步的结果”。前者能同时发，后者不能——它必须串起来等。");
+  };
+
+  /* ================= 第 11 章补充：多跳问题，向量答不了 ================= */
+  V.v11multihop = function (box) {
+    var b = head(box, "同一个问题：向量检索答不了，知识图谱能答",
+      "点两下切换，看两种检索各自能捞到什么。");
+    compare(b, {
+      label: "向量检索（找“像的”）",
+      title: "问：“张三现在在哪家公司上班？”",
+      lines: ["它去找“和这句话最像”的段落。",
+              "最像的那一段是旧新闻：“张三任星海科技 CEO（2021 年）”——于是答案停在了三年前。",
+              "真正需要的另外两条信息（李四 2023 年加入、2025 年接任）里，既没有“张三”，也没有“现在”，所以分数很低，捞不上来。",
+              "结论：这不是检索参数没调好，是“找最像的”这条路走不了关系。"],
+      bars: [{ label: "三跳关系里，它捞到了几条", value: 33, text: "1 / 3", max: 100, color: "#8c3d2e" },
+             { label: "答案的时效性", value: 20, text: "停在 2021 年", max: 100 }]
+    }, {
+      label: "知识图谱（找“有关的”）",
+      title: "同一个问题，沿关系走三跳",
+      lines: ["从“张三”这个实体出发，沿“任职于”找到星海科技；",
+              "再沿“接任自 / 接任者”找到李四，并且每一步都带着生效时间。",
+              "走到了就是走到了，走不到就是没有——它不会把“像”当成“是”。"],
+      bars: [{ label: "三跳关系里，它捞到了几条", value: 100, text: "3 / 3", max: 100, color: "#2f7d52" },
+             { label: "答案的时效性", value: 95, text: "取到最新一条", max: 100 }]
+    }, "这就是 Graph RAG 存在的理由：相似不等于相关。向量擅长“这段话和问题像不像”，图擅长“这两个东西之间有没有一条路”。代价是建图贵、更新麻烦，所以只在关系密集的场景用（风控、供应链、组织关系）。上面两根柱子是定性示意，不是实测数字。");
+  };
+
+  /* ================= 第 7 章补充：余弦相似度 ================= */
+  V.v7cos = function (box) {
+    var b = head(box, "两个向量像不像，看的是“夹角”，不是“距离”",
+      "拖动夹角，看余弦相似度怎么变——这是所有语义检索背后的那把尺子。");
+    sliders(b, [
+      { k: "a", label: "两句话的意思差多少（夹角）", min: 0, max: 180, val: 35, unit: "°" }
+    ], function (v, o) {
+      var c = Math.cos(v.a * Math.PI / 180);
+      var verdict = c > 0.95 ? "几乎同一个意思" : c > 0.8 ? "很相关" : c > 0.5 ? "有点相关"
+        : c > 0 ? "基本无关" : c > -0.5 ? "方向相反（比如“支持”和“不支持”）" : "强烈相反";
+      out(o, c.toFixed(2), [["夹角", v.a + "°"], ["余弦相似度", c.toFixed(2)], ["人话解读", verdict]]);
+
+      // 两个箭头：A 固定朝右，B 按夹角转
+      var cv = mk("canvas", "vz-cv");
+      cv.style.height = "170px";
+      o.appendChild(cv);
+      var W = 0, H = 170, dpr = window.devicePixelRatio || 1;
+      function draw() {
+        W = cv.clientWidth || 520; cv.width = W * dpr; cv.height = H * dpr;
+        cv.style.width = "100%"; cv.style.height = H + "px";
+        var g = cv.getContext("2d");
+        g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+        var ox = 72, oy = H - 30, L = Math.min(W - 150, 240);
+        var ink = getComputedStyle(document.body).color;
+        g.strokeStyle = "rgba(140,61,46,.25)"; g.lineWidth = 1;
+        g.beginPath(); g.moveTo(ox - 24, oy); g.lineTo(ox + L + 90, oy); g.stroke();
+        // A：固定朝右
+        g.strokeStyle = "#1d5c63"; g.lineWidth = 3;
+        g.beginPath(); g.moveTo(ox, oy); g.lineTo(ox + L, oy); g.stroke();
+        g.fillStyle = "#1d5c63"; g.font = "13px -apple-system, sans-serif";
+        g.fillText("句子 A", ox + L - 42, oy - 10);
+        // B：按夹角转
+        var th = v.a * Math.PI / 180;
+        g.strokeStyle = "#8c3d2e";
+        g.beginPath(); g.moveTo(ox, oy);
+        g.lineTo(ox + Math.cos(th) * L, oy - Math.sin(th) * L); g.stroke();
+        g.fillStyle = "#8c3d2e";
+        g.fillText("句子 B", ox + Math.cos(th) * L + 6, oy - Math.sin(th) * L - 4);
+        // 夹角弧
+        g.strokeStyle = "rgba(140,61,46,.55)"; g.lineWidth = 1.5;
+        g.beginPath(); g.arc(ox, oy, 46, -th, 0); g.stroke();
+        g.fillStyle = ink; g.font = "12px -apple-system, sans-serif";
+        g.fillText(v.a + "°", ox + 54, oy - 14);
+      }
+      draw();
+      var ro = window.ResizeObserver ? new ResizeObserver(function () { draw(); }) : null;
+      if (ro) ro.observe(cv);
+
+      var h = mk("div", "vz-bars"); o.appendChild(h);
+      bars(h, [
+        { label: "余弦相似度（夹角决定）", value: (c + 1) / 2 * 100, max: 100, text: c.toFixed(2), color: "#1d5c63" },
+        { label: "只看夹角时，长度完全不影响", value: 100, max: 100, text: "长度不参与", color: "#2f7d52" }
+      ]);
+      o.appendChild(mk("div", "vz-note",
+        "为什么不用欧氏距离？因为欧氏距离会被“长度”污染：同一句话写得更长、或者两个句子里重复词更多，" +
+        "距离就会变大，但意思并没有变远。余弦只看向量之间的夹角，把长度除掉，所以更稳。" +
+        "记住这条就够应付面试：“余弦相似度算的是方向一致程度，取值范围 −1 到 1，越接近 1 越像；" +
+        "0 表示无关，负数表示意思相反。”"));
+    }, "工程上的取用阈值：一般 0.8 以上算高度相关，0.6 到 0.8 算可能相关（要配合重排），低于 0.5 基本可以丢掉。具体数字要按你的模型和语料实测，不同 embedding 模型的分布不一样。");
+  };
+
+  /* ================= 第 4 章补充：结构化输出 ================= */
+  V.v4json = function (box) {
+    var b = head(box, "要让它一定吐 JSON，四种做法的可靠度差很远",
+      "点“下一步”，从最弱到最稳走一遍。");
+    stepper(b, [
+      { t: "① 只在提示词里写“请输出 JSON”",
+        lines: ["模型大部分时候会照做，但它是“尽力而为”，不是“保证”。",
+                "常见翻车：前面先来一句“好的，以下是结果：”，或者少一个字段、多一个注释。",
+                "你的程序一 parse 就崩——而这类故障往往只在线上、只在小概率请求上出现。"],
+        bars: [{ label: "格式合法的概率（示意）", value: 85, max: 100, text: "大多数时候", color: "#b06a1e" },
+               { label: "字段齐全的概率（示意）", value: 70, max: 100, text: "偶尔缺项", color: "#8c3d2e" }] },
+      { t: "② 给它一个模板或一个示例",
+        lines: ["把你要的结构直接写出来，再给一条“输入 → 输出”的示范。",
+                "这一步的收益比想象中大：模型是在“照着抄”，不是在“理解要求”。",
+                "字段名、嵌套层级、空值怎么写，靠示例传达比靠文字描述准得多。"],
+        bars: [{ label: "格式合法的概率（示意）", value: 93, max: 100, text: "明显变好", color: "#b06a1e" },
+               { label: "字段齐全的概率（示意）", value: 88, max: 100, text: "基本齐", color: "#2f7d52" }] },
+      { t: "③ 用平台提供的“结构化输出”参数",
+        lines: ["主流平台都支持传一个 JSON Schema 进去，服务端在解码阶段就把非法结构掐掉。",
+                "这叫受约束解码：不是“求它照做”，而是“它在物理上只能这么生成”。",
+                "注意区分：有的平台只保证“语法合法”，不保证“字段符合你的语义要求”。"],
+        bars: [{ label: "格式合法的概率", value: 100, max: 100, text: "由解码保证", color: "#2f7d52" },
+               { label: "字段齐全的概率（示意）", value: 95, max: 100, text: "仍要看 schema 写得好不好", color: "#1d5c63" }] },
+      { t: "④ 程序侧再校验一次，失败就重试",
+        lines: ["Schema 只保证形状，不保证内容合理。所以拿到之后还要程序校验：",
+                "金额是不是数字、日期能不能解析、枚举值在不在白名单里、必填项有没有空。",
+                "校验不过就带着“哪里错了”重试一次；两次不过走降级路径（转人工或返回兜底话术）。"] },
+      { t: "面试标准答法",
+        lines: ["“我们不让模型自由发挥：先定 schema，用平台的结构化输出保证格式，",
+                "再用程序做业务校验，失败带错误信息重试一次，仍然失败就降级。",
+                "这样模型的不确定性被限制在一个很小的盒子里，产品侧就是稳定的。”"] }
+    ], "记住这条分界：提示词管的是“倾向”，结构化输出参数管的是“格式的硬约束”，程序校验管的是“业务上是否成立”。三件事解决的是三个不同层面的问题。");
+  };
+
+  /* ================= 第 16 章补充：负载均衡 ================= */
+  V.v16lb = function (box) {
+    var b = head(box, "把请求分到多台机器：三种分法，各治各的病",
+      "点一种分法，看它擅长解决什么、什么时候会失效。");
+    explorer(b, [
+      { label: "轮询 Round Robin",
+        title: "一个一个发，第 1 台、第 2 台、第 3 台……",
+        lines: ["最简单，也最常用。每台机器收到的请求数几乎相等。",
+                "它假设“每台机器一样快、每个请求一样重”——这个假设经常不成立。",
+                "于是出现最典型的故障：一台慢机器排在队里，请求被平均分过去，用户等到超时。"],
+        bars: [{ label: "实现简单度", value: 100, max: 100, text: "最低成本" },
+               { label: "对“慢机器”的容错", value: 25, max: 100, text: "很差", color: "#8c3d2e" }] },
+      { label: "最少连接 Least Conn",
+        title: "谁手上活最少，就给谁",
+        lines: ["它看的是实时负载，所以天然能绕开“正在忙”的那台。",
+                "长连接、慢请求（比如大模型生成、语音通话）场景下，这一条比轮询好得多。",
+                "缺点是要在多台机器之间同步连接数，实现复杂一点。"],
+        bars: [{ label: "实现简单度", value: 60, max: 100, text: "要同步状态" },
+               { label: "对“慢机器”的容错", value: 80, max: 100, text: "自动绕开", color: "#2f7d52" }] },
+      { label: "一致性哈希",
+        title: "同一个用户的请求，固定落到同一台机器",
+        lines: ["按用户 ID 或会话 ID 算哈希，决定去那台。好处是“同一用户总是同一台”。",
+                "这解决的是“有状态”的问题：会话缓存、对话历史缓存在本机时就必须要它。",
+                "代价：负载可能不均（热门用户集中的机器会偏忙），扩容时要处理迁移。"],
+        bars: [{ label: "实现简单度", value: 45, max: 100, text: "要处理迁移" },
+               { label: "会话粘性", value: 95, max: 100, text: "天然满足", color: "#2f7d52" }] },
+      { label: "健康检查（都要配）",
+        title: "不管用哪种分法，都要有人负责“把坏机器摘掉”",
+        lines: ["负载均衡只是分请求；决定“哪台机器算健康的”是健康检查。",
+                "两种做法：主动探测（定期发一个探测请求，看回答对不对）和被动摘除（连续若干次超时就暂时踢出）。",
+                "面试里主动提这一条，说明你知道负载均衡的真正难点不在“分”，在“判断谁还活着”。"],
+        bars: [{ label: "主动探测", value: 85, max: 100, text: "提前发现" },
+               { label: "被动摘除", value: 70, max: 100, text: "事后补救", color: "#b06a1e" }] }
+    ], "还有两个必须知道的词：L4（按 IP/端口转发，快但看不到内容）和 L7（能看到 HTTP 路径、Header，所以能按业务规则分流，比如把 /voice 走到语音集群）。模型网关通常是 L7 的。");
+  };
+
+  /* ================= 第 12 章补充：三道刹车 ================= */
+  V.v12brake = function (box) {
+    var b = head(box, "三道刹车，少一道都可能翻车",
+      "把三道刹车逐个关掉，看同一个 Agent 会变成什么样。");
+    sliders(b, [
+      { k: "step", label: "步数上限（12 步）", val: 1, check: true },
+      { k: "cost", label: "成本上限（1 元）", val: 1, check: true },
+      { k: "noprog", label: "无进展检测（原地打转就停）", val: 0, check: true }
+    ], function (v, o) {
+      var per = 0.05;                     // 每一步大约 5 分钱，示意值
+      var stop, why, steps;
+      if (v.noprog) { steps = 4; why = "第 4 步就发现它在原地打转，提前喊停"; }
+      else if (v.step) { steps = 12; why = "撞到步数上限才停——它把 12 步都跑满了"; }
+      else { steps = 40; why = "没有任何上限，只能等它自己觉得完了（可能永远不觉得）"; }
+      if (v.cost) {
+        var cap = Math.floor(1 / per);
+        if (steps > cap) { steps = cap; why = "撞到成本上限被强行掐断"; }
+      }
+      var money = steps * per;
+      out(o, steps + " 步 / " + money.toFixed(2) + " 元", [
+        ["停在哪一层", why],
+        ["步数上限", v.step ? "开" : "关"],
+        ["成本上限", v.cost ? "开" : "关"],
+        ["无进展检测", v.noprog ? "开" : "关"]
+      ]);
+      var h = mk("div", "vz-bars"); o.appendChild(h);
+      bars(h, [
+        { label: "跑到多少步", value: steps, max: 40, text: steps + " 步", color: v.noprog ? "#2f7d52" : "#8c3d2e" },
+        { label: "花了多少钱", value: money, max: 2, text: money.toFixed(2) + " 元", color: v.noprog ? "#2f7d52" : "#8c3d2e" }
+      ]);
+      o.appendChild(mk("div", "vz-note",
+        v.noprog
+          ? "无进展检测是最值钱的一道：它让 Agent 在“还没花完钱”的时候就停下来。判断口径是——连续几步拿到的是同样的工具结果、状态没有实质变化，就判定为绕圈。"
+          : "把无进展检测关掉试试：它会一路跑到步数或成本上限才停。代价差好几倍，而用户早在第三步就已经不耐烦了。"));
+    }, "三道刹车分工不同：步数上限防“永远跑下去”，成本上限防“账单失控”，无进展检测防“白烧钱”。前两道是保命的底线，第三道才是省钱的。面试里把这三句分开说，比说一句“我们会设超时”专业得多。");
+  };
+
   /* ---------- 启动 ---------- */
   var nodes = document.querySelectorAll("[data-viz]");
   Array.prototype.forEach.call(nodes, function (el) {
@@ -4356,6 +4661,51 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 (function () {
   var TAU = Math.PI * 2;
 
+  /* ---------- 整个页面只跑一个渲染循环 ----------
+     以前每张画布在构造时各起一个 requestAnimationFrame 循环，而且 auto 默认开着，
+     于是 50 张画布 = 50 个永不停止的循环，每帧各自重画一整幅三维场景
+     （建几何 → 深度排序 → 标签避让排版 → 画）。滚动和它们抢主线程，
+     这就是"滚起来不丝滑"的主因。
+     现在改成：所有实例挂在一个注册表里，由唯一的循环统一驱动，并且
+       ① 屏幕外的实例这一帧直接跳过；
+       ② 用户正在滚动时全体暂停（滚动本身要占主线程，这时候转也看不清）；
+       ③ 离开视口够久的实例把画布显存交还（手机上 50 张画布很容易顶到上限）。 */
+  var REG = [], ticking = false, scrolling = false, scrollTimer = null, lastSweep = 0;
+  var FREE_AFTER = 10000;    // 离开视口超过 10 秒 → 交还画布显存
+  var RESUME_AFTER = 150;    // 停止滚动 150ms 后恢复自动旋转
+
+  window.addEventListener("scroll", function () {
+    scrolling = true;
+    if (scrollTimer) clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(function () { scrolling = false; }, RESUME_AFTER);
+  }, { passive: true });
+
+  // 提前 320px 就算"快要看见了"：等你真滑到它时，它已经在转了
+  var IO = window.IntersectionObserver ? new IntersectionObserver(function (ents) {
+    for (var i = 0; i < ents.length; i++) {
+      var api = ents[i].target.__e3;
+      if (api) api.__setVisible(ents[i].isIntersecting);
+    }
+  }, { rootMargin: "320px 0px 320px 0px" }) : null;
+
+  function frame() {
+    var now = Date.now(), sweep = now - lastSweep > 1000;
+    if (sweep) lastSweep = now;
+    for (var i = 0; i < REG.length; i++) {
+      var it = REG[i];
+      if (!it.__isVisible()) continue;   // 屏幕外：这一帧不算
+      if (scrolling) continue;           // 滚动中：先让滚动顺
+      it.__step();
+    }
+    if (sweep) for (var j = 0; j < REG.length; j++) REG[j].__sweep(now);
+    requestAnimationFrame(frame);
+  }
+  function startTick() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(frame);
+  }
+
   window.E3 = function (canvas, opt) {
     opt = opt || {};
     var api = {}, W = 0, H = 0, dpr = 1;
@@ -4379,10 +4729,15 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     var scaf = false;
     // 取景棘轮的"历史最紧约束"：只减不增，避免旋转时画面忽大忽小。
     var fitCap = 1e9;
-    var scene = null, running = false;
+    var scene = null;
+    // 可见性 / 显存状态。没有 IntersectionObserver 时一律当作"可见"，行为退回老样子。
+    var visible = !IO, lastVisibleAt = Date.now(), freed = false;
+    // 手机上 devicePixelRatio 能到 3，意味着画布面积是物理像素的 9 倍。
+    // 这些场景都是线条和文字，dpr 压到 2 肉眼看不出差别，像素工作量少一半以上。
+    var dprMax = opt.dprMax || 2;
 
     function resize() {
-      dpr = window.devicePixelRatio || 1;
+      dpr = Math.min(window.devicePixelRatio || 1, dprMax);
       W = canvas.clientWidth || 640;
       H = canvas.clientHeight || 340;
       canvas.width = Math.round(W * dpr);
@@ -4828,11 +5183,10 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       api.zoom(e.deltaY > 0 ? 1.09 : 0.92);
     }, { passive: false });
 
-    function loop() {
+    function step() {
       if (auto) { yaw += 0.0022; dirty = true; }
       // 取景若在本帧被收紧，需要再画一帧才算落到画面上
       if (dirty) { render(); dirty = reframed; reframed = false; }
-      requestAnimationFrame(loop);
     }
     var ro = window.ResizeObserver ? new ResizeObserver(function () { resize(); }) : null;
     if (ro) ro.observe(canvas);
@@ -4843,7 +5197,31 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     };
     canvas.__e3 = api;
     resize();
-    if (!running) { running = true; loop(); }
+    /* ---------- 挂进全局循环：只算可见的、滚动时让路、闲久了交还显存 ---------- */
+    api.__step = step;
+    api.__isVisible = function () { return visible; };
+    api.__setVisible = function (v) {
+      v = !!v;
+      if (v === visible) return;
+      visible = v;
+      if (!v) return;
+      lastVisibleAt = Date.now();
+      // 之前为了省显存把画布尺寸清成 0 了，回来先按当前 CSS 尺寸复原
+      if (freed) { freed = false; resize(); }
+      dirty = true;
+    };
+    api.__sweep = function (now) {
+      if (visible || freed) return;
+      if (now - lastVisibleAt < FREE_AFTER) return;
+      // 交还显存：把 backing store 清零。布局不受影响（高度是 mount() 写死的 inline 样式），
+      // 重新可见时 __setVisible → resize() 会按 clientWidth/Height 复原。
+      freed = true;
+      canvas.width = 0;
+      canvas.height = 0;
+    };
+    REG.push(api);
+    if (IO) IO.observe(canvas);
+    startTick();
     return api;
   };
 })();

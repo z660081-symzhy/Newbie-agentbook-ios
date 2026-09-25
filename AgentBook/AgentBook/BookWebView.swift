@@ -239,3 +239,65 @@ struct BookWebView: UIViewRepresentable {
         }
     }
 }
+
+// MARK: - 关掉"从左边缘往右滑 = 返回目录"的系统手势
+//
+/// iPhone 上正文是 push 出来的，所以系统自带的返回手势一直开着。
+/// 它和三维场景的拖动**抢同一段手势**：读者在动画里从左往右拖，本意是转动模型，
+/// 结果被当成"返回"，直接弹回目录（用户实测反馈）。
+///
+/// `webView.allowsBackForwardNavigationGestures = false` 只管网页自己的前进/后退，
+/// 管不到导航栈的这个手势 —— 必须从原生这边关。
+///
+/// 关掉之后返回走左上角的返回按钮。对一本长文档来说这样反而更安全：
+/// 读到一半蹭一下屏幕边缘就弹回去、还丢了位置，是很糟的体验。
+struct PopGestureOff: UIViewControllerRepresentable {
+
+    func makeUIViewController(context: Context) -> UIViewController { Disabler() }
+
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+        (uiViewController as? Disabler)?.apply()
+    }
+
+    final class Disabler: UIViewController {
+
+        override func didMove(toParent parent: UIViewController?) {
+            super.didMove(toParent: parent)
+            apply()
+        }
+
+        override func viewDidAppear(_ animated: Bool) {
+            super.viewDidAppear(animated)
+            apply()
+        }
+
+        override func viewWillDisappear(_ animated: Bool) {
+            super.viewWillDisappear(animated)
+            // 离开正文这一屏就把系统默认行为还回去，免得影响以后新增的界面
+            navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+        }
+
+        func apply() {
+            guard let nav = hostNavigationController() else { return }
+            nav.interactivePopGestureRecognizer?.isEnabled = false
+        }
+
+        /// SwiftUI 的视图控制器 parent 链不一定连得到导航控制器，
+        /// 所以沿着 view 的响应链往上找 —— 这是拿"宿主 UINavigationController"的通用办法。
+        private func hostNavigationController() -> UINavigationController? {
+            var node: UIView? = view
+            while let current = node {
+                if let nav = current.next as? UINavigationController { return nav }
+                if let vc = current.next as? UIViewController, let nav = vc.navigationController { return nav }
+                node = current.superview
+            }
+            // 兜底：顺着 parent 链再找一遍
+            var vc: UIViewController? = self
+            while let current = vc {
+                if let nav = current.navigationController { return nav }
+                vc = current.parent
+            }
+            return nil
+        }
+    }
+}
