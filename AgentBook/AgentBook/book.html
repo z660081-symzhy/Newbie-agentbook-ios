@@ -97,14 +97,58 @@ background:var(--card)}
 a.q{color:var(--accent2);text-decoration:none;border-bottom:1px dotted var(--accent2);font-size:12px;
 opacity:0;margin-left:8px}
 h2:hover a.q,h3:hover a.q{opacity:1}
-#up{position:fixed;right:26px;bottom:26px;z-index:50;display:none}
-#up.show{display:block}
 .mark-read{float:right;font-size:12px;border:1px solid var(--line);background:var(--card);
 color:var(--muted);border-radius:20px;padding:3px 12px;cursor:pointer;font-family:inherit;
 font-weight:400;vertical-align:middle}
 .mark-read.done{color:#2f7d52;border-color:#2f7d52}
+/* ---- 目录底部的次要工具（从顶栏挪下来的） ---- */
+.sidetools{padding:16px 16px 4px;border-top:1px solid #2a2621;margin-top:14px;display:flex;flex-direction:column;gap:8px}
+.sidetools .st-t{font-size:11.5px;letter-spacing:.12em;color:#7d746a;margin-bottom:2px}
+.sidetools .tool{text-align:left;background:#2a2621;border-color:#3a352f;color:#e6ded3}
+.sidetools .tool:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ---- 章末的三个按钮 ---- */
+.chapnav{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:36px 0 10px;padding:16px 18px;
+  background:var(--card);border:1px solid var(--line);border-radius:14px}
+.chapnav .cn-t{flex-basis:100%;font-size:12.5px;color:var(--muted)}
+.chapnav button{font:inherit;font-size:13.5px;padding:9px 16px;border-radius:11px;cursor:pointer;
+  border:1px solid var(--line);background:var(--bg);color:var(--fg);transition:.18s}
+.chapnav button:hover{border-color:var(--accent);color:var(--accent)}
+.chapnav button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.chapnav button.primary:hover{color:#fff;filter:brightness(1.08)}
+.chapnav .cn-sub{flex-basis:100%;font-size:12.5px;color:var(--muted);margin-top:-2px}
+
+/* ---- 问问题 / 写笔记 面板 ---- */
+.pane{display:flex;flex-direction:column;gap:12px}
+.pane .ph{font-size:13px;color:var(--muted);line-height:1.7}
+.pane .ph b{color:var(--fg)}
+.ask-log{display:flex;flex-direction:column;gap:12px;max-height:44vh;overflow:auto;padding-right:4px}
+.ask-msg{font-size:14.5px;line-height:1.78;white-space:pre-wrap;word-break:break-word}
+.ask-msg.u{align-self:flex-end;max-width:86%;background:var(--accent);color:#fff;padding:9px 13px;
+  border-radius:13px 13px 4px 13px}
+.ask-msg.a{align-self:flex-start;max-width:94%;background:color-mix(in srgb,var(--fg) 6%,transparent);
+  padding:11px 14px;border-radius:13px 13px 13px 4px}
+.ask-msg.sys{align-self:center;font-size:12.5px;color:var(--muted);text-align:center}
+.ask-row{display:flex;gap:9px;align-items:flex-end}
+.ask-row textarea,.note-area{font:inherit;font-size:14.5px;line-height:1.7;padding:11px 13px;
+  border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
+.ask-row textarea{flex:1;min-height:48px;max-height:140px;resize:vertical}
+.note-area{width:100%;min-height:200px;resize:vertical}
+.ask-row button,.pane button.act{font:inherit;font-size:14px;padding:11px 18px;border-radius:11px;cursor:pointer;
+  border:1px solid var(--accent);background:var(--accent);color:#fff;white-space:nowrap}
+.ask-row button:disabled{opacity:.45;cursor:default}
+.pane button.ghost{background:var(--bg);color:var(--fg);border-color:var(--line)}
+.ask-key{display:flex;flex-direction:column;gap:9px;padding:14px;border:1px dashed var(--line);border-radius:12px}
+.ask-key input{font:inherit;font-size:13.5px;padding:10px 12px;border-radius:10px;
+  border:1px solid var(--line);background:var(--bg);color:var(--fg)}
+.note-list{display:flex;flex-wrap:wrap;gap:8px}
+.note-list button{font:inherit;font-size:12.5px;padding:5px 12px;border-radius:20px;cursor:pointer;
+  border:1px solid var(--line);background:var(--bg);color:var(--fg)}
+.note-list button:hover{border-color:var(--accent);color:var(--accent)}
+.saved{font-size:12.5px;color:#2f7d52}
+
 @media print{
- #sidebar,#topbar,#up,#bar{display:none!important}
+ #sidebar,#topbar,#bar,#panel,.chapnav{display:none!important}
  main{margin:0}
  .wrap{max-width:100%;padding:0}
  body{background:#fff;font-size:11pt}
@@ -181,7 +225,15 @@ body.nav-open #scrim{display:block}
   .qz-q{font-size:16px}
   .qz-score{font-size:30px}
   .qz-list{max-height:38vh}
-  #up{right:14px;bottom:calc(16px + env(safe-area-inset-bottom))}
+  /* 顶栏在手机上要换行：目录 / 进度 / 日间模式 / 问问题 / 写笔记 放不下 */
+  #topbar .wrap{flex-wrap:wrap;gap:8px 10px;padding:9px 15px}
+  #topbar .sp{display:none}
+  #topbar button.tool{font-size:12.5px;padding:5px 11px}
+  #topbar>div>span{font-size:12.5px}
+  .ask-log{max-height:38vh}
+  .chapnav{gap:8px;padding:14px}
+  .chapnav button{font-size:13px;padding:9px 13px;flex:1 1 auto}
+  .note-area{min-height:150px}
 }
 
 @media (max-width: 560px){
@@ -354,16 +406,21 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   <h1>AGENT 就业教材全集</h1>
   <div class="search"><input id="q" type="search" placeholder="搜索章节…"></div>
   <div id="nav"><div class="grp open"><button type="button">第 0 部分　出发之前，先看清战场</button><div class="kids"><a href="#c1" data-c="c1">第 0 章　这本教材是什么，你该怎么用它</a></div></div><div class="grp open"><button type="button">Agent 就业学习 Todolist（总路线图）</button><div class="kids"><a href="#c2" data-c="c2">第 0 阶段：认知与定位（第 0 天，约 4 小时）</a><a href="#c3" data-c="c3">第 1 阶段：基础与框架（第 1-4 周）</a><a href="#c4" data-c="c4">第 2 阶段：两大基础设施 + 九大项目（第 5-12 周）</a><a href="#c5" data-c="c5">第 3 阶段：面试力培养（第 13-15 周）</a><a href="#c6" data-c="c6">第 4 阶段：举一反三（第 16 周）</a><a href="#c7" data-c="c7">第 5 阶段：冲刺与交付（第 17-18 周）</a><a href="#c8" data-c="c8">每日固定动作（贯穿全程）</a></div></div><div class="grp open"><button type="button">第 1 部分　基础与框架：先把地基打对</button><div class="kids"><a href="#c9" data-c="c9">第 1 章　Python：你不写代码，但你必须看得懂</a><a href="#c10" data-c="c10">第 2 章　大模型原理（上）：从&quot;一个字&quot;到&quot;一个能对话的东西&quot;</a><a href="#c11" data-c="c11">第 3 章　大模型原理（下）：上下文、参数、幻觉、成本</a><a href="#c12" data-c="c12">第 4 章　大模型 API（上）：一切产品的地基</a><a href="#c13" data-c="c13">第 5 章　大模型 API（下）：工具调用与工程化</a><a href="#c14" data-c="c14">第 6 章　提示词工程与上下文工程</a><a href="#c15" data-c="c15">第 7 章　Embedding 与语义检索：让机器理解&quot;意思&quot;</a><a href="#c16" data-c="c16">第 8 章　RAG 全链路：让模型&quot;有据可依&quot;</a><a href="#c17" data-c="c17">第 9 章　RAG 的评估与优化：把&quot;感觉还行&quot;变成&quot;数据说话&quot;</a><a href="#c18" data-c="c18">第 10 章　向量数据库：在几亿个坐标里瞬间找到最近的</a><a href="#c19" data-c="c19">第 11 章　Graph RAG 与知识图谱：当&quot;关系&quot;比&quot;相似&quot;更重要</a><a href="#c20" data-c="c20">第 12 章　LangChain 与 LangGraph：把散件组装成流水线</a><a href="#c21" data-c="c21">第 13 章　MCP 与 Skills：给 Agent 装上标准插座</a><a href="#c22" data-c="c22">第 14 章　Harness 与 Agent Loop：模型外面那个壳，才是真功夫</a><a href="#c23" data-c="c23">第 15 章　数据标注与模型微调：把&quot;行为&quot;写进模型里</a><a href="#c24" data-c="c24">第 16 章　云原生部署：让服务在坏掉的时候还活着</a><a href="#c25" data-c="c25">第 17 章　AI 研发效能：当写代码不再是瓶颈</a><a href="#c26" data-c="c26">第 18 章　AI Infra 架构设计：从 1 个 Agent 到 100 个 Agent</a></div></div><div class="grp open"><button type="button">第 2 部分　项目篇：把知识组装成体系</button><div class="kids"><a href="#c27" data-c="c27">第 19 章　项目一：AI 数据中台</a><a href="#c28" data-c="c28">第 20 章　项目二：AI RTC 实时语音客服</a><a href="#c29" data-c="c29">第 21 章　项目三：自媒体运营 Agent</a><a href="#c30" data-c="c30">第 22 章　项目四：销售与员工考核 Agent</a><a href="#c31" data-c="c31">第 23 章　项目五：素材中心</a><a href="#c32" data-c="c32">第 24 章　项目六：Harness 与 Agent Loop（含自进化）</a><a href="#c33" data-c="c33">第 25 章　项目七：MCP 与 Agent 集群</a><a href="#c34" data-c="c34">第 26 章　总装：把七个项目串成一个体系</a></div></div><div class="grp open"><button type="button">第 3 部分　面试力：把会的东西变成 offer</button><div class="kids"><a href="#c35" data-c="c35">第 27 章　简历：不是编出来的，是排出来的</a><a href="#c36" data-c="c36">第 28 章　&quot;项目放大&quot;的正确做法：升维表达，而不是谎报数字</a><a href="#c37" data-c="c37">第 29 章　高频面试题全景：74 题的 30 秒答题骨架</a><a href="#c38" data-c="c38">第 30 章　面试前准备与实战沙盘</a></div></div><div class="grp open"><button type="button">第 4 部分　举一反三：从电商到一个行业</button><div class="kids"><a href="#c39" data-c="c39">第 31 章　B 端 AI 工作台架构解析</a><a href="#c40" data-c="c40">第 32 章　CEO 视角：一笔 AI 生意是怎么算账的</a></div></div><div class="grp open"><button type="button">第 5 部分　落地：从今天到 offer</button><div class="kids"><a href="#c41" data-c="c41">第 33 章　90 天就业冲刺计划</a></div></div><div class="grp open"><button type="button">附录</button><div class="kids"><a href="#c42" data-c="c42">附录 A　全书速查卡</a><a href="#c43" data-c="c43">附录 B　常见坑清单（60 条）</a><a href="#c44" data-c="c44">附录 C　面试前 30 分钟清单</a><a href="#c45" data-c="c45">附录 D　体系图（可单独打印）</a><a href="#c46" data-c="c46">附录 E　自测题使用方法</a></div></div></div>
+  <div class="sidetools">
+    <div class="st-t">工具</div>
+    <button class="tool" id="quizBtn">随机抽题</button>
+    <button class="tool" id="wrongBtn">错题本</button>
+    <button class="tool" id="reset">清除勾选</button>
+    <button class="tool" onclick="window.print()">打印 / 存 PDF</button>
+  </div>
 </nav>
 <main>
   <div id="topbar"><div class="wrap">
     <button class="tool" id="menu" aria-label="打开目录">目录</button>
     <span>进度 <b id="pct">0%</b></span><span class="sp"></span>
-    <button class="tool" id="theme">夜间模式</button>
-    <button class="tool" id="quizBtn">随机抽题</button>
-    <button class="tool" id="wrongBtn">错题本</button>
-    <button class="tool" id="reset">清除勾选</button>
-    <button class="tool" onclick="window.print()">打印/存 PDF</button>
+    <button class="tool" id="theme">日间模式</button>
+    <button class="tool" id="askBtn">问问题</button>
+    <button class="tool" id="noteBtn">写笔记</button>
   </div></div>
   <div class="wrap">
     <div class="cover">
@@ -411,7 +468,9 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <h1 class="part">Agent 就业学习 Todolist（总路线图）</h1>
 <blockquote><p>用法：每一条任务后面都有【验收】。<strong>通过验收才算完成</strong>，读完不算完成。</p><p>建议节奏：每天 4 小时有效学习（不是看视频的时间，是&quot;能复述 + 能操作&quot;的时间）。</p><p>打印出来，完成一条划掉一条。全部划完，你就具备了投递 Agent / 大模型应用岗的完整知识底盘。</p></blockquote>
 <hr>
-<div class="viz" data-viz="ch0"></div><h2 id="c2">第 0 阶段：认知与定位（第 0 天，约 4 小时）<a class="q" href="javascript:void 0" data-q="c2">#</a><button class="mark-read" data-c="c2">标记已读</button></h2>
+<div class="viz" data-viz="ch0"></div>
+<div class="chapnav" data-ch="0"><div class="cn-t">第 0 章读完了</div><button class="primary" data-go="c2">前往第 0 阶段：认知与定位（第 0 天，约 4 小时） →</button><button data-quiz="0">做题</button><button data-note="0">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
+<h2 id="c2">第 0 阶段：认知与定位（第 0 天，约 4 小时）<a class="q" href="javascript:void 0" data-q="c2">#</a><button class="mark-read" data-c="c2">标记已读</button></h2>
 <ul class="tasks"><li class="task" data-k="252ce785b667"><input type="checkbox"><span><strong>0.1 搞清岗位地图</strong>：读懂&quot;大模型应用工程师 / Agent 工程师 / AI Infra / AI 产品&quot;四个岗位的差别</span></li></ul>
 <p>【验收】能不看资料说出这四个岗位各自每天在干什么、招人时看什么、薪资区间差异的原因</p>
 <ul class="tasks"><li class="task" data-k="c02bf244c5af"><input type="checkbox"><span><strong>0.2 读懂能力模型</strong>：明白本教材 5 个部分各自对应面试的哪一环</span></li></ul>
@@ -598,6 +657,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>temperature（温度）</strong>｜控制随机性的旋钮：越低越稳、越像照本宣科，越高越天马行空，第 3 章细讲。</p>
 <p><strong>top_k</strong>｜&quot;取最像的前 k 条&quot;的那个 k，第 10 章细讲。</p>
 <div class="viz" data-fc="1"></div>
+<div class="chapnav" data-ch="1"><div class="cn-t">第 1 章读完了</div><button class="primary" data-go="c10">前往第 2 章 →</button><button data-quiz="1">做题</button><button data-note="1">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c10">第 2 章　大模型原理（上）：从&quot;一个字&quot;到&quot;一个能对话的东西&quot;<a class="q" href="javascript:void 0" data-q="c10">#</a><button class="mark-read" data-c="c10">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>大模型做的事，本质上只有一件：<strong>看着前面所有的字，猜下一个字最可能是什么。</strong> 它把这一件事做到极致，就涌现出了对话、写代码、推理这些能力。</p>
@@ -668,6 +728,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>预训练 / SFT / 对齐</strong>｜训练的三个阶段：学语言、学听指令、学符合偏好。</p>
 <p><strong>涌现能力</strong>｜模型规模变大后突然出现的新能力。</p>
 <div class="viz" data-fc="2"></div>
+<div class="chapnav" data-ch="2"><div class="cn-t">第 2 章读完了</div><button class="primary" data-go="c11">前往第 3 章 →</button><button data-quiz="2">做题</button><button data-note="2">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c11">第 3 章　大模型原理（下）：上下文、参数、幻觉、成本<a class="q" href="javascript:void 0" data-q="c11">#</a><button class="mark-read" data-c="c11">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>模型的能力上限由&quot;参数&quot;决定，但你能做出什么产品，几乎完全由四个工程变量决定：<strong>上下文怎么给、采样参数怎么调、幻觉怎么兜、钱怎么省</strong>。</p>
@@ -749,6 +810,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>蒸馏</strong>｜用大模型教小模型，把能力降本。</p>
 <p><strong>MoE</strong>｜混合专家，总参数大但每次只激活一部分。</p>
 <div class="viz" data-fc="3"></div>
+<div class="chapnav" data-ch="3"><div class="cn-t">第 3 章读完了</div><button class="primary" data-go="c12">前往第 4 章 →</button><button data-quiz="3">做题</button><button data-note="3">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c12">第 4 章　大模型 API（上）：一切产品的地基<a class="q" href="javascript:void 0" data-q="c12">#</a><button class="mark-read" data-c="c12">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>大模型 API 就是一根<strong>水管</strong>：你把资料从这头灌进去，答案从那头流出来。所有 AI 产品，无论多复杂，本质上都是在这根水管的两端做文章。</p>
@@ -822,6 +884,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>多模态</strong>｜模型可处理文字之外的图片、音频、文档等。</p>
 <p><strong>固定版本号</strong>｜锁定模型版本，保证线上效果稳定。</p>
 <div class="viz" data-fc="4"></div>
+<div class="chapnav" data-ch="4"><div class="cn-t">第 4 章读完了</div><button class="primary" data-go="c13">前往第 5 章 →</button><button data-quiz="4">做题</button><button data-note="4">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c13">第 5 章　大模型 API（下）：工具调用与工程化<a class="q" href="javascript:void 0" data-q="c13">#</a><button class="mark-read" data-c="c13">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>工具调用（Tool Calling）是&quot;聊天机器人&quot;变成&quot;Agent&quot;的那道门槛。</strong> 在这之前，模型只能说话；在这之后，模型能办事。</p>
@@ -903,6 +966,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>Trace ID</strong>｜贯穿一次请求全链路的唯一编号，用于排查。</p>
 <p><strong>提示词注入</strong>｜用输入内容劫持模型指令的攻击方式。</p>
 <div class="viz" data-fc="5"></div>
+<div class="chapnav" data-ch="5"><div class="cn-t">第 5 章读完了</div><button class="primary" data-go="c14">前往第 6 章 →</button><button data-quiz="5">做题</button><button data-note="5">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c14">第 6 章　提示词工程与上下文工程<a class="q" href="javascript:void 0" data-q="c14">#</a><button class="mark-read" data-c="c14">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>提示词工程是&quot;怎么说&quot;，上下文工程是&quot;给它看什么&quot;。</strong> 前者是技巧，后者是架构。真正拉开差距的是后者。</p>
@@ -975,6 +1039,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>滚动摘要</strong>｜把旧对话压缩成摘要随行携带。</p>
 <p><strong>提示词回归测试</strong>｜改动提示词后用固定测试集验证没有退化。</p>
 <div class="viz" data-fc="6"></div>
+<div class="chapnav" data-ch="6"><div class="cn-t">第 6 章读完了</div><button class="primary" data-go="c15">前往第 7 章 →</button><button data-quiz="6">做题</button><button data-note="6">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c15">第 7 章　Embedding 与语义检索：让机器理解&quot;意思&quot;<a class="q" href="javascript:void 0" data-q="c15">#</a><button class="mark-read" data-c="c15">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>Embedding 就是给每一段文字<strong>打一个&quot;含义坐标&quot;</strong>，坐标相近的东西意思相近。整条 RAG 流水线能成立，全靠这一件事。</p>
@@ -1052,6 +1117,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>跨语言对齐</strong>｜不同语言的相似含义映射到相近位置。</p>
 <p><strong>维度</strong>｜向量的长度，如 768、1024、1536。</p>
 <div class="viz" data-fc="7"></div>
+<div class="chapnav" data-ch="7"><div class="cn-t">第 7 章读完了</div><button class="primary" data-go="c16">前往第 8 章 →</button><button data-quiz="7">做题</button><button data-note="7">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c16">第 8 章　RAG 全链路：让模型&quot;有据可依&quot;<a class="q" href="javascript:void 0" data-q="c16">#</a><button class="mark-read" data-c="c16">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>RAG 就是<strong>开卷考试</strong>：模型不再凭记忆答题，而是先去资料库里查，再带着查到的资料回答。</p>
@@ -1137,6 +1203,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>BM25</strong>｜经典的关键词检索算法。</p>
 <p><strong>忠实度（Faithfulness）</strong>｜生成的答案是否严格来自提供的资料。</p>
 <div class="viz" data-fc="8"></div>
+<div class="chapnav" data-ch="8"><div class="cn-t">第 8 章读完了</div><button class="primary" data-go="c17">前往第 9 章 →</button><button data-quiz="8">做题</button><button data-note="8">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c17">第 9 章　RAG 的评估与优化：把&quot;感觉还行&quot;变成&quot;数据说话&quot;<a class="q" href="javascript:void 0" data-q="c17">#</a><button class="mark-read" data-c="c17">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>RAG 项目的分水岭不在技术选型，在有没有评估集。</strong> 没有评估集，你所有的优化都是靠感觉；有评估集，你才知道下一步该动哪里。</p>
@@ -1208,6 +1275,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>LLM-as-a-Judge</strong>｜用大模型充当评分裁判。</p>
 <p><strong>灰度发布</strong>｜新方案先给少量流量，验证后再全量。</p>
 <div class="viz" data-fc="9"></div>
+<div class="chapnav" data-ch="9"><div class="cn-t">第 9 章读完了</div><button class="primary" data-go="c18">前往第 10 章 →</button><button data-quiz="9">做题</button><button data-note="9">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c18">第 10 章　向量数据库：在几亿个坐标里瞬间找到最近的<a class="q" href="javascript:void 0" data-q="c18">#</a><button class="mark-read" data-c="c18">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>向量数据库就是一个<strong>专门回答&quot;哪些东西跟这个最像&quot;的仓库</strong>。它的全部技术难点，集中在一件事上：<strong>在准确率、速度、内存之间做交换。</strong></p>
@@ -1270,6 +1338,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>pgvector</strong>｜PostgreSQL 的向量扩展，适合中小规模。</p>
 <p><strong>分片 / 副本</strong>｜把数据切分存储、保存多份以提高容量与可靠性。</p>
 <div class="viz" data-fc="10"></div>
+<div class="chapnav" data-ch="10"><div class="cn-t">第 10 章读完了</div><button class="primary" data-go="c19">前往第 11 章 →</button><button data-quiz="10">做题</button><button data-note="10">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c19">第 11 章　Graph RAG 与知识图谱：当&quot;关系&quot;比&quot;相似&quot;更重要<a class="q" href="javascript:void 0" data-q="c19">#</a><button class="mark-read" data-c="c19">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>普通 RAG 找的是&quot;跟这个问题<strong>像</strong>的资料&quot;，Graph RAG 找的是&quot;跟这个问题<strong>有关联</strong>的资料&quot;。<strong>相似</strong>和<strong>关联</strong>是两件事，这就是它的全部价值。</p>
@@ -1353,6 +1422,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>Graph RAG</strong>｜结合知识图谱的检索增强方法。</p>
 <p><strong>多跳推理</strong>｜需要连续多步关联才能得到答案。</p>
 <div class="viz" data-fc="11"></div>
+<div class="chapnav" data-ch="11"><div class="cn-t">第 11 章读完了</div><button class="primary" data-go="c20">前往第 12 章 →</button><button data-quiz="11">做题</button><button data-note="11">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c20">第 12 章　LangChain 与 LangGraph：把散件组装成流水线<a class="q" href="javascript:void 0" data-q="c20">#</a><button class="mark-read" data-c="c20">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>LangChain 提供的是<strong>标准零件</strong>，LangGraph 提供的是<strong>装配图纸</strong>。前者让你不用从零造轮子，后者让你能画出带分支和回路的复杂流程。</p>
@@ -1426,6 +1496,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>Human-in-the-loop</strong>｜在流程中插入人工确认。</p>
 <p><strong>编排（Orchestration）</strong>｜把多个步骤和工具组织成完整流程。</p>
 <div class="viz" data-fc="12"></div>
+<div class="chapnav" data-ch="12"><div class="cn-t">第 12 章读完了</div><button class="primary" data-go="c21">前往第 13 章 →</button><button data-quiz="12">做题</button><button data-note="12">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c21">第 13 章　MCP 与 Skills：给 Agent 装上标准插座<a class="q" href="javascript:void 0" data-q="c21">#</a><button class="mark-read" data-c="c21">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>MCP 解决&quot;Agent 怎么连上外部能力&quot;，Skills 解决&quot;Agent 怎么学会一套做法&quot;。</strong> 前者是接口标准，后者是知识封装。</p>
@@ -1500,6 +1571,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>MCP 网关</strong>｜统一管控服务端接入、权限、审计的中间层。</p>
 <p><strong>供应链风险</strong>｜引入第三方组件带来的安全风险。</p>
 <div class="viz" data-fc="13"></div>
+<div class="chapnav" data-ch="13"><div class="cn-t">第 13 章读完了</div><button class="primary" data-go="c22">前往第 14 章 →</button><button data-quiz="13">做题</button><button data-note="13">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c22">第 14 章　Harness 与 Agent Loop：模型外面那个壳，才是真功夫<a class="q" href="javascript:void 0" data-q="c22">#</a><button class="mark-read" data-c="c22">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>Harness 就是套在模型外面的那层&quot;工作台&quot;</strong>——它决定模型能看到什么、能做什么、做到什么程度算完、以及做错了怎么办。模型决定上限，Harness 决定下限。</p>
@@ -1624,6 +1696,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>计划模式</strong>｜先输出计划，确认后再执行。</p>
 <p><strong>自进化</strong>｜从经验中沉淀记忆、迭代策略的闭环。</p>
 <div class="viz" data-fc="14"></div>
+<div class="chapnav" data-ch="14"><div class="cn-t">第 14 章读完了</div><button class="primary" data-go="c23">前往第 15 章 →</button><button data-quiz="14">做题</button><button data-note="14">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c23">第 15 章　数据标注与模型微调：把&quot;行为&quot;写进模型里<a class="q" href="javascript:void 0" data-q="c23">#</a><button class="mark-read" data-c="c23">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>微调是用<strong>你自己的数据</strong>去改造模型的行为。但真正决定成败的不是训练技术，是<strong>数据</strong>——而数据是整条链路上最贵、最慢、最没有捷径的环节。</p>
@@ -1712,6 +1785,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>回归测试</strong>｜确认改动没有破坏原有能力。</p>
 <p><strong>标注规范</strong>｜把&quot;什么算对&quot;写成可执行文字的核心资产。</p>
 <div class="viz" data-fc="15"></div>
+<div class="chapnav" data-ch="15"><div class="cn-t">第 15 章读完了</div><button class="primary" data-go="c24">前往第 16 章 →</button><button data-quiz="15">做题</button><button data-note="15">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c24">第 16 章　云原生部署：让服务在坏掉的时候还活着<a class="q" href="javascript:void 0" data-q="c24">#</a><button class="mark-read" data-c="c24">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>云原生解决的核心问题只有一个：<strong>当某个零件坏掉、流量暴涨、或者要更新版本时，用户还能正常使用。</strong></p>
@@ -1826,6 +1900,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>降级</strong>｜压力大时主动关闭非核心功能保住核心。</p>
 <p><strong>KMS</strong>｜密钥管理服务，集中安全地保管密钥。</p>
 <div class="viz" data-fc="16"></div>
+<div class="chapnav" data-ch="16"><div class="cn-t">第 16 章读完了</div><button class="primary" data-go="c25">前往第 17 章 →</button><button data-quiz="16">做题</button><button data-note="16">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c25">第 17 章　AI 研发效能：当写代码不再是瓶颈<a class="q" href="javascript:void 0" data-q="c25">#</a><button class="mark-read" data-c="c25">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>AI 让&quot;写代码&quot;变便宜了十倍，于是<strong>瓶颈自动转移到了&quot;审查、验证、对齐&quot;这三个环节</strong>。谁解决这三个环节，谁就能带团队。</p>
@@ -1898,6 +1973,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>核心链路</strong>｜涉及资金、权限、数据安全的关键路径。</p>
 <p><strong>知识文档化</strong>｜把隐性经验写成显式文件，供人和 AI 共用。</p>
 <div class="viz" data-fc="17"></div>
+<div class="chapnav" data-ch="17"><div class="cn-t">第 17 章读完了</div><button class="primary" data-go="c26">前往第 18 章 →</button><button data-quiz="17">做题</button><button data-note="17">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c26">第 18 章　AI Infra 架构设计：从 1 个 Agent 到 100 个 Agent<a class="q" href="javascript:void 0" data-q="c26">#</a><button class="mark-read" data-c="c26">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>做一个 Agent 是手工作坊，做一百个 Agent 是工厂。<strong>AI Infra 就是那套工厂流水线：把每个 Agent 都要重复做一遍的事，抽出来做成公共设施。</strong></p>
@@ -1987,6 +2063,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>按需生长</strong>｜基础设施随业务痛点逐步建设，而非一次性铺开。</p>
 <h1 class="part">第 2 部分　项目篇：把知识组装成体系</h1>
 <div class="viz" data-fc="18"></div>
+<div class="chapnav" data-ch="18"><div class="cn-t">第 18 章读完了</div><button class="primary" data-go="c27">前往第 19 章 →</button><button data-quiz="18">做题</button><button data-note="18">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c27">第 19 章　项目一：AI 数据中台<a class="q" href="javascript:void 0" data-q="c27">#</a><button class="mark-read" data-c="c27">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>数据中台解决的是<strong>&quot;AI 吃的粮从哪来、干不干净、谁来负责&quot;</strong>。所有上层 Agent 的效果上限，都由这一层决定。</p>
@@ -2064,6 +2141,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>数据服务</strong>｜把数据以接口形式提供给上层调用。</p>
 <p><strong>CDC（变更捕获）</strong>｜监听数据库变更，实现增量同步。</p>
 <div class="viz" data-fc="19"></div>
+<div class="chapnav" data-ch="19"><div class="cn-t">第 19 章读完了</div><button class="primary" data-go="c28">前往第 20 章 →</button><button data-quiz="19">做题</button><button data-note="19">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c28">第 20 章　项目二：AI RTC 实时语音客服<a class="q" href="javascript:void 0" data-q="c28">#</a><button class="mark-read" data-c="c28">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>实时语音客服是<strong>把&quot;打字聊天&quot;的所有难点，加上&quot;实时&quot;和&quot;语音&quot;两个放大器</strong>。它是目前最有体感、最能体现工程能力的 AI 应用方向之一。</p>
@@ -2146,6 +2224,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>误打断</strong>｜把用户的应答语气误判为打断。</p>
 <p><strong>复述确认</strong>｜对关键数字信息让用户确认一次，防止听错。</p>
 <div class="viz" data-fc="20"></div>
+<div class="chapnav" data-ch="20"><div class="cn-t">第 20 章读完了</div><button class="primary" data-go="c29">前往第 21 章 →</button><button data-quiz="20">做题</button><button data-note="20">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c29">第 21 章　项目三：自媒体运营 Agent<a class="q" href="javascript:void 0" data-q="c29">#</a><button class="mark-read" data-c="c29">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>内容运营 Agent 的本质是一条<strong>流水线</strong>：把&quot;想选题、写文案、配图、审核、发布、看数据&quot;这六步，从依赖灵感的手工活，变成可批量、可复现、可度量的产线。</p>
@@ -2227,6 +2306,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>人机协作</strong>｜AI 起草、人工修改的协作模式。</p>
 <p><strong>同质化</strong>｜AI 产出趋同、缺乏记忆点的现象。</p>
 <div class="viz" data-fc="21"></div>
+<div class="chapnav" data-ch="21"><div class="cn-t">第 21 章读完了</div><button class="primary" data-go="c30">前往第 22 章 →</button><button data-quiz="21">做题</button><button data-note="21">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c30">第 22 章　项目四：销售与员工考核 Agent<a class="q" href="javascript:void 0" data-q="c30">#</a><button class="mark-read" data-c="c30">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>这个项目的技术难度不算最高，但<strong>组织难度最高</strong>。因为你要解决的不是&quot;能不能打分&quot;，而是<strong>&quot;打出来的分，别人服不服&quot;</strong>。</p>
@@ -2286,6 +2366,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>话术资产</strong>｜从优秀案例中沉淀出来的可复用经验。</p>
 <p><strong>表演动机</strong>｜被考核者为了得分而刻意做动作的倾向。</p>
 <div class="viz" data-fc="22"></div>
+<div class="chapnav" data-ch="22"><div class="cn-t">第 22 章读完了</div><button class="primary" data-go="c31">前往第 23 章 →</button><button data-quiz="22">做题</button><button data-note="22">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c31">第 23 章　项目五：素材中心<a class="q" href="javascript:void 0" data-q="c31">#</a><button class="mark-read" data-c="c31">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>素材中心是<strong>给&quot;图片、视频、文案&quot;这类非结构化资产建的图书馆</strong>：能存、能找、能管权限、能追责任、能自动打标。</p>
@@ -2348,6 +2429,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>生命周期</strong>｜素材从入库到失效的完整管理过程。</p>
 <p><strong>可追溯</strong>｜能查到素材的来源、上传人、使用记录。</p>
 <div class="viz" data-fc="23"></div>
+<div class="chapnav" data-ch="23"><div class="cn-t">第 23 章读完了</div><button class="primary" data-go="c32">前往第 24 章 →</button><button data-quiz="23">做题</button><button data-note="23">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c32">第 24 章　项目六：Harness 与 Agent Loop（含自进化）<a class="q" href="javascript:void 0" data-q="c32">#</a><button class="mark-read" data-c="c32">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>这是七个项目里<strong>最值钱的一个</strong>。因为它不解决某一个业务问题，它解决的是&quot;<strong>怎么让 Agent 真的能把活干完，而且越干越好</strong>&quot;。</p>
@@ -2436,6 +2518,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>可回放</strong>｜完整还原一次任务的执行过程。</p>
 <p><strong>自主等级</strong>｜按风险给不同任务设置不同的自动化程度。</p>
 <div class="viz" data-fc="24"></div>
+<div class="chapnav" data-ch="24"><div class="cn-t">第 24 章读完了</div><button class="primary" data-go="c33">前往第 25 章 →</button><button data-quiz="24">做题</button><button data-note="24">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c33">第 25 章　项目七：MCP 与 Agent 集群<a class="q" href="javascript:void 0" data-q="c33">#</a><button class="mark-read" data-c="c33">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>一个 Agent 靠能力，一百个 Agent 靠组织。</strong> Agent 集群要解决的是&quot;谁负责接待、谁负责干活、怎么分工、怎么不打架&quot;。</p>
@@ -2510,6 +2593,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>调用深度上限</strong>｜限制链路长度，防止互相调用死循环。</p>
 <p><strong>故障隔离</strong>｜限制单个组件故障的影响范围。</p>
 <div class="viz" data-fc="25"></div>
+<div class="chapnav" data-ch="25"><div class="cn-t">第 25 章读完了</div><button class="primary" data-go="c34">前往第 26 章 →</button><button data-quiz="25">做题</button><button data-note="25">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c34">第 26 章　总装：把七个项目串成一个体系<a class="q" href="javascript:void 0" data-q="c34">#</a><button class="mark-read" data-c="c34">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>面试官真正想看的不是七个项目，而是&quot;这七个东西是怎么长在一起的&quot;。</strong> 这一章就是教你把它们串成一个故事。</p>
@@ -2584,6 +2668,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>自主度分级</strong>｜按风险给不同任务不同自动化程度。</p>
 <h1 class="part">第 3 部分　面试力：把会的东西变成 offer</h1>
 <div class="viz" data-fc="26"></div>
+<div class="chapnav" data-ch="26"><div class="cn-t">第 26 章读完了</div><button class="primary" data-go="c35">前往第 27 章 →</button><button data-quiz="26">做题</button><button data-note="26">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c35">第 27 章　简历：不是编出来的，是排出来的<a class="q" href="javascript:void 0" data-q="c35">#</a><button class="mark-read" data-c="c35">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>简历的作用只有一个：<strong>让面试官在 20 秒内产生&quot;这个人可能行，值得聊一聊&quot;的判断。</strong> 它不是自传，是广告。</p>
@@ -2651,6 +2736,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>三层追问</strong>｜判断简历条目是否可写的检验方式。</p>
 <p><strong>排列</strong>｜用更有信息量的方式陈述既有事实。</p>
 <div class="viz" data-fc="27"></div>
+<div class="chapnav" data-ch="27"><div class="cn-t">第 27 章读完了</div><button class="primary" data-go="c36">前往第 28 章 →</button><button data-quiz="27">做题</button><button data-note="27">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c36">第 28 章　&quot;项目放大&quot;的正确做法：升维表达，而不是谎报数字<a class="q" href="javascript:void 0" data-q="c36">#</a><button class="mark-read" data-c="c36">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>你要放大的不是数字，是视野。</strong> 面试官真正想听的是&quot;你想过更大的规模会怎样&quot;，而不是&quot;你曾经有过更大的规模&quot;。</p>
@@ -2717,6 +2803,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>问题驱动叙事</strong>｜按业务问题的发展顺序讲述项目。</p>
 <p><strong>留钩子</strong>｜主动抛出一个可被追问的点，引导面试方向。</p>
 <div class="viz" data-fc="28"></div>
+<div class="chapnav" data-ch="28"><div class="cn-t">第 28 章读完了</div><button class="primary" data-go="c37">前往第 29 章 →</button><button data-quiz="28">做题</button><button data-note="28">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c37">第 29 章　高频面试题全景：74 题的 30 秒答题骨架<a class="q" href="javascript:void 0" data-q="c37">#</a><button class="mark-read" data-c="c37">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p>面试不是知识竞赛，是<strong>&quot;在有限时间里让对方相信你能干活&quot;</strong>。所以每一题你需要的不是完整答案，是一个<strong>能在 30 秒内站住脚的骨架</strong>，剩下的靠追问展开。</p>
@@ -2758,6 +2845,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>场景设计题</strong>｜没有标准答案、考察思考结构的问题。</p>
 <p><strong>澄清需求</strong>｜回答设计题第一步，先问清楚限制条件。</p>
 <div class="viz" data-fc="29"></div>
+<div class="chapnav" data-ch="29"><div class="cn-t">第 29 章读完了</div><button class="primary" data-go="c38">前往第 30 章 →</button><button data-quiz="29">做题</button><button data-note="29">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c38">第 30 章　面试前准备与实战沙盘<a class="q" href="javascript:void 0" data-q="c38">#</a><button class="mark-read" data-c="c38">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>面试是一场可以排练的表演。</strong> 内容你已经有了，这一章解决的是&quot;怎么在 45 分钟里稳定地拿出来&quot;。</p>
@@ -2821,6 +2909,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>总包</strong>｜基本工资、绩效、年终、期权等构成的整体收入。</p>
 <h1 class="part">第 4 部分　举一反三：从电商到一个行业</h1>
 <div class="viz" data-fc="30"></div>
+<div class="chapnav" data-ch="30"><div class="cn-t">第 30 章读完了</div><button class="primary" data-go="c39">前往第 31 章 →</button><button data-quiz="30">做题</button><button data-note="30">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c39">第 31 章　B 端 AI 工作台架构解析<a class="q" href="javascript:void 0" data-q="c39">#</a><button class="mark-read" data-c="c39">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>C 端 AI 产品拼&quot;体验&quot;，B 端 AI 工作台拼&quot;能不能接进企业、能不能被管住、能不能被算清账&quot;。</strong> 这就是两者架构上所有差异的源头。</p>
@@ -2876,6 +2965,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>私有化部署</strong>｜把系统部署在客户自己的环境里。</p>
 <p><strong>交付成本</strong>｜把产品落地到客户现场所消耗的人力与时间。</p>
 <div class="viz" data-fc="31"></div>
+<div class="chapnav" data-ch="31"><div class="cn-t">第 31 章读完了</div><button class="primary" data-go="c40">前往第 32 章 →</button><button data-quiz="31">做题</button><button data-note="31">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c40">第 32 章　CEO 视角：一笔 AI 生意是怎么算账的<a class="q" href="javascript:void 0" data-q="c40">#</a><button class="mark-read" data-c="c40">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>技术方案回答&quot;能不能做&quot;，商业方案回答&quot;值不值得做&quot;。</strong> 能同时回答这两个问题的人，才配谈&quot;负责人&quot;这三个字。</p>
@@ -2941,6 +3031,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>ROI</strong>｜投入产出比，衡量方案经济性。</p>
 <h1 class="part">第 5 部分　落地：从今天到 offer</h1>
 <div class="viz" data-fc="32"></div>
+<div class="chapnav" data-ch="32"><div class="cn-t">第 32 章读完了</div><button class="primary" data-go="c41">前往第 33 章 →</button><button data-quiz="32">做题</button><button data-note="32">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c41">第 33 章　90 天就业冲刺计划<a class="q" href="javascript:void 0" data-q="c41">#</a><button class="mark-read" data-c="c41">标记已读</button></h2>
 <h3>一句话结论</h3>
 <p><strong>90 天，每天 4 小时有效学习，足够一个非科班的人走到&quot;能聊、能讲、能过技术面&quot;的水平。</strong> 前提是：按顺序、有验收、不追求学完才投。</p>
@@ -2998,6 +3089,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>投递节奏</strong>｜先零散投递收集问题，再集中投递的阶段安排。</p>
 <h1 class="part">附录</h1>
 <div class="viz" data-fc="33"></div>
+<div class="chapnav" data-ch="33"><div class="cn-t">第 33 章读完了</div><button class="primary" data-go="c42">前往附录 A →</button><button data-quiz="33">做题</button><button data-note="33">写笔记</button><div class="cn-sub">「做题」只抽这一章的题；「写笔记」存在你这台设备上，不上传。</div></div>
 <h2 id="c42">附录 A　全书速查卡<a class="q" href="javascript:void 0" data-q="c42">#</a><button class="mark-read" data-c="c42">标记已读</button></h2>
 <blockquote><p>用法：面试前一天，只看这一页。每一条都是&quot;一句话版本&quot;。</p></blockquote>
 <table><thead><tr><th>章</th><th>一句话速查</th></tr></thead><tbody><tr><td>1</td><td>Python 是行业普通话。你要能读懂、能改参数、能看报错，不一定要会写</td></tr><tr><td>2</td><td>大模型只做一件事：根据上文预测下一个 Token。注意力是&quot;每个词和其他所有词算相关度&quot;</td></tr><tr><td>3</td><td>上下文是短期记忆桌面。长上下文贵在 KV Cache。幻觉只能管理不能消灭</td></tr><tr><td>4</td><td>API 是水管。system 提示是最高杠杆。对话没有记忆，每轮都要重发历史</td></tr><tr><td>5</td><td>工具调用三步舞：给菜单、模型提出请求、程序执行后回填。权限在程序侧</td></tr><tr><td>6</td><td>提示词管&quot;怎么说&quot;，上下文管&quot;给它看什么&quot;。给对信息比写好指令更重要</td></tr><tr><td>7</td><td>Embedding 是含义坐标。它擅长同义表达，不擅长数字、型号、否定</td></tr><tr><td>8</td><td>RAG 是开卷考试。六环节：解析、切块、索引、召回、重排、生成</td></tr><tr><td>9</td><td>没有测试集的 RAG 一定会退化。调试顺序：数据、切块、召回、重排、提示词、模型</td></tr><tr><td>10</td><td>向量库的核心取舍：用一点召回率换几十倍速度。HNSW 快但吃内存</td></tr><tr><td>11</td><td>Graph RAG 管&quot;关联&quot;，向量管&quot;相似&quot;。它补多跳、关系、全局三类盲区</td></tr><tr><td>12</td><td>LangChain 是标准零件，LangGraph 是装配图纸。有循环就用图</td></tr><tr><td>13</td><td>MCP 是 Agent 的 USB-C。Function Calling 连着模型和程序，MCP 连着程序和系统</td></tr><tr><td>14</td><td>Harness 是模型外面的工作台。循环五步 + 四道退出闸门 + 上下文四招</td></tr><tr><td>15</td><td>知识用 RAG，行为用微调。LoRA 像在书里贴便签。质量远重于数量</td></tr><tr><td>16</td><td>云原生解决&quot;坏了还能活&quot;。模型网关是 AI 场景的特殊网关</td></tr><tr><td>17</td><td>AI 把瓶颈从&quot;写代码&quot;移到&quot;审查、验证、对齐&quot;。考核改用 DORA 四指标</td></tr><tr><td>18</td><td>一百个 Agent 需要的公共设施：模型网关、检索中台、评测平台，按需生长</td></tr><tr><td>19</td><td>数据中台是地基。数据质量拆成五个维度。要变成&quot;服务&quot;而不是&quot;仓库&quot;</td></tr><tr><td>20</td><td>实时语音的关键是全链路流式，用户感受到的是各环节首字延迟之和</td></tr><tr><td>21</td><td>内容 Agent 是六环流水线。评估分过程指标和结果指标，数据要反哺生成</td></tr><tr><td>22</td><td>考核项目的难点在组织不在技术。证据链 + 可申诉 + 定位成培训系统</td></tr><tr><td>23</td><td>素材中心是多模态版 RAG。核心是自动打标、近似去重、责任可追溯</td></tr><tr><td>24</td><td>Harness 项目最值钱。自进化 = 记忆沉淀 + 规则迭代 + 策略优选，可验证</td></tr><tr><td>25</td><td>Agent 集群靠组织不靠能力。传任务不传历史。不要过度拆分</td></tr><tr><td>26</td><td>面试官看的是&quot;怎么长在一起的&quot;。用三阶段演进讲体系</td></tr><tr><td>27</td><td>简历不是编出来的，是排出来的。每条都要撑得住三层追问</td></tr><tr><td>28</td><td>放大的是视野不是数字。讲设计意图、讲推演、讲&quot;我们故意没做&quot;</td></tr><tr><td>29</td><td>每题 30 秒骨架：结论、原因、做法、边界</td></tr><tr><td>30</td><td>面试可以排练。D-1 天不学新东西。每次面试后填复盘表</td></tr><tr><td>31</td><td>B 端拼能不能接进企业、能不能被管住、能不能算清账。权限必须做在检索前</td></tr><tr><td>32</td><td>算不清 ROI 的方案过不了预算。模型不是壁垒，数据和流程嵌入才是</td></tr><tr><td>33</td><td>90 天每天 4 小时。复述比阅读重要。第 8 周开始零散投递</td></tr></tbody></table>
@@ -3052,7 +3144,11 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
 <p><strong>如果你的正确率低于 70%</strong>，不要继续往下学新章节。<strong>先把这一章过扎实，因为后面每一章都会用到前面的概念。</strong></p>
   </div>
 </main>
-<button class="tool" id="up">↑ 回到顶部</button>
+<div id="panel" class="modal"><div class="mbox">
+  <div class="mhead"><b id="ptitle">写笔记</b><span class="sp"></span>
+    <button class="tool" id="pclose">关闭</button></div>
+  <div class="mbody" id="pbody"></div>
+</div></div>
 <div id="modal" class="modal"><div class="mbox">
   <div class="mhead"><b id="mtitle">随机抽题</b><span class="sp"></span>
     <button class="tool" id="mclose">关闭</button></div>
@@ -3109,12 +3205,11 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   // 正好是最经典的"读-写-读-写"抖动。改成：文档高度缓存起来，滚动里每帧最多更新一次，
   // 百分比没变就完全不碰 DOM。
   var barEl=document.getElementById('bar'),pctEl=document.getElementById('pct'),
-      upEl=document.getElementById('up'),docH=0,progTick=false,lastPct=-1;
+      docH=0,progTick=false,lastPct=-1;
   function measure(){docH=Math.max(0,document.documentElement.scrollHeight-window.innerHeight);}
   function prog(){
     var p=docH>0?Math.min(100,Math.round(scrollY/docH*100)):0;
     if(p!==lastPct){lastPct=p;barEl.style.width=p+'%';pctEl.textContent=p+'%';}
-    upEl.classList.toggle('show',scrollY>800);
   }
   function onScroll(){
     if(progTick)return;progTick=true;
@@ -3130,7 +3225,6 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   addEventListener('load',function(){measure();prog();});
   setTimeout(function(){measure();prog();},300);
   measure();prog();
-  upEl.onclick=function(){scrollTo({top:0,behavior:'smooth'});};
   // 主题
   var tb=document.getElementById('theme');
   function sync(){tb.textContent=document.documentElement.dataset.theme==='dark'?'日间模式':'夜间模式';}
@@ -3170,6 +3264,222 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     if(!confirm('清除所有勾选和已读标记？'))return;
     st.tasks={};st.read={};save();location.reload();
   };
+
+  /* ================= 问问题 / 写笔记 / 章末导航 ================= */
+  var panel=document.getElementById('panel'),pbody=document.getElementById('pbody'),
+      ptitle=document.getElementById('ptitle');
+  function openPanel(t){ptitle.textContent=t;panel.classList.add('open');}
+  // 关面板时要把"笔记自动保存"的定时器掐掉：否则面板关掉、内容被下一个面板替换之后，
+  // 这个定时器还会在 500ms 后触发，去找一个已经不存在的节点，直接抛错。
+  function closePanel(){if(noteTimer){clearTimeout(noteTimer);noteTimer=null;}panel.classList.remove('open');}
+  document.getElementById('pclose').onclick=closePanel;
+  panel.onclick=function(e){if(e.target===panel)closePanel();};
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closePanel();});
+
+  /* ---------- 定位：我在第几章 ---------- */
+  // 章号 → 那一章的 h2（按标题文字找，和 quiz.js 同一个办法）
+  function chapEl(n){
+    var hs=document.querySelectorAll('h2[id]');
+    for(var i=0;i<hs.length;i++)if((hs[i].textContent||'').indexOf('第 '+n+' 章')>=0)return hs[i];
+    return null;
+  }
+  function chapNo(el){var m=(el.textContent||'').match(/第\s*(\d+)\s*章/);return m?parseInt(m[1],10):null;}
+  // 当前读到第几章 = 最后一个已经滚过视口顶部的章节标题
+  function currentChap(){
+    var hs=document.querySelectorAll('h2[id]'),best=null,first=null;
+    for(var i=0;i<hs.length;i++){
+      var n=chapNo(hs[i]);if(n===null)continue;
+      if(first===null)first=n;
+      if(hs[i].getBoundingClientRect().top<=120)best=n;else break;
+    }
+    return best===null?first:best;
+  }
+  // 一章的正文纯文本（拿给模型当参考，也用来判断"这一章讲了什么"）
+  function chapText(n){
+    var el=chapEl(n);if(!el)return '';
+    var buf=[],node=el.nextElementSibling;
+    while(node&&node.tagName!=='H2'){
+      if(!(node.classList&&node.classList.contains('chapnav')))buf.push(node.textContent||'');
+      node=node.nextElementSibling;
+    }
+    return buf.join('\n').replace(/\n{3,}/g,'\n\n').trim();
+  }
+
+  /* ---------- 写笔记（只存本机，不上传） ---------- */
+  var NOTES_KEY='agentbook_notes_v1',noteMem={},noteTimer=null;
+  function notesAll(){try{return JSON.parse(localStorage.getItem(NOTES_KEY)||'{}');}catch(e){return noteMem;}}
+  function notesPut(o){try{localStorage.setItem(NOTES_KEY,JSON.stringify(o));}catch(e){noteMem=o;}}
+  function openNotes(n){
+    if(n==null)n=currentChap();
+    if(n==null)return;
+    if(noteTimer){clearTimeout(noteTimer);noteTimer=null;}
+    openPanel('写笔记');
+    var all=notesAll();
+    var mine=Object.keys(all).filter(function(k){return (all[k]||'').trim();})
+      .sort(function(a,b){return a-b;});
+    var h=['<div class="pane">'];
+    h.push('<div class="ph">正在给 <b>第 '+n+' 章</b> 写笔记。'+
+      '笔记只保存在这台设备上，不会上传，也不会跟着书一起发布出去。</div>');
+    if(mine.length)h.push('<div class="note-list">'+mine.map(function(k){
+      return '<button data-jump="'+k+'"'+(parseInt(k,10)===n?' style="border-color:var(--accent);color:var(--accent)"':'')+
+        '>第 '+k+' 章</button>';}).join('')+'</div>');
+    h.push('<div class="ph">写不出来就照这三句填：① 这章解决什么问题；② 我原来的误解是什么；③ 面试官会怎么问。</div>');
+    h.push('<textarea class="note-area" id="noteArea" placeholder="用自己的话写一遍…"></textarea>');
+    h.push('<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">'+
+      '<button class="act" id="noteSave">保存</button><span class="saved" id="noteMsg"></span></div>');
+    h.push('</div>');
+    pbody.innerHTML=h.join('');
+    var ta=document.getElementById('noteArea');
+    ta.value=all[n]||'';
+    function saveNote(msg){
+      var o=notesAll();o[n]=ta.value;notesPut(o);
+      var el=document.getElementById('noteMsg');
+      if(msg&&el)el.textContent=msg;
+    }
+    ta.oninput=function(){
+      if(noteTimer)clearTimeout(noteTimer);
+      noteTimer=setTimeout(function(){noteTimer=null;saveNote('已自动保存');},500);
+    };
+    document.getElementById('noteSave').onclick=function(){saveNote('已保存');};
+    pbody.querySelectorAll('[data-jump]').forEach(function(b){
+      b.onclick=function(){openNotes(parseInt(b.getAttribute('data-jump'),10));};
+    });
+    setTimeout(function(){try{ta.focus();}catch(e){}},60);
+  }
+
+  /* ---------- 问问题（DeepSeek deepseek-flash） ----------
+     ⚠️ Key 绝不写进代码或任何会推送的文件：只存在这台设备的 localStorage。
+     这个仓库是公开的，任何写进文件里的 key 都等于公开。 */
+  var KEY_LS='agentbook_ds_key_v1';
+  function getKey(){
+    try{var k=localStorage.getItem(KEY_LS);if(k)return k;}catch(e){}
+    return (typeof window.__DEEPSEEK_KEY==='string'&&window.__DEEPSEEK_KEY)||'';
+  }
+  function setKey(k){try{localStorage.setItem(KEY_LS,k);}catch(e){}}
+  var askCh=null,chat={};
+
+  function openAsk(n){
+    if(n==null)n=currentChap();
+    if(n==null)return;
+    askCh=n;openPanel('问问题');renderAsk();
+  }
+  function renderAsk(){
+    var n=askCh,key=getKey(),log=chat[n]||(chat[n]=[]);
+    var h=['<div class="pane">'];
+    h.push('<div class="ph">正在问 <b>第 '+n+' 章</b>。回答来自 DeepSeek 的 <b>deepseek-flash</b>，'+
+      '会自动带上这一章的正文当参考。<b>它可能出错，关键结论以书上原文为准。</b></div>');
+    if(!key)h.push('<div class="ask-key"><div class="ph">第一次用要先填一个 API Key。'+
+      '它只保存在这台设备上，<b>不会写进书里，也不会跟着书一起推送出去</b>。'+
+      '在 platform.deepseek.com 的「API Keys」里建一个，粘进来即可。</div>'+
+      '<input id="keyInput" type="password" placeholder="sk-…" autocomplete="off">'+
+      '<div><button class="act" id="keySave">保存 Key</button></div></div>');
+    h.push('<div class="ask-log" id="askLog"></div>');
+    h.push('<div class="ask-row"><textarea id="askInput" rows="1" placeholder="'+
+      (key?'这一章哪里没看懂？直接问。':'先在上面填 Key，然后就能提问')+'"'+(key?'':' disabled')+
+      '></textarea><button id="askSend"'+(key?'':' disabled')+'>发送</button></div>');
+    if(key)h.push('<div class="ph"><button class="act ghost" id="keyClear" '+
+      'style="font-size:12.5px;padding:6px 12px">换掉 Key</button></div>');
+    h.push('</div>');
+    pbody.innerHTML=h.join('');
+    var logEl=document.getElementById('askLog');
+    var shown=log.length?log:[{role:'sys',content:'试试问：这一章的 KV Cache 为什么还要乘并发数？'}];
+    shown.forEach(function(m){
+      var d=document.createElement('div');
+      d.className='ask-msg '+(m.role==='user'?'u':m.role==='sys'?'sys':'a');
+      d.textContent=m.content;logEl.appendChild(d);
+    });
+    var ks=document.getElementById('keySave');
+    if(ks)ks.onclick=function(){
+      var v=(document.getElementById('keyInput').value||'').trim();
+      if(!v){alert('先把 Key 粘进来');return;}
+      setKey(v);renderAsk();
+    };
+    var kc=document.getElementById('keyClear');
+    if(kc)kc.onclick=function(){if(confirm('清除本机保存的 Key？')){setKey('');renderAsk();}};
+    var inp=document.getElementById('askInput'),btn=document.getElementById('askSend');
+    if(btn){
+      var go=function(){
+        var q=(inp.value||'').trim();if(!q)return;
+        inp.value='';ask(q,logEl,btn,inp);
+      };
+      btn.onclick=go;
+      inp.onkeydown=function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();go();}};
+    }
+    logEl.scrollTop=logEl.scrollHeight;
+  }
+  function pushMsg(logEl,role,text){
+    var d=document.createElement('div');
+    d.className='ask-msg '+(role==='user'?'u':role==='sys'?'sys':'a');
+    d.textContent=text;logEl.appendChild(d);logEl.scrollTop=logEl.scrollHeight;return d;
+  }
+  function ask(q,logEl,btn,inp){
+    var key=getKey();if(!key){renderAsk();return;}
+    var n=askCh,log=chat[n];
+    var history=log.slice(-6);
+    log.push({role:'user',content:q});
+    pushMsg(logEl,'user',q);
+    var waitEl=pushMsg(logEl,'a','正在想…');
+    btn.disabled=true;if(inp)inp.disabled=true;
+    var sys='你是一位耐心、严谨的助教。读者正在读《Agent 就业教材》的第 '+n+' 章。\n'+
+      '要求：\n1. 只依据下面给出的本章正文回答；正文没讲的，明说「这一章没讲」，不要编。\n'+
+      '2. 用生活化的语言，必要时打比方。\n3. 先给结论，再给理由，控制在 300 字以内。\n'+
+      '4. 与本章无关的问题也可以简短回答，但要说明「这不在本章范围内」。\n\n'+
+      '【本章正文】\n'+chapText(n).slice(0,9000);
+    var msgs=[{role:'system',content:sys}].concat(history).concat([{role:'user',content:q}]);
+    fetch('https://api.deepseek.com/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+      body:JSON.stringify({model:'deepseek-flash',messages:msgs,stream:false,max_tokens:1200})
+    }).then(function(r){
+      return r.text().then(function(t){return{ok:r.ok,status:r.status,body:t};});
+    }).then(function(r){
+      var data=null;try{data=JSON.parse(r.body);}catch(e){}
+      if(!r.ok){
+        var msg=r.status===401?'Key 不对或已失效，点「换掉 Key」重新填一个。'
+          :r.status===402?'DeepSeek 账户余额不足，充值后再试。'
+          :r.status===429?'请求太频繁，等几秒再问。'
+          :'请求失败（HTTP '+r.status+'）。'+(data&&data.error&&data.error.message?' '+data.error.message:'');
+        waitEl.className='ask-msg sys';waitEl.textContent=msg;
+        log.pop();return;
+      }
+      var ans=(data&&data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content)||'';
+      ans=String(ans).trim()||'（模型没返回内容，换个问法试试）';
+      waitEl.textContent=ans;
+      log.push({role:'assistant',content:ans});
+    }).catch(function(err){
+      waitEl.className='ask-msg sys';
+      waitEl.textContent='连不上 DeepSeek。检查一下网络；离线时问问题用不了，但书本身照常能看。';
+      log.pop();
+      if(window.console&&console.warn)console.warn('[ask]',err);
+    }).then(function(){
+      btn.disabled=false;
+      if(inp){inp.disabled=false;try{inp.focus();}catch(e){}}
+      logEl.scrollTop=logEl.scrollHeight;
+    });
+  }
+
+  /* ---------- 章末导航的三个按钮 ---------- */
+  document.querySelectorAll('.chapnav').forEach(function(nav){
+    var go=nav.querySelector('[data-go]');
+    if(go)go.onclick=function(){
+      var id=go.getAttribute('data-go');
+      if(!id){scrollTo({top:0,behavior:'auto'});return;}
+      var el=document.getElementById(id);
+      // 一律瞬时跳：平滑滚动在 WKWebView 里会被丢掉（实测 5 次丢 3 次）
+      if(el)scrollTo({top:el.getBoundingClientRect().top+scrollY-64,behavior:'auto'});
+    };
+    var q=nav.querySelector('[data-quiz]');
+    if(q)q.onclick=function(){
+      var n=parseInt(q.getAttribute('data-quiz'),10);
+      if(window.__quizChapter)window.__quizChapter(n);
+      else document.getElementById('quizBtn').click();
+    };
+    var nt=nav.querySelector('[data-note]');
+    if(nt)nt.onclick=function(){openNotes(parseInt(nt.getAttribute('data-note'),10));};
+  });
+  document.getElementById('askBtn').onclick=function(){openAsk();};
+  document.getElementById('noteBtn').onclick=function(){openNotes();};
+
   // 高亮当前章节
   // 原来用 IntersectionObserver 遍历回调条目、取"数组里最后一个"来高亮：一次回调可能
   // 带多个条目，顺序又不保证，于是会高亮到错的那一节（实测会跳到很靠后的一章）。
@@ -3209,6 +3519,22 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     if (x != null) e.textContent = x;
     return e;
   }
+  /* 拖动滑块时的"安静模式"。
+     滑块每动一下，章节里的 compute() 都会被调用一次；如果这时候还让柱子
+     从 0 长到目标值（入场动画），就会看到柱子反复"归零再长"——这就是交互抖动的主因。
+     安静模式下柱子直接到位，动画只在卡片第一次画出来时播一次。 */
+  var QUIET = false;
+  function quiet(fn) { QUIET = true; try { fn(); } finally { QUIET = false; } }
+  /* 每帧最多跑一次的节流器。必须**每个滑块各自一个**：
+     用全局单槽的话，两张卡片同时动，后一个会被丢掉（只跑前一个）。 */
+  function makeRaf(fn) {
+    var pending = false;
+    return function () {
+      if (pending) return;
+      pending = true;
+      requestAnimationFrame(function () { pending = false; fn(); });
+    };
+  }
   function head(box, title, sub) {
     box.innerHTML = "";
     box.appendChild(mk("div", "vz-t", title));
@@ -3230,7 +3556,13 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       host.appendChild(r);
       var pct = Math.max(1.5, Math.min(100, (it.value / (it.max || 100)) * 100));
       f.style.width = "0%";
-      setTimeout(function () { f.style.width = pct + "%"; }, 30);
+      if (QUIET) {
+        // 拖动中：直接到位，不播入场动画（否则每帧都在"归零再长"）
+        f.style.transition = "none";
+        f.style.width = pct + "%";
+      } else {
+        setTimeout(function () { f.style.width = pct + "%"; }, 30);
+      }
     });
   }
   function render(panel, it) {
@@ -3306,13 +3638,16 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   }
   function sliders(host, defs, compute, note) {
     var vals = {}, ctl = mk("div", "vz-ctls"), out = mk("div", "vz-out");
+    // 原来的写法是每个 input 事件同步跑一次 compute，一次拖动会跑几十上百次，
+    // 每次都重建 DOM —— 又卡又抖。改成每帧最多跑一次。
+    var update = makeRaf(function () { quiet(function () { compute(vals, out); }); });
     defs.forEach(function (d) {
       vals[d.k] = d.val;
       if (d.check) {
         var lab = mk("label", "vz-check"), cb = document.createElement("input");
         cb.type = "checkbox"; cb.checked = !!d.val;
         lab.appendChild(cb); lab.appendChild(mk("span", null, d.label));
-        cb.onchange = function () { vals[d.k] = cb.checked ? 1 : 0; compute(vals, out); };
+        cb.onchange = function () { vals[d.k] = cb.checked ? 1 : 0; update(); };
         ctl.appendChild(lab);
         return;
       }
@@ -3322,12 +3657,13 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       vv = mk("div", "vz-ctl-v", d.val + (d.unit || ""));
       inp.oninput = function () {
         vals[d.k] = parseFloat(inp.value); vv.textContent = inp.value + (d.unit || "");
-        compute(vals, out);
+        update();
       };
       w.appendChild(inp); w.appendChild(vv); ctl.appendChild(w);
     });
     host.appendChild(ctl); host.appendChild(out);
     if (note) host.appendChild(mk("div", "vz-note", note));
+    // 第一次渲染保留入场动画
     compute(vals, out);
   }
   function scatter(host, pts, pick) {
@@ -4205,61 +4541,85 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
   V.v7cos = function (box) {
     var b = head(box, "两个向量像不像，看的是“夹角”，不是“距离”",
       "拖动夹角，看余弦相似度怎么变——这是所有语义检索背后的那把尺子。");
-    sliders(b, [
-      { k: "a", label: "两句话的意思差多少（夹角）", min: 0, max: 180, val: 35, unit: "°" }
-    ], function (v, o) {
-      var c = Math.cos(v.a * Math.PI / 180);
+    // 这里不用通用的 sliders()，而是自己搭结构：这块画布必须**只建一次**。
+    // 之前每动一下滑块就重建一个 canvas，等于同时泄漏显存和一个 ResizeObserver，
+    // 拖动几次画面就卡住了。
+    var ang = 35, H = 170;
+    var ctl = mk("div", "vz-ctls"), row = mk("div", "vz-ctl-row");
+    row.appendChild(mk("div", "vz-ctl-l", "两句话的意思差多少（夹角）"));
+    var inp = document.createElement("input");
+    inp.type = "range"; inp.min = 0; inp.max = 180; inp.step = 1; inp.value = ang;
+    var vv = mk("div", "vz-ctl-v", ang + "°");
+    row.appendChild(inp); row.appendChild(vv); ctl.appendChild(row);
+
+    var outEl = mk("div", "vz-out"), big = mk("div", "vz-big");
+    var kvs = [mk("span"), mk("span"), mk("span")], kv = mk("div", "vz-kv");
+    kvs.forEach(function (s) { kv.appendChild(s); });
+    var cv = mk("canvas", "vz-cv"), barsHost = mk("div", "vz-bars"), noteEl = mk("div", "vz-note");
+    cv.style.height = H + "px";
+    outEl.appendChild(big); outEl.appendChild(kv); outEl.appendChild(cv);
+    outEl.appendChild(barsHost); outEl.appendChild(noteEl);
+    box.appendChild(ctl); box.appendChild(outEl);
+    box.appendChild(mk("div", "vz-note",
+      "工程上的取用阈值：一般 0.8 以上算高度相关，0.6 到 0.8 算可能相关（要配合重排），低于 0.5 基本可以丢掉。" +
+      "具体数字要按你的模型和语料实测，不同 embedding 模型的分布不一样。"));
+
+    var W = 0, dpr = window.devicePixelRatio || 1;
+    function fit() { W = cv.clientWidth || 520; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+    function draw() {
+      if (!W) fit();
+      var g = cv.getContext("2d");
+      g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+      var ox = 72, oy = H - 30, L = Math.min(W - 150, 240);
+      var ink = getComputedStyle(document.body).color;
+      g.strokeStyle = "rgba(140,61,46,.25)"; g.lineWidth = 1;
+      g.beginPath(); g.moveTo(ox - 24, oy); g.lineTo(ox + L + 90, oy); g.stroke();
+      g.strokeStyle = "#1d5c63"; g.lineWidth = 3;
+      g.beginPath(); g.moveTo(ox, oy); g.lineTo(ox + L, oy); g.stroke();
+      g.fillStyle = "#1d5c63"; g.font = "13px -apple-system, sans-serif";
+      g.fillText("句子 A", ox + L - 42, oy - 10);
+      var th = ang * Math.PI / 180;
+      g.strokeStyle = "#8c3d2e";
+      g.beginPath(); g.moveTo(ox, oy);
+      g.lineTo(ox + Math.cos(th) * L, oy - Math.sin(th) * L); g.stroke();
+      g.fillStyle = "#8c3d2e";
+      g.fillText("句子 B", ox + Math.cos(th) * L + 6, oy - Math.sin(th) * L - 4);
+      g.strokeStyle = "rgba(140,61,46,.55)"; g.lineWidth = 1.5;
+      g.beginPath(); g.arc(ox, oy, 46, -th, 0); g.stroke();
+      g.fillStyle = ink; g.font = "12px -apple-system, sans-serif";
+      g.fillText(ang + "°", ox + 54, oy - 14);
+    }
+    function update() {
+      var c = Math.cos(ang * Math.PI / 180);
       var verdict = c > 0.95 ? "几乎同一个意思" : c > 0.8 ? "很相关" : c > 0.5 ? "有点相关"
         : c > 0 ? "基本无关" : c > -0.5 ? "方向相反（比如“支持”和“不支持”）" : "强烈相反";
-      out(o, c.toFixed(2), [["夹角", v.a + "°"], ["余弦相似度", c.toFixed(2)], ["人话解读", verdict]]);
-
-      // 两个箭头：A 固定朝右，B 按夹角转
-      var cv = mk("canvas", "vz-cv");
-      cv.style.height = "170px";
-      o.appendChild(cv);
-      var W = 0, H = 170, dpr = window.devicePixelRatio || 1;
-      function draw() {
-        W = cv.clientWidth || 520; cv.width = W * dpr; cv.height = H * dpr;
-        cv.style.width = "100%"; cv.style.height = H + "px";
-        var g = cv.getContext("2d");
-        g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
-        var ox = 72, oy = H - 30, L = Math.min(W - 150, 240);
-        var ink = getComputedStyle(document.body).color;
-        g.strokeStyle = "rgba(140,61,46,.25)"; g.lineWidth = 1;
-        g.beginPath(); g.moveTo(ox - 24, oy); g.lineTo(ox + L + 90, oy); g.stroke();
-        // A：固定朝右
-        g.strokeStyle = "#1d5c63"; g.lineWidth = 3;
-        g.beginPath(); g.moveTo(ox, oy); g.lineTo(ox + L, oy); g.stroke();
-        g.fillStyle = "#1d5c63"; g.font = "13px -apple-system, sans-serif";
-        g.fillText("句子 A", ox + L - 42, oy - 10);
-        // B：按夹角转
-        var th = v.a * Math.PI / 180;
-        g.strokeStyle = "#8c3d2e";
-        g.beginPath(); g.moveTo(ox, oy);
-        g.lineTo(ox + Math.cos(th) * L, oy - Math.sin(th) * L); g.stroke();
-        g.fillStyle = "#8c3d2e";
-        g.fillText("句子 B", ox + Math.cos(th) * L + 6, oy - Math.sin(th) * L - 4);
-        // 夹角弧
-        g.strokeStyle = "rgba(140,61,46,.55)"; g.lineWidth = 1.5;
-        g.beginPath(); g.arc(ox, oy, 46, -th, 0); g.stroke();
-        g.fillStyle = ink; g.font = "12px -apple-system, sans-serif";
-        g.fillText(v.a + "°", ox + 54, oy - 14);
-      }
+      big.textContent = c.toFixed(2);
+      kvs[0].innerHTML = "夹角 <b>" + ang + "°</b>";
+      kvs[1].innerHTML = "余弦相似度 <b>" + c.toFixed(2) + "</b>";
+      kvs[2].innerHTML = "人话解读 <b>" + verdict + "</b>";
       draw();
-      var ro = window.ResizeObserver ? new ResizeObserver(function () { draw(); }) : null;
-      if (ro) ro.observe(cv);
-
-      var h = mk("div", "vz-bars"); o.appendChild(h);
-      bars(h, [
-        { label: "余弦相似度（夹角决定）", value: (c + 1) / 2 * 100, max: 100, text: c.toFixed(2), color: "#1d5c63" },
-        { label: "只看夹角时，长度完全不影响", value: 100, max: 100, text: "长度不参与", color: "#2f7d52" }
-      ]);
-      o.appendChild(mk("div", "vz-note",
-        "为什么不用欧氏距离？因为欧氏距离会被“长度”污染：同一句话写得更长、或者两个句子里重复词更多，" +
+      quiet(function () {
+        bars(barsHost, [
+          { label: "余弦相似度（夹角决定）", value: (c + 1) / 2 * 100, max: 100, text: c.toFixed(2), color: "#1d5c63" },
+          { label: "只看夹角时，长度完全不影响", value: 100, max: 100, text: "长度不参与", color: "#2f7d52" }
+        ]);
+      });
+      noteEl.textContent =
+        "为什么不用欧氏距离？因为欧氏距离会被“长度”污染：同一句话写得更长、或者句子里重复词更多，" +
         "距离就会变大，但意思并没有变远。余弦只看向量之间的夹角，把长度除掉，所以更稳。" +
         "记住这条就够应付面试：“余弦相似度算的是方向一致程度，取值范围 −1 到 1，越接近 1 越像；" +
-        "0 表示无关，负数表示意思相反。”"));
-    }, "工程上的取用阈值：一般 0.8 以上算高度相关，0.6 到 0.8 算可能相关（要配合重排），低于 0.5 基本可以丢掉。具体数字要按你的模型和语料实测，不同 embedding 模型的分布不一样。");
+        "0 表示无关，负数表示意思相反。”";
+    }
+    var updateThrottled = makeRaf(update);
+    inp.oninput = function () { ang = parseFloat(inp.value); vv.textContent = ang + "°"; updateThrottled(); };
+
+    // 画布尺寸只跟随窗口变化，不跟随滑块
+    function onResize() { fit(); draw(); }
+    window.addEventListener("resize", onResize);
+    var ro = window.ResizeObserver ? new ResizeObserver(onResize) : null;
+    if (ro) ro.observe(cv);
+    setTimeout(function () { fit(); update(); }, 60);
+    fit(); update();
   };
 
   /* ================= 第 4 章补充：结构化输出 ================= */
@@ -4635,8 +4995,9 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     mbody.appendChild(btns);
   }
 
-  var qb = document.getElementById("quizBtn");
-  if (qb) qb.onclick = function () {
+  // 抽题的"起点页"。原来写死在 qb.onclick 里，现在抽成函数，
+  // 因为章末的「做题」按钮也要用到它（那一章没有题目时的兜底）。
+  function quizHome() {
     open("随机抽题");
     mbody.innerHTML = "";
     mbody.appendChild(mk("div", "qz-meta",
@@ -4652,7 +5013,18 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     bw.onclick = function () { if (w) start(w, wrongList()); };
     btns.appendChild(bw);
     mbody.appendChild(btns);
+  }
+
+  var qb = document.getElementById("quizBtn");
+  if (qb) qb.onclick = quizHome;
+
+  /** 章末「做题」按钮用：只抽这一章的题。没有题目就退回起点页。 */
+  window.__quizChapter = function (n) {
+    var pool = BANK.filter(function (q) { return q[0] === n; });
+    if (!pool.length) { quizHome(); return; }
+    start(Math.min(pool.length, 20), pool);
   };
+
   var wb = document.getElementById("wrongBtn");
   if (wb) wb.onclick = drawWrong;
 })();
@@ -5129,9 +5501,12 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       reframed = reframe();
       mb = null;
     }
-    // 场景内容变了（拖滑块、点按钮）就要重新取景一次，
-    // 否则上一轮算好的倍率会一直背着走，新内容可能顶出画布。
-    api.render = function () { dirty = true; settled = false; fitCap = 1e9; };
+    // 场景内容变了（拖滑块、点按钮）就要重新看一眼取景。
+    // ⚠️ 但**绝不能**把 fitCap 归零 —— 它是"历史最紧约束"的棘轮。
+    // 一旦归零，每动一下滑块，取景都会从零重新收敛一遍（受"一帧最多放大 28%"限制，
+    // 要连着好几帧才到位），表现出来就是画面在缩放抖动。
+    // 只打开 settled 就够了：内容真的变大时 reframe 会收紧；内容变小则原地不动。
+    api.render = function () { dirty = true; settled = false; };
     api.scene = function (fn) { scene = fn; dirty = true; };
     api.setAuto = function (v) { auto = v; };
     api.isAuto = function () { return auto; };

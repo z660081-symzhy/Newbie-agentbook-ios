@@ -15,6 +15,11 @@ struct BookWebView: UIViewRepresentable {
         config.defaultWebpagePreferences.allowsContentJavaScript = true
         config.allowsInlineMediaPlayback = true
         config.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
+        // 「问问题」要直接从 file:// 页面调用 https://api.deepseek.com —— 这是跨源请求。
+        // WKWebView 对 file:// 源的处理和普通网页不一样：不开这一项，fetch 会被拦下来。
+        // （服务端 CORS 已经允许 Origin: null，所以打开这个开关就能通。）
+        // 这里的页面只有 App 自己打包的 book.html，不存在加载外部网页的风险。
+        config.preferences.setValue(true, forKey: "allowUniversalAccessFromFileURLs")
         config.userContentController.addUserScript(
             WKUserScript(source: Self.bridge, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
         )
