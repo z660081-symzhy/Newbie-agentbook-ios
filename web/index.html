@@ -119,6 +119,10 @@ font-weight:400;vertical-align:middle}
 .chapnav .cn-sub{flex-basis:100%;font-size:12.5px;color:var(--muted);margin-top:-2px}
 
 /* ---- 问问题 / 写笔记 面板 ---- */
+/* z-index 要比抽题弹层（80）高：两个都是 fixed 全屏遮罩，
+   而 #panel 在 DOM 里排在 #modal 前面 —— 同层级时后出现的会盖住先出现的，
+   于是"抽题开着的时候点问问题"会被抽题弹层挡住。 */
+#panel{z-index:90}
 .pane{display:flex;flex-direction:column;gap:12px}
 .pane .ph{font-size:13px;color:var(--muted);line-height:1.7}
 .pane .ph b{color:var(--fg)}
@@ -3344,6 +3348,8 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     pbody.querySelectorAll('[data-jump]').forEach(function(b){
       b.onclick=function(){openNotes(parseInt(b.getAttribute('data-jump'),10));};
     });
+    // 手机上键盘会顶上来盖住输入框：聚焦后把它滚进可视区
+    ta.onfocus=function(){setTimeout(function(){try{ta.scrollIntoView({block:'center'});}catch(e){}},320);};
     setTimeout(function(){try{ta.focus();}catch(e){}},60);
   }
 
@@ -3398,6 +3404,7 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
     if(kc)kc.onclick=function(){if(confirm('清除本机保存的 Key？')){setKey('');renderAsk();}};
     var inp=document.getElementById('askInput'),btn=document.getElementById('askSend');
     if(btn){
+      inp.onfocus=function(){setTimeout(function(){try{inp.scrollIntoView({block:'center'});}catch(e){}},320);};
       var go=function(){
         var q=(inp.value||'').trim();if(!q)return;
         inp.value='';ask(q,logEl,btn,inp);
@@ -3424,7 +3431,9 @@ ol.qlist{list-style:none;padding-left:0;margin:18px 0}
       '要求：\n1. 只依据下面给出的本章正文回答；正文没讲的，明说「这一章没讲」，不要编。\n'+
       '2. 用生活化的语言，必要时打比方。\n3. 先给结论，再给理由，控制在 300 字以内。\n'+
       '4. 与本章无关的问题也可以简短回答，但要说明「这不在本章范围内」。\n\n'+
-      '【本章正文】\n'+chapText(n).slice(0,9000);
+      // 14000 字：全书最长的一章（第 14 章）正文是 10301 字，这样每一章都能整段带进去，
+      // 不会出现"问后半章的内容，模型说没讲过"。
+      '【本章正文】\n'+chapText(n).slice(0,14000);
     var msgs=[{role:'system',content:sys}].concat(history).concat([{role:'user',content:q}]);
     fetch('https://api.deepseek.com/chat/completions',{
       method:'POST',
